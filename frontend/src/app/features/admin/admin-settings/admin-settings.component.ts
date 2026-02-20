@@ -10,6 +10,7 @@ export class AdminSettingsComponent implements OnInit {
   holidays: HolidayDto[] = [];
   settings: SystemSettingDto[] = [];
   loading = true;
+  error = '';
   holidayYear: number | null = new Date().getFullYear();
   showHolidayForm = false;
   holidayForm: { holidayDate: string; name: string; description: string } = { holidayDate: '', name: '', description: '' };
@@ -23,9 +24,10 @@ export class AdminSettingsComponent implements OnInit {
 
   loadHolidays(): void {
     this.loading = true;
+    this.error = '';
     this.api.getHolidays(this.holidayYear ?? undefined).subscribe({
       next: list => { this.holidays = list; this.loading = false; },
-      error: () => this.loading = false
+      error: () => { this.loading = false; this.error = 'Failed to load holidays. Please try again.'; }
     });
   }
 
@@ -36,6 +38,10 @@ export class AdminSettingsComponent implements OnInit {
   openHolidayForm(): void {
     this.showHolidayForm = true;
     this.holidayForm = { holidayDate: '', name: '', description: '' };
+  }
+
+  closeHolidayForm(): void {
+    this.showHolidayForm = false;
   }
 
   submitHoliday(): void {

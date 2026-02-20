@@ -10,3 +10,7 @@
 .day-checkbox { display: inline-flex; align-items: center; gap: 0.35rem; margin: 0; font-weight: normal; cursor: pointer; }
 .day-checkbox input { width: auto; }
 .modal-actions { margin-top: 1rem; display: flex; gap: 0.5rem; }
+.error { color: #b91c1c; margin-bottom: 1rem; padding: 0.75rem; background: #fef2f2; border-radius: 8px; }
+.loading { color: #64748b; padding: 0.5rem 0; }
+.empty-state { padding: 2rem; text-align: center; color: #64748b; background: #f8fafc; border-radius: 10px; }
+.empty-state p { margin: 0 0 1rem 0; }

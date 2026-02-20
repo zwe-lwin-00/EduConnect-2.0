@@ -4,14 +4,14 @@ import { Component } from '@angular/core';
   selector: 'app-parent-layout',
   template: `
     <div class="parent-layout">
-      <header class="header">
+      <header class="header" role="banner" aria-label="Parent">
         <app-brand subtitle="Parent" class="header-brand"></app-brand>
-        <div class="header-actions">
+        <div class="header-actions" role="region" aria-label="User menu">
           <app-notification-bell></app-notification-bell>
           <app-logout-button></app-logout-button>
         </div>
       </header>
-      <main class="content"><router-outlet></router-outlet></main>
+      <main class="content" aria-label="Main content"><router-outlet></router-outlet></main>
     </div>
   `,
   styles: [

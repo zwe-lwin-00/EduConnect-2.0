@@ -1,5 +1,9 @@
 .page-block { padding: 1rem; }
+.page-header { margin-bottom: 0.5rem; }
+.page-header h1 { margin: 0; }
 .hint { color: #64748b; margin-bottom: 1rem; }
+.error { color: #b91c1c; margin-bottom: 1rem; padding: 0.75rem; background: #fef2f2; border-radius: 8px; }
+.loading { color: #64748b; padding: 0.5rem 0; }
 .toolbar { margin-bottom: 1rem; }
 .toolbar input { margin: 0 0.5rem; padding: 0.35rem; }
 .summary { margin-bottom: 1rem; padding: 0.75rem; background: #f1f5f9; border-radius: 6px; }

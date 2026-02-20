@@ -18,6 +18,7 @@ export class TeacherCalendarComponent implements OnInit {
   year = new Date().getFullYear();
   month = new Date().getMonth() + 1;
   loading = true;
+  error = '';
   items: CalendarDayItemDto[] = [];
   holidays: string[] = [];
   /** 7 columns (Sun–Sat), multiple rows. First row may start with empty cells. */
@@ -32,6 +33,7 @@ export class TeacherCalendarComponent implements OnInit {
 
   load(): void {
     this.loading = true;
+    this.error = '';
     this.api.getCalendar(this.year, this.month).subscribe({
       next: (res: TeacherCalendarResponseDto) => {
         this.items = res.items || [];
@@ -39,7 +41,7 @@ export class TeacherCalendarComponent implements OnInit {
         this.buildGrid();
         this.loading = false;
       },
-      error: () => this.loading = false
+      error: () => { this.loading = false; this.error = 'Failed to load calendar. Please try again.'; }
     });
   }
 

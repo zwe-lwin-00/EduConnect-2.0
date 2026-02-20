@@ -10,6 +10,7 @@ export class TeacherSessionsComponent implements OnInit {
   sessions: TeacherSessionDto[] = [];
   contracts: { id: string; studentId: string; studentName: string }[] = [];
   loading = true;
+  error = '';
   from = '';
   to = '';
   showStart = false;
@@ -33,16 +34,26 @@ export class TeacherSessionsComponent implements OnInit {
 
   load(): void {
     this.loading = true;
+    this.error = '';
     this.api.getSessions(this.from || undefined, this.to || undefined).subscribe({
       next: (list) => { this.sessions = list; this.loading = false; },
-      error: () => this.loading = false
+      error: () => { this.loading = false; this.error = 'Failed to load sessions. Please try again.'; }
     });
   }
 
   openStart(): void {
-    this.startContractId = this.contracts[0]?.id || '';
+    this.startContractId = '';
     this.startDate = new Date().toISOString().slice(0, 10);
     this.showStart = true;
+  }
+
+  closeStart(): void {
+    this.showStart = false;
+  }
+
+  closeNotes(): void {
+    this.showNotes = false;
+    this.selectedSession = null;
   }
 
   submitStart(): void {

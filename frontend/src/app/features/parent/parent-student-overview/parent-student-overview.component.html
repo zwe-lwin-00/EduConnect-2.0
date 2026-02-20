@@ -1,11 +1,12 @@
 <div class="page-block">
   <a routerLink="/parent" class="back">← My students</a>
-  <div *ngIf="loading" class="loading">Loading…</div>
+  <p *ngIf="error" class="error">{{ error }}</p>
+  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
   <div *ngIf="!loading && invalidStudent" class="invalid-student">
     <p>Invalid student.</p>
     <p>This student is not linked to your account. <a routerLink="/parent">Return to My students</a>.</p>
   </div>
-  <div *ngIf="!loading && !invalidStudent && overview">
+  <div *ngIf="!loading && !error && !invalidStudent && overview">
     <header class="header">
       <h1>{{ overview.studentName }}</h1>
       <p class="grade">Grade {{ overview.grade }}</p>
@@ -18,7 +19,8 @@
     </section>
     <section>
       <h2>Recent sessions</h2>
-      <dx-data-grid [dataSource]="overview.recentSessions" [showBorders]="true">
+      <p *ngIf="!overview.recentSessions?.length" class="section-empty">No recent sessions.</p>
+      <dx-data-grid *ngIf="overview.recentSessions?.length" [dataSource]="overview.recentSessions" [showBorders]="true">
         <dxi-column dataField="sessionDate" caption="Date" dataType="date"></dxi-column>
         <dxi-column dataField="type" caption="Type"></dxi-column>
         <dxi-column dataField="teacherOrClassName" caption="Teacher / Class"></dxi-column>
@@ -29,7 +31,8 @@
     </section>
     <section>
       <h2>Homework</h2>
-      <dx-data-grid [dataSource]="overview.homework" [showBorders]="true" keyExpr="id">
+      <p *ngIf="!overview.homework?.length" class="section-empty">No homework.</p>
+      <dx-data-grid *ngIf="overview.homework?.length" [dataSource]="overview.homework" [showBorders]="true" keyExpr="id">
         <dxi-column dataField="title" caption="Title"></dxi-column>
         <dxi-column dataField="dueDate" caption="Due" dataType="date"></dxi-column>
         <dxi-column dataField="status" caption="Status"></dxi-column>
@@ -38,7 +41,8 @@
     </section>
     <section>
       <h2>Grades</h2>
-      <dx-data-grid [dataSource]="overview.grades" [showBorders]="true" keyExpr="id">
+      <p *ngIf="!overview.grades?.length" class="section-empty">No grades yet.</p>
+      <dx-data-grid *ngIf="overview.grades?.length" [dataSource]="overview.grades" [showBorders]="true" keyExpr="id">
         <dxi-column dataField="title" caption="Title"></dxi-column>
         <dxi-column dataField="gradeValue" caption="Score" dataType="number"></dxi-column>
         <dxi-column dataField="maxValue" caption="Max" dataType="number"></dxi-column>

@@ -9,6 +9,7 @@ import { TeacherApiService, TeacherGroupClassDto } from '../../../../core/servic
 export class TeacherGroupClassesComponent implements OnInit {
   list: TeacherGroupClassDto[] = [];
   loading = true;
+  error = '';
   showEdit = false;
   selected: TeacherGroupClassDto | null = null;
   editForm = { name: '', zoomJoinUrl: '', active: true };
@@ -21,10 +22,16 @@ export class TeacherGroupClassesComponent implements OnInit {
 
   load(): void {
     this.loading = true;
+    this.error = '';
     this.api.getGroupClasses().subscribe({
       next: (list) => { this.list = list; this.loading = false; },
-      error: () => this.loading = false
+      error: () => { this.loading = false; this.error = 'Failed to load group classes. Please try again.'; }
     });
+  }
+
+  closeEdit(): void {
+    this.showEdit = false;
+    this.selected = null;
   }
 
   openEdit(gc: TeacherGroupClassDto): void {

@@ -8,3 +8,8 @@
 .form-group label { display: block; margin-bottom: 0.25rem; }
 .form-group input, .form-group select { width: 100%; padding: 0.5rem; box-sizing: border-box; }
 .modal-actions { margin-top: 1rem; display: flex; gap: 0.5rem; }
+.error { color: #b91c1c; margin-bottom: 1rem; padding: 0.75rem; background: #fef2f2; border-radius: 8px; }
+.loading { color: #64748b; padding: 0.5rem 0; }
+.empty-state { padding: 2rem; text-align: center; color: #64748b; background: #f8fafc; border-radius: 10px; }
+.empty-state p { margin: 0 0 1rem 0; }
+.form-group select { width: 100%; }

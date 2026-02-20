@@ -9,6 +9,7 @@ import { AdminApiService, DashboardData } from '../../../../core/services/admin-
 export class AdminDashboardComponent implements OnInit {
   data: Partial<DashboardData> = {};
   loading = true;
+  error = '';
   summaryData: { metric: string; value: number | string }[] = [];
 
   constructor(private adminApi: AdminApiService) {}
@@ -25,8 +26,12 @@ export class AdminDashboardComponent implements OnInit {
           { metric: 'Revenue this month', value: res.revenueThisMonth ?? 0 }
         ];
         this.loading = false;
+        this.error = '';
       },
-      error: () => (this.loading = false)
+      error: () => {
+        this.loading = false;
+        this.error = 'Failed to load dashboard. Please try again.';
+      }
     });
   }
 }

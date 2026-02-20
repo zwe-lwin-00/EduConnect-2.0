@@ -4,8 +4,13 @@
     <button type="button" class="btn-primary" (click)="openCreate()">Create subscription (monthly)</button>
   </header>
   <p class="hint">Monthly billing only. Create a new subscription (1 month) or renew existing via Renew.</p>
-  <div *ngIf="loading" class="loading">Loading…</div>
-  <dx-data-grid *ngIf="!loading" [dataSource]="subscriptions" [showBorders]="true" keyExpr="id">
+  <p *ngIf="error" class="error">{{ error }}</p>
+  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <div *ngIf="!loading && !error && !subscriptions.length" class="empty-state">
+    <p>No subscriptions yet.</p>
+    <button type="button" class="btn-primary" (click)="openCreate()">Create subscription (monthly)</button>
+  </div>
+  <dx-data-grid *ngIf="!loading && !error && subscriptions.length" [dataSource]="subscriptions" [showBorders]="true" keyExpr="id">
     <dxi-column dataField="studentName" caption="Student"></dxi-column>
     <dxi-column dataField="type" caption="Type"></dxi-column>
     <dxi-column dataField="startDate" caption="Start" dataType="date"></dxi-column>
@@ -22,6 +27,7 @@
     <div class="form-group">
       <label>Student</label>
       <select [(ngModel)]="createForm.studentId">
+        <option value="" disabled>— Select student —</option>
         <option *ngFor="let s of students" [value]="s.id">{{ s.fullName }} ({{ s.grade }})</option>
       </select>
     </div>
@@ -38,7 +44,7 @@
     </div>
     <div class="modal-actions">
       <button type="button" (click)="submitCreate()">Create</button>
-      <button type="button" (click)="showCreate = false">Cancel</button>
+      <button type="button" (click)="closeCreate()">Cancel</button>
     </div>
   </app-card>
 </div>

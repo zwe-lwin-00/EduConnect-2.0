@@ -9,13 +9,14 @@ import { TeacherApiService, TeacherStudentDto } from '../../../../core/services/
 export class TeacherStudentsComponent implements OnInit {
   students: TeacherStudentDto[] = [];
   loading = true;
+  error = '';
 
   constructor(public api: TeacherApiService) {}
 
   ngOnInit(): void {
     this.api.getStudents().subscribe({
-      next: (list) => { this.students = list; this.loading = false; },
-      error: () => this.loading = false
+      next: (list) => { this.students = list; this.loading = false; this.error = ''; },
+      error: () => { this.loading = false; this.error = 'Failed to load students. Please try again.'; }
     });
   }
 }

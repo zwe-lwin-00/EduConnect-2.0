@@ -1,7 +1,7 @@
 <div class="admin-layout">
-  <aside class="sidebar">
+  <aside class="sidebar" aria-label="Admin navigation">
     <app-brand class="sidebar-brand"></app-brand>
-    <nav>
+    <nav aria-label="Main">
       <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
       <a routerLink="/admin/teachers" routerLinkActive="active">Teachers</a>
       <a routerLink="/admin/parents" routerLinkActive="active">Parents</a>
@@ -13,9 +13,10 @@
       <a routerLink="/admin/reports" routerLinkActive="active">Reports</a>
       <a routerLink="/admin/settings" routerLinkActive="active">Settings</a>
     </nav>
-    <div class="user">
+    <div class="user" role="region" aria-label="User menu">
       <app-notification-bell></app-notification-bell>
-      <span>{{ auth.getStoredUser()?.fullName }}</span>
+      <span class="user-name">{{ auth.getStoredUser()?.fullName }}</span>
+      <span class="user-role">Admin</span>
       <app-logout-button></app-logout-button>
     </div>
   </aside>

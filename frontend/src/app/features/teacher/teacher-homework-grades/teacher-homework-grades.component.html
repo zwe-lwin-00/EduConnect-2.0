@@ -7,8 +7,13 @@
     </div>
   </header>
   <h2>Homework</h2>
-  <div *ngIf="loading" class="loading">Loading…</div>
-  <dx-data-grid *ngIf="!loading" [dataSource]="homework" [showBorders]="true" keyExpr="id">
+  <p *ngIf="error" class="error">{{ error }}</p>
+  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <div *ngIf="!loading && !error && !homework.length" class="empty-state">
+    <p>No homework yet.</p>
+    <button type="button" class="btn-primary" (click)="openHomeworkForm()">Assign homework</button>
+  </div>
+  <dx-data-grid *ngIf="!loading && !error && homework.length" [dataSource]="homework" [showBorders]="true" keyExpr="id">
     <dxi-column dataField="studentName" caption="Student"></dxi-column>
     <dxi-column dataField="title" caption="Title"></dxi-column>
     <dxi-column dataField="dueDate" caption="Due" dataType="date"></dxi-column>
@@ -19,7 +24,10 @@
     </dxi-column>
   </dx-data-grid>
   <h2>Grades</h2>
-  <dx-data-grid [dataSource]="grades" [showBorders]="true" keyExpr="id">
+  <div *ngIf="!loading && !error && !grades.length" class="empty-state small">
+    <p>No grades yet.</p>
+  </div>
+  <dx-data-grid *ngIf="!loading && grades.length" [dataSource]="grades" [showBorders]="true" keyExpr="id">
     <dxi-column dataField="studentName" caption="Student"></dxi-column>
     <dxi-column dataField="title" caption="Title"></dxi-column>
     <dxi-column dataField="gradeValue" caption="Score" dataType="number"></dxi-column>
@@ -33,6 +41,7 @@
     <div class="form-group">
       <label>Student</label>
       <select [(ngModel)]="homeworkForm.studentId">
+        <option value="" disabled>— Select student —</option>
         <option *ngFor="let s of students" [value]="s.id">{{ s.fullName }}</option>
       </select>
     </div>
@@ -50,7 +59,7 @@
     </div>
     <div class="modal-actions">
       <button type="button" (click)="submitHomework()">Assign</button>
-      <button type="button" (click)="showHomeworkForm = false">Cancel</button>
+      <button type="button" (click)="closeHomeworkForm()">Cancel</button>
     </div>
   </app-card>
 </div>
@@ -60,6 +69,7 @@
     <div class="form-group">
       <label>Student</label>
       <select [(ngModel)]="gradeForm.studentId">
+        <option value="" disabled>— Select student —</option>
         <option *ngFor="let s of students" [value]="s.id">{{ s.fullName }}</option>
       </select>
     </div>
@@ -85,7 +95,7 @@
     </div>
     <div class="modal-actions">
       <button type="button" (click)="submitGrade()">Add</button>
-      <button type="button" (click)="showGradeForm = false">Cancel</button>
+      <button type="button" (click)="closeGradeForm()">Cancel</button>
     </div>
   </app-card>
 </div>
@@ -98,7 +108,7 @@
     </div>
     <div class="modal-actions">
       <button type="button" (click)="saveFeedback()">Save (mark graded)</button>
-      <button type="button" (click)="showFeedback = false; selectedHomework = null">Cancel</button>
+      <button type="button" (click)="closeFeedback()">Cancel</button>
     </div>
   </app-card>
 </div>

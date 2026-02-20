@@ -1,14 +1,20 @@
 <div class="page-block">
-  <h1>Settings</h1>
+  <header class="page-header">
+    <h1>Settings</h1>
+  </header>
   <section>
     <h2>Holidays</h2>
+    <p *ngIf="error" class="error">{{ error }}</p>
     <div class="toolbar">
       <label>Year</label>
       <input type="number" [(ngModel)]="holidayYear" (ngModelChange)="onYearChange()" />
       <button type="button" class="btn-primary" (click)="openHolidayForm()">Add holiday</button>
     </div>
-    <div *ngIf="loading" class="loading">Loading…</div>
-    <dx-data-grid *ngIf="!loading" [dataSource]="holidays" [showBorders]="true" keyExpr="id">
+    <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+    <div *ngIf="!loading && !error && !holidays.length" class="empty-state">
+      <p>No holidays for this year.</p>
+    </div>
+    <dx-data-grid *ngIf="!loading && !error && holidays.length" [dataSource]="holidays" [showBorders]="true" keyExpr="id">
       <dxi-column dataField="holidayDate" caption="Date" dataType="date"></dxi-column>
       <dxi-column dataField="name" caption="Name"></dxi-column>
       <dxi-column dataField="description" caption="Description"></dxi-column>
@@ -43,7 +49,7 @@
     </div>
     <div class="modal-actions">
       <button type="button" (click)="submitHoliday()">Add</button>
-      <button type="button" (click)="showHolidayForm = false">Cancel</button>
+      <button type="button" (click)="closeHolidayForm()">Cancel</button>
     </div>
   </app-card>
 </div>

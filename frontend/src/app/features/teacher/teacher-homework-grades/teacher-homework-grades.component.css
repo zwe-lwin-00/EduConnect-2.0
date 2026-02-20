@@ -3,6 +3,12 @@
 .btn-primary { padding: 0.5rem 1rem; background: #1e3a5f; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin-right: 0.5rem; }
 .btn-secondary { padding: 0.5rem 1rem; background: #64748b; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
 h2 { margin-top: 1.5rem; margin-bottom: 0.5rem; }
+.error { color: #b91c1c; margin-bottom: 1rem; padding: 0.75rem; background: #fef2f2; border-radius: 8px; }
+.loading { color: #64748b; padding: 0.5rem 0; }
+.empty-state { padding: 2rem; text-align: center; color: #64748b; background: #f8fafc; border-radius: 10px; }
+.empty-state p { margin: 0 0 1rem 0; }
+.empty-state.small { padding: 1rem; }
+.empty-state.small p { margin: 0; }
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
 .modal-content { max-width: 420px; width: 90%; max-height: 90vh; overflow: auto; }
 .form-group { margin-bottom: 1rem; }

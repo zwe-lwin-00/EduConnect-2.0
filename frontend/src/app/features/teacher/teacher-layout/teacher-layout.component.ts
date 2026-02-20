@@ -4,9 +4,9 @@ import { Component } from '@angular/core';
   selector: 'app-teacher-layout',
   template: `
     <div class="teacher-layout">
-      <aside class="sidebar">
+      <aside class="sidebar" aria-label="Teacher navigation">
         <app-brand subtitle="Teacher" class="sidebar-brand"></app-brand>
-        <nav>
+        <nav aria-label="Main">
           <a routerLink="/teacher" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
           <a routerLink="/teacher/availability" routerLinkActive="active">Availability</a>
           <a routerLink="/teacher/students" routerLinkActive="active">Students</a>
@@ -16,12 +16,12 @@ import { Component } from '@angular/core';
           <a routerLink="/teacher/homework-grades" routerLinkActive="active">Homework & Grades</a>
           <a routerLink="/teacher/profile" routerLinkActive="active">Profile</a>
         </nav>
-        <div class="user">
+        <div class="user" role="region" aria-label="User menu">
           <app-notification-bell></app-notification-bell>
           <app-logout-button></app-logout-button>
         </div>
       </aside>
-      <main class="content"><router-outlet></router-outlet></main>
+      <main class="content" aria-label="Main content"><router-outlet></router-outlet></main>
     </div>
   `,
   styles: [

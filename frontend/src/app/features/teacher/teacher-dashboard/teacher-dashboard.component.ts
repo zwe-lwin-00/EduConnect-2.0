@@ -14,13 +14,14 @@ export class TeacherDashboardComponent implements OnInit {
     pendingHomeworkToGrade: 0
   };
   loading = true;
+  error = '';
 
   constructor(public api: TeacherApiService) {}
 
   ngOnInit(): void {
     this.api.getDashboard().subscribe({
-      next: (d) => { this.data = d; this.loading = false; },
-      error: () => this.loading = false
+      next: (d) => { this.data = d; this.loading = false; this.error = ''; },
+      error: () => { this.loading = false; this.error = 'Failed to load dashboard. Please try again.'; }
     });
   }
 }

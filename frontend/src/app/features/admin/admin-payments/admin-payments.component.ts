@@ -10,6 +10,7 @@ export class AdminPaymentsComponent implements OnInit {
   subscriptions: SubscriptionDto[] = [];
   students: StudentDto[] = [];
   loading = true;
+  error = '';
   showCreate = false;
   createForm = { studentId: '', type: 'ONE_TO_ONE' as string, startDate: '' };
 
@@ -22,15 +23,20 @@ export class AdminPaymentsComponent implements OnInit {
 
   load(): void {
     this.loading = true;
+    this.error = '';
     this.api.getSubscriptions().subscribe({
       next: list => { this.subscriptions = list; this.loading = false; },
-      error: () => this.loading = false
+      error: () => { this.loading = false; this.error = 'Failed to load subscriptions. Please try again.'; }
     });
+  }
+
+  closeCreate(): void {
+    this.showCreate = false;
   }
 
   openCreate(): void {
     const today = new Date().toISOString().slice(0, 10);
-    this.createForm = { studentId: this.students[0]?.id || '', type: 'ONE_TO_ONE', startDate: today };
+    this.createForm = { studentId: '', type: 'ONE_TO_ONE', startDate: today };
     this.showCreate = true;
   }
 

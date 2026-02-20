@@ -17,6 +17,7 @@ export class AdminContractsComponent implements OnInit {
   students: StudentDto[] = [];
   subscriptions: SubscriptionDto[] = [];
   loading = true;
+  error = '';
   showCreate = false;
   dayOptions = DAY_LABELS;
   form: any = { teacherId: '', studentId: '', subscriptionId: '', legacyPeriodEnd: '', daysOfWeek: [] as number[], scheduleStartTime: '', scheduleEndTime: '' };
@@ -55,7 +56,15 @@ export class AdminContractsComponent implements OnInit {
 
   load(): void {
     this.loading = true;
-    this.api.getContracts().subscribe({ next: list => { this.contracts = list; this.loading = false; }, error: () => this.loading = false });
+    this.error = '';
+    this.api.getContracts().subscribe({
+      next: list => { this.contracts = list; this.loading = false; },
+      error: () => { this.loading = false; this.error = 'Failed to load contracts. Please try again.'; }
+    });
+  }
+
+  closeCreate(): void {
+    this.showCreate = false;
   }
 
   openCreate(): void {

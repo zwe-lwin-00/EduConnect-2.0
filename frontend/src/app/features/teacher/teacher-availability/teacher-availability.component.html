@@ -1,8 +1,14 @@
 <div class="page-block">
-  <h1>Weekly availability</h1>
+  <header class="page-header">
+    <h1>Weekly availability</h1>
+  </header>
   <p class="hint">Set your available time slots (1–7 = Mon–Sun). Save to update.</p>
-  <div *ngIf="loading" class="loading">Loading…</div>
-  <div *ngIf="!loading">
+  <p *ngIf="error" class="error">{{ error }}</p>
+  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <div *ngIf="!loading && !error && !slots.length" class="empty-state">
+    <p>No slots yet. Add a slot below and save.</p>
+  </div>
+  <div *ngIf="!loading && !error">
     <div class="slot-list">
       <div *ngFor="let s of slots; let i = index" class="slot-row">
         <select [(ngModel)]="s.dayOfWeek" style="width:80px">

@@ -7,6 +7,8 @@
 .back:hover {
   text-decoration: underline;
 }
+.error { color: #b91c1c; margin-bottom: 1rem; padding: 0.75rem; background: #fef2f2; border-radius: 8px; }
+.loading { color: #64748b; padding: 0.5rem 0; }
 .invalid-student {
   padding: 1rem;
   color: #b91c1c;

@@ -4,7 +4,10 @@
 .page-header { margin-bottom: 1.5rem; }
 .page-header h1 { margin: 0; font-size: 1.5rem; color: #1a1a2e; }
 .page-header p { margin: 0.25rem 0 0 0; color: #64748b; font-size: 0.95rem; }
-.loading { color: #64748b; }
+.loading { color: #64748b; padding: 0.5rem 0; }
+.error { color: #b91c1c; margin-bottom: 1rem; padding: 0.75rem; background: #fef2f2; border-radius: 8px; }
+.empty-state { padding: 2rem; text-align: center; color: #64748b; background: #f8fafc; border-radius: 10px; margin-bottom: 1.5rem; }
+.empty-state p { margin: 0; }
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
 .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; }
 .card h3 { margin: 0 0 0.5rem 0; font-size: 0.9rem; color: #64748b; font-weight: 600; }

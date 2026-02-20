@@ -3,8 +3,13 @@
     <h1>One-To-One (Contracts)</h1>
     <button type="button" class="btn-primary" (click)="openCreate()">Create One-To-One</button>
   </header>
-  <div *ngIf="loading" class="loading">Loading…</div>
-  <dx-data-grid *ngIf="!loading" [dataSource]="contracts" [showBorders]="true" keyExpr="id">
+  <p *ngIf="error" class="error">{{ error }}</p>
+  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <div *ngIf="!loading && !error && !contracts.length" class="empty-state">
+    <p>No One-To-One contracts yet.</p>
+    <button type="button" class="btn-primary" (click)="openCreate()">Create One-To-One</button>
+  </div>
+  <dx-data-grid *ngIf="!loading && !error && contracts.length" [dataSource]="contracts" [showBorders]="true" keyExpr="id">
     <dxi-column dataField="teacherName" caption="Teacher"></dxi-column>
     <dxi-column dataField="studentName" caption="Student"></dxi-column>
     <dxi-column dataField="status" caption="Status"></dxi-column>
@@ -61,7 +66,7 @@
     </div>
     <div class="modal-actions">
       <button type="button" (click)="submitCreate()">Create</button>
-      <button type="button" (click)="showCreate = false">Cancel</button>
+      <button type="button" (click)="closeCreate()">Cancel</button>
     </div>
   </app-card>
 </div>

@@ -228,6 +228,23 @@ All config is externalized; there are **no hardcoded values** in code for URLs, 
 - **Backend:** `mvn clean package` (or `./mvnw clean package`)
 - **Frontend:** `npm run build` (output in `frontend/dist/frontend`)
 
+## Frontend UI/UX standards
+
+Admin, Teacher, and Parent areas follow consistent patterns:
+
+- **Page headers** – Each main view uses a `<header class="page-header">` with `<h1>` (and optional hint/actions).
+- **Error states** – List/detail pages show a clear error message on load failure (e.g. “Failed to load … Please try again.”) with `.error` styling (red background).
+- **Empty states** – When a list or section has no data, show a short message (e.g. “No teachers yet.”) and, where relevant, a CTA (e.g. “Onboard teacher”). Use `.empty-state` (muted background, centered).
+- **Loading** – Use `aria-live="polite"` on loading text for screen readers.
+- **Modals** – Primary action first (Create / Save / Add), Cancel second. Use “Cancel” for the secondary action when the modal is for an action; use “Close” only when showing a result (e.g. after success). Prefer component methods (e.g. `closeCreate()`) over inline `showModal = false`.
+- **Form dropdowns** – Use placeholder options (e.g. “— Select student —”) and default to empty when opening create/add modals.
+- **Accessibility** – Layouts use `aria-label` on nav, main content, and user menu; `role="region"` or `role="banner"` where appropriate.
+
+These patterns are applied across **Admin** (dashboard, teachers, parents, students, contracts, group classes, attendance, payments, reports, settings), **Teacher** (dashboard, availability, students, sessions, calendar, group classes, homework & grades, profile), and **Parent** (My students, student overview, student calendar).
+
 ## Development workflow
 
-After each logical change: update this README if the change affects setup, behaviour, or architecture; then commit and push with a clear, conventional message (e.g. `feat: ...`, `fix: ...`, `docs: ...`).
+After each logical change:
+
+1. **Update this README** if the change affects setup, behaviour, or architecture (including UI/UX).
+2. **Commit and push** with a clear, conventional message (e.g. `feat: ...`, `fix: ...`, `docs: ...`).

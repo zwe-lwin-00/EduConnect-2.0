@@ -9,6 +9,7 @@ import { AdminApiService, ParentDto, CreateParentResponse } from '../../../../co
 export class AdminParentsComponent implements OnInit {
   parents: ParentDto[] = [];
   loading = true;
+  error = '';
   showCreate = false;
   form: { email: string; fullName: string; phone: string } = { email: '', fullName: '', phone: '' };
   createResult: CreateParentResponse | null = null;
@@ -21,9 +22,10 @@ export class AdminParentsComponent implements OnInit {
 
   load(): void {
     this.loading = true;
+    this.error = '';
     this.api.getParents().subscribe({
       next: (list) => { this.parents = list; this.loading = false; },
-      error: () => this.loading = false
+      error: () => { this.loading = false; this.error = 'Failed to load parents. Please try again.'; }
     });
   }
 

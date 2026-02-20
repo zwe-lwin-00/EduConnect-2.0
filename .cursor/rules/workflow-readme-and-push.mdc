@@ -1,0 +1,22 @@
+---
+description: After each instruction, update README and git push with a suitable commit message
+alwaysApply: true
+---
+
+# Workflow: README + Git push after each instruction
+
+After completing any code, config, or UI/UX change:
+
+1. **Update README**  
+   - If the change affects setup, behaviour, architecture, or UI/UX, update `README.md` (or `frontend/README.md` where relevant).  
+   - Add or adjust sections so the docs stay accurate (e.g. new features, UI standards, env vars).
+
+2. **Commit and push**  
+   - Stage the relevant files (including README when updated).  
+   - Commit with a **clear, conventional message**, e.g.:  
+     - `feat: add error and empty states to Parent student overview`  
+     - `fix: modal button order in teacher sessions`  
+     - `docs: document frontend UI/UX standards in README`  
+   - Push to the current branch.
+
+Use present tense or imperative in the commit message (e.g. "add" not "added"). Keep the message short but specific enough to understand the change from history.

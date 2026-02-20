@@ -1,5 +1,8 @@
 .page-block { padding: 1rem; }
 .back { display: inline-block; margin-bottom: 1rem; color: #0f3460; text-decoration: none; }
+.error { color: #b91c1c; margin-bottom: 1rem; padding: 0.75rem; background: #fef2f2; border-radius: 8px; }
+.loading { color: #64748b; padding: 0.5rem 0; }
+.section-empty { color: #64748b; margin: 0 0 0.5rem 0; font-size: 0.9rem; }
 .invalid-student { padding: 1.5rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b; }
 .invalid-student p { margin: 0 0 0.5rem 0; }
 .invalid-student a { color: #0f3460; }

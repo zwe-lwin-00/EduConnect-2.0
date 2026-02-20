@@ -9,6 +9,7 @@ import { AdminApiService, AttendanceDto } from '../../../../core/services/admin-
 export class AdminAttendanceComponent implements OnInit {
   list: AttendanceDto[] = [];
   loading = true;
+  error = '';
   date = '';
   showOverride = false;
   selected: AttendanceDto | null = null;
@@ -22,9 +23,10 @@ export class AdminAttendanceComponent implements OnInit {
 
   load(): void {
     this.loading = true;
+    this.error = '';
     this.api.getAttendance(this.date || undefined).subscribe({
       next: list => { this.list = list; this.loading = false; },
-      error: () => this.loading = false
+      error: () => { this.loading = false; this.error = 'Failed to load attendance. Please try again.'; }
     });
   }
 

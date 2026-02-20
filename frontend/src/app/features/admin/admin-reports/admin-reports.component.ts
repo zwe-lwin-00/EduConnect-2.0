@@ -14,6 +14,7 @@ export class AdminReportsComponent implements OnInit {
   daily: ReportDto[] = [];
   monthly: ReportRow[] = [];
   loading = true;
+  error = '';
   from = '';
   to = '';
   totalSessions = 0;
@@ -34,6 +35,7 @@ export class AdminReportsComponent implements OnInit {
   loadDaily(): void {
     if (!this.from || !this.to) return;
     this.loading = true;
+    this.error = '';
     this.api.getDailyReport(this.from, this.to).subscribe({
       next: list => {
         this.daily = list;
@@ -41,7 +43,7 @@ export class AdminReportsComponent implements OnInit {
         this.totalRevenue = list.reduce((s, r) => s + (r.revenue ?? 0), 0);
         this.loading = false;
       },
-      error: () => this.loading = false
+      error: () => { this.loading = false; this.error = 'Failed to load reports. Please try again.'; }
     });
   }
 

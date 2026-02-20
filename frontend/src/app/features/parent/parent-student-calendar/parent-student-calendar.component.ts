@@ -29,6 +29,7 @@ export class ParentStudentCalendarComponent implements OnInit {
   year = new Date().getFullYear();
   month = new Date().getMonth() + 1;
   loading = true;
+  error = '';
   invalidStudent = false;
   items: CalendarItem[] = [];
   holidays: string[] = [];
@@ -58,12 +59,13 @@ export class ParentStudentCalendarComponent implements OnInit {
           this.loading = false;
         }
       },
-      error: () => { this.invalidStudent = true; this.loading = false; }
+      error: () => { this.loading = false; this.error = 'Failed to load. Please try again.'; }
     });
   }
 
   load(): void {
     this.loading = true;
+    this.error = '';
     this.api.getStudentCalendar(this.studentId, this.year, this.month).subscribe({
       next: (res) => {
         this.items = res.items || [];
@@ -71,7 +73,7 @@ export class ParentStudentCalendarComponent implements OnInit {
         this.buildGrid();
         this.loading = false;
       },
-      error: () => this.loading = false
+      error: () => { this.loading = false; this.error = 'Failed to load calendar. Please try again.'; }
     });
   }
 

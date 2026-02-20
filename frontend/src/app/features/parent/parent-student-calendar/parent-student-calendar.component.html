@@ -1,11 +1,12 @@
 <div class="page-block">
   <a routerLink="/parent/student/{{ studentId }}" class="back">← {{ studentName || 'Student' }}</a>
-  <div *ngIf="loading" class="loading">Loading…</div>
+  <p *ngIf="error" class="error">{{ error }}</p>
+  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
   <div *ngIf="!loading && invalidStudent" class="invalid-student">
     <p>Invalid student.</p>
     <p><a routerLink="/parent">Return to My students</a>.</p>
   </div>
-  <div *ngIf="!loading && !invalidStudent">
+  <div *ngIf="!loading && !error && !invalidStudent">
     <header class="page-header">
       <h1>Calendar{{ studentName ? ': ' + studentName : '' }}</h1>
       <div class="month-nav">

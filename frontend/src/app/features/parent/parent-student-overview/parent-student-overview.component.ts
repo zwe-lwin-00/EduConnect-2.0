@@ -12,6 +12,7 @@ import { ParentApiService, StudentOverviewDto } from '../../../../core/services/
 export class ParentStudentOverviewComponent implements OnInit {
   overview: StudentOverviewDto | null = null;
   loading = true;
+  error = '';
   invalidStudent = false;
   studentId = '';
 
@@ -43,8 +44,9 @@ export class ParentStudentOverviewComponent implements OnInit {
           this.overview = o;
         }
         this.loading = false;
+        this.error = '';
       },
-      error: () => this.loading = false
+      error: () => { this.loading = false; this.error = 'Failed to load overview. Please try again.'; }
     });
   }
 }

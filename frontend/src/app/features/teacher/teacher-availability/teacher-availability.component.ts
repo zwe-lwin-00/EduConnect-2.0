@@ -11,6 +11,7 @@ const DAYS = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export class TeacherAvailabilityComponent implements OnInit {
   slots: AvailabilitySlotDto[] = [];
   loading = true;
+  error = '';
   saving = false;
   newSlot = { dayOfWeek: 1, startTime: '09:00', endTime: '17:00' };
 
@@ -20,8 +21,8 @@ export class TeacherAvailabilityComponent implements OnInit {
 
   ngOnInit(): void {
     this.api.getAvailability().subscribe({
-      next: (list) => { this.slots = list; this.loading = false; },
-      error: () => this.loading = false
+      next: (list) => { this.slots = list; this.loading = false; this.error = ''; },
+      error: () => { this.loading = false; this.error = 'Failed to load availability. Please try again.'; }
     });
   }
 

@@ -11,6 +11,7 @@ export class TeacherHomeworkGradesComponent implements OnInit {
   grades: TeacherGradeDto[] = [];
   students: TeacherStudentDto[] = [];
   loading = true;
+  error = '';
   showHomeworkForm = false;
   showGradeForm = false;
   homeworkForm = { studentId: '', title: '', description: '', dueDate: '' };
@@ -28,15 +29,20 @@ export class TeacherHomeworkGradesComponent implements OnInit {
 
   load(): void {
     this.loading = true;
+    this.error = '';
     this.api.getHomework().subscribe({
       next: (list) => { this.homework = list; this.loading = false; },
-      error: () => this.loading = false
+      error: () => { this.loading = false; this.error = 'Failed to load homework. Please try again.'; }
     });
     this.api.getGrades().subscribe(g => this.grades = g);
   }
 
+  closeHomeworkForm(): void { this.showHomeworkForm = false; }
+  closeGradeForm(): void { this.showGradeForm = false; }
+  closeFeedback(): void { this.showFeedback = false; this.selectedHomework = null; }
+
   openHomeworkForm(): void {
-    this.homeworkForm = { studentId: this.students[0]?.id || '', title: '', description: '', dueDate: new Date().toISOString().slice(0, 10) };
+    this.homeworkForm = { studentId: '', title: '', description: '', dueDate: new Date().toISOString().slice(0, 10) };
     this.showHomeworkForm = true;
   }
 
@@ -49,7 +55,7 @@ export class TeacherHomeworkGradesComponent implements OnInit {
 
   openGradeForm(): void {
     this.gradeForm = {
-      studentId: this.students[0]?.id || '',
+      studentId: '',
       title: '',
       gradeValue: 100,
       maxValue: 100,

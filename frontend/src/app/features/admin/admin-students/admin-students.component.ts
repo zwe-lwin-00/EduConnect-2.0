@@ -10,6 +10,7 @@ export class AdminStudentsComponent implements OnInit {
   students: StudentDto[] = [];
   parents: ParentDto[] = [];
   loading = true;
+  error = '';
   showAdd = false;
   form: { fullName: string; grade: string; dateOfBirth: string; parentId: string } = { fullName: '', grade: 'P1', dateOfBirth: '', parentId: '' };
 
@@ -22,15 +23,20 @@ export class AdminStudentsComponent implements OnInit {
 
   load(): void {
     this.loading = true;
+    this.error = '';
     this.api.getStudents().subscribe({
       next: (list) => { this.students = list; this.loading = false; },
-      error: () => this.loading = false
+      error: () => { this.loading = false; this.error = 'Failed to load students. Please try again.'; }
     });
   }
 
   openAdd(): void {
     this.showAdd = true;
-    this.form = { fullName: '', grade: 'P1', dateOfBirth: '', parentId: this.parents[0]?.id || '' };
+    this.form = { fullName: '', grade: 'P1', dateOfBirth: '', parentId: '' };
+  }
+
+  closeAdd(): void {
+    this.showAdd = false;
   }
 
   submitAdd(): void {

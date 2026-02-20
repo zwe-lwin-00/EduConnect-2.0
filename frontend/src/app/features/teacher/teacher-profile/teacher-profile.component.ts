@@ -10,6 +10,7 @@ export class TeacherProfileComponent implements OnInit {
   profile: TeacherProfileDto | null = null;
   zoomJoinUrl = '';
   loading = true;
+  error = '';
   saving = false;
 
   constructor(public api: TeacherApiService) {}
@@ -20,8 +21,9 @@ export class TeacherProfileComponent implements OnInit {
         this.profile = p;
         this.zoomJoinUrl = p?.zoomJoinUrl ?? '';
         this.loading = false;
+        this.error = '';
       },
-      error: () => this.loading = false
+      error: () => { this.loading = false; this.error = 'Failed to load profile. Please try again.'; }
     });
   }
 

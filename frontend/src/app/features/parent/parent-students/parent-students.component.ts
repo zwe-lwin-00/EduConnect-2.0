@@ -9,13 +9,14 @@ import { ParentApiService, ParentStudentDto } from '../../../../core/services/pa
 export class ParentStudentsComponent implements OnInit {
   students: ParentStudentDto[] = [];
   loading = true;
+  error = '';
 
   constructor(public api: ParentApiService) {}
 
   ngOnInit(): void {
     this.api.getStudents().subscribe({
-      next: (list) => { this.students = list; this.loading = false; },
-      error: () => this.loading = false
+      next: (list) => { this.students = list; this.loading = false; this.error = ''; },
+      error: () => { this.loading = false; this.error = 'Failed to load students. Please try again.'; }
     });
   }
 }

@@ -8,5 +8,7 @@
 .content { flex: 1; background: #f8fafc; overflow: auto; }
 .user { padding: 1rem; border-top: 1px solid #334155; font-size: 0.85rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
 .user app-notification-bell { margin-right: 0.25rem; }
+.user-name { font-weight: 500; color: #e2e8f0; }
+.user-role { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-left: 0.25rem; }
 .user button { margin-top: 0; padding: 0.35rem 0.75rem; background: transparent; border: 1px solid #64748b; color: #94a3b8; border-radius: 6px; cursor: pointer; }
 .user button:hover { background: rgba(255,255,255,0.1); }

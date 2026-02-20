@@ -1,8 +1,13 @@
 <div class="page-block">
-  <h1>My students</h1>
-  <div *ngIf="loading" class="loading">Loading…</div>
-  <div *ngIf="!loading && !students.length" class="empty">No students linked to your account.</div>
-  <div *ngIf="!loading && students.length" class="student-cards">
+  <header class="page-header">
+    <h1>My students</h1>
+  </header>
+  <p *ngIf="error" class="error">{{ error }}</p>
+  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <div *ngIf="!loading && !error && !students.length" class="empty-state">
+    <p>No students linked to your account.</p>
+  </div>
+  <div *ngIf="!loading && !error && students.length" class="student-cards">
     <a *ngFor="let s of students" [routerLink]="['/parent/student', s.id]" class="student-card">
       <h3>{{ s.fullName }}</h3>
       <p>Grade {{ s.grade }}</p>
