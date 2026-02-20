@@ -1,6 +1,7 @@
 package com.educonnect.web.parent;
 
 import com.educonnect.application.parent.dto.StudentOverviewDto;
+import com.educonnect.config.AppProperties;
 import com.educonnect.domain.*;
 import com.educonnect.repository.*;
 import com.educonnect.web.common.CurrentUserResolver;
@@ -30,6 +31,7 @@ public class ParentStudentOverviewController {
     private final GroupClassEnrollmentRepository enrollmentRepository;
     private final GroupSessionRepository groupSessionRepository;
     private final GroupSessionAttendanceRepository groupSessionAttendanceRepository;
+    private final AppProperties appProperties;
 
     @GetMapping("/{studentId}/overview")
     public ResponseEntity<StudentOverviewDto> overview(@PathVariable String studentId) {
@@ -46,7 +48,7 @@ public class ParentStudentOverviewController {
             assignedTeacherName = contracts.get(0).getTeacher().getUser().getFullName();
         }
 
-        LocalDate from = LocalDate.now().minusMonths(3);
+        LocalDate from = LocalDate.now().minusMonths(appProperties.getParentOverviewRecentMonths());
         LocalDate to = LocalDate.now();
         List<StudentOverviewDto.SessionSummaryDto> recentSessions = new ArrayList<>();
         for (AttendanceLog log : attendanceLogRepository.findByContract_Student_IdAndSessionDateBetweenOrderBySessionDateDesc(studentId, from, to)) {
@@ -72,7 +74,8 @@ public class ParentStudentOverviewController {
         }
         recentSessions.sort((a, b) -> (b.getSessionDate() != null && a.getSessionDate() != null)
                 ? b.getSessionDate().compareTo(a.getSessionDate()) : 0);
-        if (recentSessions.size() > 20) recentSessions = recentSessions.subList(0, 20);
+        int maxRecent = appProperties.getParentOverviewRecentSessionsMax();
+        if (recentSessions.size() > maxRecent) recentSessions = recentSessions.subList(0, maxRecent);
 
         List<StudentOverviewDto.HomeworkSummaryDto> homework = homeworkRepository.findByStudent_Id(studentId).stream()
                 .map(h -> new StudentOverviewDto.HomeworkSummaryDto(
@@ -85,8 +88,9 @@ public class ParentStudentOverviewController {
                 .collect(Collectors.toList());
 
         int totalSessions = attendanceLogRepository.findByContract_Student_Id(studentId).size();
+        int years = appProperties.getParentOverviewTotalSessionsYears();
         totalSessions += groupSessionAttendanceRepository.findByStudent_IdAndGroupSession_SessionDateBetweenOrderByGroupSession_SessionDateDesc(
-                studentId, LocalDate.now().minusYears(1), LocalDate.now()).size();
+                studentId, LocalDate.now().minusYears(years), LocalDate.now()).size();
         int completedHomework = (int) homework.stream().filter(h -> "GRADED".equals(h.getStatus()) || "SUBMITTED".equals(h.getStatus())).count();
 
         StudentOverviewDto dto = StudentOverviewDto.builder()

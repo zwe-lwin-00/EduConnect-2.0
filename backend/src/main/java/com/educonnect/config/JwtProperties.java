@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "jwt")
 public class JwtProperties {
 
-    private String secret = "EduConnectSecretKeyForJWTTokenGenerationChangeInProduction";
-    private long expirationMs = 86400000L;
-    private long refreshExpirationMs = 604800000L;
+    private String secret;   // from jwt.secret (set in application.yml or JWT_SECRET env)
+    private long expirationMs = 86400000L;   // from jwt.expiration-ms
+    private long refreshExpirationMs = 604800000L;   // from jwt.refresh-expiration-ms
 
     public String getSecret() { return secret; }
     public void setSecret(String secret) { this.secret = secret; }

@@ -4,14 +4,7 @@ Full-stack application: **Angular 15** frontend and **Java 17** Spring Boot API.
 
 ## Default Admin Account (auto-creation on startup)
 
-When the API starts, it **ensures a default admin account exists** (created on first run if missing):
-
-- **Email:** `admin@educonnect.com`
-- **Password:** `1qaz!QAZ`
-
-Check the API console on every startup:  
-`EduConnect startup: default admin check (admin@educonnect.com). Created on first run if missing.`  
-On first run you’ll see: `Default admin account CREATED. Login at /auth/login with: admin@educonnect.com ...`
+When the API starts, it **ensures a default admin account exists** (created on first run if missing). Credentials and all other config are **driven from configuration** (see **Configuration** below); defaults in `application.yml` can be overridden via environment variables.
 
 ## Names (full name only)
 
@@ -150,7 +143,7 @@ mvn spring-boot:run
 - H2 console (when using `dev` profile): http://localhost:8080/h2-console
 - Login: `POST /auth/login` with `{"email":"admin@educonnect.com","password":"1qaz!QAZ"}`. Response includes **access token** and **refresh token** (refresh token is stored hashed in DB). Use **refresh**: `POST /auth/refresh` with `{"refreshToken":"..."}` to get new access + refresh tokens (rotation: old refresh token is revoked). **Logout**: `POST /auth/logout` with `Authorization: Bearer <access token>` revokes all refresh tokens for that user. The frontend on **401** tries refresh once and retries the request; on refresh failure it logs out and redirects to login.
 
-Configuration is in `src/main/resources/application.yml`: app thresholds, seed-data (default admin), JWT, CORS, etc.
+Configuration is in `src/main/resources/application.yml`: app thresholds, seed-data (default admin), JWT, CORS, etc. **No hardcoded config in code** – all values come from `application.yml` (with env overrides). See **Configuration (dynamic config)** below.
 
 ## Frontend (Angular 15 + DevExtreme)
 
@@ -217,6 +210,18 @@ The following flows are implemented and verified:
 - **Role-based routing** – `/admin/*`, `/teacher/*`, `/parent/*` protected by AuthGuard + RoleGuard with the corresponding roles.
 - **API ↔ frontend IDs** – Contract, student, teacher, parent IDs are passed consistently (e.g. route params, request bodies, DTOs). Payloads match backend DTOs (e.g. CreateContractRequest, StudentDto, TeacherDto, CreateParentRequest).
 - **Invalid Parent student route** – For `/parent/student/:studentId`, the frontend **validates** that `studentId` is one of the current parent’s students (from `GET /parent/students`) **before** calling `GET /parent/students/:studentId/overview`. If the ID is not in the list (e.g. `/parent/student/xyz` or another parent’s student), the app shows **“Invalid student”** and does **not** call the overview API.
+
+## Configuration (dynamic config)
+
+All config is externalized; there are **no hardcoded values** in code for URLs, limits, or secrets.
+
+- **Backend** – `application.yml` defines defaults; **environment variables** override them. Examples:
+  - **App:** `APP_TIMEZONE`, `APP_PARENT_OVERVIEW_RECENT_MONTHS`, `APP_PARENT_OVERVIEW_RECENT_SESSIONS_MAX`, `APP_PARENT_OVERVIEW_TOTAL_SESSIONS_YEARS`, `APP_REPORT_DEFAULT_MONTHS_BACK`, `API_PUBLIC_URL`, etc.
+  - **Seed admin:** `SEED_DATA_ADMIN_EMAIL`, `SEED_DATA_ADMIN_PASSWORD`, `SEED_DATA_ADMIN_FULL_NAME`
+  - **JWT:** `JWT_SECRET` (set in production), `JWT_EXPIRATION_MS`, `JWT_REFRESH_EXPIRATION_MS`
+  - **CORS:** `CORS_ALLOWED_ORIGINS`
+- **Public config endpoint** – `GET /config` (no auth) returns `{ "apiUrl": "<app.api-public-url>" }` so the frontend can use the correct API base URL at runtime.
+- **Frontend** – At bootstrap the app calls `GET {environment.apiUrl}/config` and, if present, uses the returned `apiUrl` for all API requests. Build-time `environment.apiUrl` (e.g. in `environment.ts` / `environment.prod.ts`) is only the **initial** URL used to fetch config; after that, the backend-driven URL is used. Same build can therefore target different backends by configuring the initial URL (or by deploying with the backend and using a relative path).
 
 ## Build
 

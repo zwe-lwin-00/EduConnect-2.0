@@ -13,6 +13,11 @@ public class AppProperties {
     private double defaultHourlyRateForRevenue = 0;
     private double groupSessionMinHoursPerStudent = 0.25;
     private int passwordGenerationLength = 12;
+    private int parentOverviewRecentMonths = 3;
+    private int parentOverviewRecentSessionsMax = 20;
+    private int parentOverviewTotalSessionsYears = 1;
+    private int reportDefaultMonthsBack = 11;
+    private String apiPublicUrl = "http://localhost:8080";
 
     public int getSubscriptionExpiringAlertDays() {
         return subscriptionExpiringAlertDays;
@@ -60,5 +65,45 @@ public class AppProperties {
 
     public void setPasswordGenerationLength(int passwordGenerationLength) {
         this.passwordGenerationLength = passwordGenerationLength;
+    }
+
+    public int getParentOverviewRecentMonths() {
+        return parentOverviewRecentMonths;
+    }
+
+    public void setParentOverviewRecentMonths(int parentOverviewRecentMonths) {
+        this.parentOverviewRecentMonths = parentOverviewRecentMonths;
+    }
+
+    public int getParentOverviewRecentSessionsMax() {
+        return parentOverviewRecentSessionsMax;
+    }
+
+    public void setParentOverviewRecentSessionsMax(int parentOverviewRecentSessionsMax) {
+        this.parentOverviewRecentSessionsMax = parentOverviewRecentSessionsMax;
+    }
+
+    public int getParentOverviewTotalSessionsYears() {
+        return parentOverviewTotalSessionsYears;
+    }
+
+    public void setParentOverviewTotalSessionsYears(int parentOverviewTotalSessionsYears) {
+        this.parentOverviewTotalSessionsYears = parentOverviewTotalSessionsYears;
+    }
+
+    public int getReportDefaultMonthsBack() {
+        return reportDefaultMonthsBack;
+    }
+
+    public void setReportDefaultMonthsBack(int reportDefaultMonthsBack) {
+        this.reportDefaultMonthsBack = reportDefaultMonthsBack;
+    }
+
+    public String getApiPublicUrl() {
+        return apiPublicUrl;
+    }
+
+    public void setApiPublicUrl(String apiPublicUrl) {
+        this.apiPublicUrl = apiPublicUrl;
     }
 }

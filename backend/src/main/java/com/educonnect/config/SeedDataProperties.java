@@ -10,12 +10,12 @@ import java.util.List;
 public class SeedDataProperties {
 
     private Admin admin = new Admin();
-    private List<String> roles = List.of("ADMIN", "TEACHER", "PARENT");
+    private List<String> roles = List.of("ADMIN", "TEACHER", "PARENT");  // from application.yml
 
     public static class Admin {
-        private String email = "admin@educonnect.com";
-        private String password = "1qaz!QAZ";
-        private String fullName = "EduConnect Admin";
+        private String email;   // from seed-data.admin.email
+        private String password;   // from seed-data.admin.password
+        private String fullName;   // from seed-data.admin.full-name
 
         public String getEmail() { return email; }
         public void setEmail(String email) { this.email = email; }

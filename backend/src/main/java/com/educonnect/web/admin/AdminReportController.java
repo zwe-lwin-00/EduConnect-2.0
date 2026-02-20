@@ -55,7 +55,7 @@ public class AdminReportController {
     public List<ReportDto> monthly(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
-        if (from == null) from = LocalDate.now().withDayOfMonth(1).minusMonths(11);
+        if (from == null) from = LocalDate.now().withDayOfMonth(1).minusMonths(appProperties.getReportDefaultMonthsBack());
         if (to == null) to = LocalDate.now();
         LocalDate start = from.withDayOfMonth(1);
         List<ReportDto> result = new ArrayList<>();

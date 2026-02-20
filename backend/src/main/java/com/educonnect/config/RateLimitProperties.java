@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "rate-limiting")
 public class RateLimitProperties {
 
-    private boolean enabled = false;
-    private int requestsPerMinute = 60;
-    private boolean loginRateLimitEnabled = true;
-    private int loginMaxAttemptsPerMinute = 10;
+    private boolean enabled;   // from rate-limiting.enabled
+    private int requestsPerMinute;   // from rate-limiting.requests-per-minute
+    private boolean loginRateLimitEnabled;   // from rate-limiting.login-rate-limit-enabled
+    private int loginMaxAttemptsPerMinute;   // from rate-limiting.login-max-attempts-per-minute
 
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }

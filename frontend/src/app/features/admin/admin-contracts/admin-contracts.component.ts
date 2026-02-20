@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminApiService, ContractDto, TeacherDto, StudentDto, SubscriptionDto } from '../../../../core/services/admin-api.service';
 
-@Component({
-  selector: 'app-admin-contracts',
-  templateUrl: './admin-contracts.component.html',
-  styleUrls: ['./admin-contracts.component.css']
-})
 const DAY_LABELS: { value: number; label: string }[] = [
   { value: 1, label: 'Mon' }, { value: 2, label: 'Tue' }, { value: 3, label: 'Wed' },
   { value: 4, label: 'Thu' }, { value: 5, label: 'Fri' }, { value: 6, label: 'Sat' }, { value: 7, label: 'Sun' }
 ];
 
+@Component({
+  selector: 'app-admin-contracts',
+  templateUrl: './admin-contracts.component.html',
+  styleUrls: ['./admin-contracts.component.css']
+})
 export class AdminContractsComponent implements OnInit {
   contracts: ContractDto[] = [];
   teachers: TeacherDto[] = [];

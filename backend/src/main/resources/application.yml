@@ -21,36 +21,44 @@ spring:
     console:
       enabled: false
 
-# App – Dashboard and reporting
+# App – Dashboard and reporting (all configurable via env or this file)
 app:
-  timezone: Asia/Yangon   # Myanmar (UTC+6:30); "today" and reports use this; API serializes Instant as UTC (Z)
-  subscription-expiring-alert-days: 7
-  contract-expiring-alert-days: 14
-  contract-ending-soon-notification-days: 14
-  default-hourly-rate-for-revenue: 0
-  group-session-min-hours-per-student: 0.25
-  password-generation-length: 12
+  timezone: ${APP_TIMEZONE:Asia/Yangon}   # Myanmar (UTC+6:30); "today" and reports use this
+  subscription-expiring-alert-days: ${APP_SUBSCRIPTION_EXPIRING_ALERT_DAYS:7}
+  contract-expiring-alert-days: ${APP_CONTRACT_EXPIRING_ALERT_DAYS:14}
+  contract-ending-soon-notification-days: ${APP_CONTRACT_ENDING_SOON_DAYS:14}
+  default-hourly-rate-for-revenue: ${APP_DEFAULT_HOURLY_RATE:0}
+  group-session-min-hours-per-student: ${APP_GROUP_SESSION_MIN_HOURS:0.25}
+  password-generation-length: ${APP_PASSWORD_GENERATION_LENGTH:12}
+  # Parent student overview
+  parent-overview-recent-months: ${APP_PARENT_OVERVIEW_RECENT_MONTHS:3}
+  parent-overview-recent-sessions-max: ${APP_PARENT_OVERVIEW_RECENT_SESSIONS_MAX:20}
+  parent-overview-total-sessions-years: ${APP_PARENT_OVERVIEW_TOTAL_SESSIONS_YEARS:1}
+  # Admin reports default range when from/to not provided
+  report-default-months-back: ${APP_REPORT_DEFAULT_MONTHS_BACK:11}
+  # Public API URL (for frontend runtime config; CORS and links)
+  api-public-url: ${API_PUBLIC_URL:http://localhost:8080}
 
-# SeedData – Default admin and roles
+# SeedData – Default admin and roles (override via env: SEED_DATA_ADMIN_EMAIL, SEED_DATA_ADMIN_PASSWORD, SEED_DATA_ADMIN_FULL_NAME)
 seed-data:
   admin:
-    email: admin@educonnect.com
-    password: "1qaz!QAZ"
-    full-name: "EduConnect Admin"
+    email: ${SEED_DATA_ADMIN_EMAIL:admin@educonnect.com}
+    password: ${SEED_DATA_ADMIN_PASSWORD:1qaz!QAZ}
+    full-name: ${SEED_DATA_ADMIN_FULL_NAME:EduConnect Admin}
   roles:
     - ADMIN
     - TEACHER
     - PARENT
 
-# JWT
+# JWT (override via env: JWT_SECRET, JWT_EXPIRATION_MS, JWT_REFRESH_EXPIRATION_MS; set JWT_SECRET in production)
 jwt:
   secret: ${JWT_SECRET:EduConnectSecretKeyForJWTTokenGenerationChangeInProduction}
-  expiration-ms: 86400000  # 24 hours
-  refresh-expiration-ms: 604800000  # 7 days
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}   # 24 hours
+  refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}   # 7 days
 
 # CORS (allowed origins for Angular app)
 cors:
-  allowed-origins: http://localhost:4200
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
   allowed-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
   allowed-headers: "*"
   allow-credentials: true
