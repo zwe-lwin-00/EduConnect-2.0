@@ -16,6 +16,7 @@ import { Component } from '@angular/core';
           <a routerLink="/teacher/profile" routerLinkActive="active">Profile</a>
         </nav>
         <div class="user">
+          <app-notification-bell></app-notification-bell>
           <app-logout-button></app-logout-button>
         </div>
       </aside>
@@ -29,7 +30,7 @@ import { Component } from '@angular/core';
     '.sidebar a { color: #94a3b8; text-decoration: none; display: block; padding: 0.5rem 0; }',
     '.sidebar a.active { color: #fff; }',
     '.content { flex: 1; padding: 1.5rem; background: #f8fafc; }',
-    '.user { margin-top: 1rem; }'
+    '.user { margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; }'
   ]
 })
 export class TeacherLayoutComponent {}

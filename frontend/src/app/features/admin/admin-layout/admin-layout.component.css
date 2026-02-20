@@ -6,6 +6,7 @@
 .sidebar nav a:hover { color: #fff; background: rgba(255,255,255,0.05); }
 .sidebar nav a.active { color: #fff; background: #0f3460; }
 .content { flex: 1; background: #f8fafc; overflow: auto; }
-.user { padding: 1rem; border-top: 1px solid #334155; font-size: 0.85rem; }
-.user button { margin-top: 0.5rem; padding: 0.35rem 0.75rem; background: transparent; border: 1px solid #64748b; color: #94a3b8; border-radius: 6px; cursor: pointer; }
+.user { padding: 1rem; border-top: 1px solid #334155; font-size: 0.85rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.user app-notification-bell { margin-right: 0.25rem; }
+.user button { margin-top: 0; padding: 0.35rem 0.75rem; background: transparent; border: 1px solid #64748b; color: #94a3b8; border-radius: 6px; cursor: pointer; }
 .user button:hover { background: rgba(255,255,255,0.1); }

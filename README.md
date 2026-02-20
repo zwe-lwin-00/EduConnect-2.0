@@ -85,6 +85,10 @@ Admin can **Freeze** or **Activate** a student from the **Students** page. Froze
 - **Teacher** – Dashboard, availability (weekly), assigned students, sessions (One-To-One and Group check-in/out and notes; “Join Zoom meeting” when session in progress), group classes (edit name/Zoom/active; students enrolled by One-To-One or Group subscription), homework & grades, profile (set default Zoom join URL for 1:1).
 - **Parent** – My Students and student learning overview (assigned teacher, sessions, homework, grades); parent notifications/alerts driven by config (e.g. contract or subscription ending soon). No self-registration; admin creates parent and shares credentials.
 
+## Notifications (bell and Mark all as read)
+
+Admin, Teacher, and Parent layouts include a **notification bell** in the header/sidebar. Notifications are stored per user. The dropdown lists notifications and includes **“Mark all as read”** for better UX when there are many. **API:** `GET /notifications` returns the current user’s notifications; `POST /notifications/mark-all-read` marks all stored notifications for the current user as read. The `/notifications/**` endpoints are available to any authenticated role.
+
 ## Time zone (Myanmar, Asia/Yangon UTC+6:30)
 
 - **Backend** – Default time zone is set to `Asia/Yangon` (`app.timezone` in `application.yml`). “Today” and report date ranges use Myanmar date. Date/time values in the API are serialized as **UTC with Z** (ISO-8601) so the client can display them correctly.

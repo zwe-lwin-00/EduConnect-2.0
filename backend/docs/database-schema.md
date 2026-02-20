@@ -297,6 +297,19 @@ No FKs.
 
 ---
 
+### notifications
+
+| Column     | Type         | Notes                          |
+|------------|--------------|--------------------------------|
+| id         | UUID (PK)    |                                |
+| user_id    | UUID (FK)    | NOT NULL → application_users   |
+| title      | VARCHAR      | NOT NULL                       |
+| message    | VARCHAR(2000)|                                |
+| read       | BOOLEAN      | NOT NULL, default false        |
+| created_at | TIMESTAMP    | NOT NULL                       |
+
+**Relationships:** Many-to-one **user** → `application_users`.
+
 ### system_settings
 
 | Column     | Type         | Notes                          |

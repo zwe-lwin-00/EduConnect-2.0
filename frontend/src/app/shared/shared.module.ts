@@ -8,6 +8,7 @@ import { PrimaryButtonComponent } from './components/primary-button/primary-butt
 import { BrandComponent } from './components/brand/brand.component';
 import { LogoutButtonComponent } from './components/logout-button/logout-button.component';
 import { CardComponent } from './components/card/card.component';
+import { NotificationBellComponent } from './components/notification-bell/notification-bell.component';
 import { MyanmarDatePipe } from './pipes/myanmar-date.pipe';
 
 /**
@@ -21,6 +22,7 @@ import { MyanmarDatePipe } from './pipes/myanmar-date.pipe';
     BrandComponent,
     LogoutButtonComponent,
     CardComponent,
+    NotificationBellComponent,
     MyanmarDatePipe
   ],
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
@@ -31,6 +33,7 @@ import { MyanmarDatePipe } from './pipes/myanmar-date.pipe';
     BrandComponent,
     LogoutButtonComponent,
     CardComponent,
+    NotificationBellComponent,
     MyanmarDatePipe
   ]
 })

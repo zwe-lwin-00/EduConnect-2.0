@@ -1,0 +1,26 @@
+<div class="notification-bell">
+  <button type="button" class="bell-btn" (click)="toggle()" title="Notifications" aria-label="Notifications">
+    <span class="bell-icon">🔔</span>
+    <span *ngIf="unreadCount > 0" class="badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
+  </button>
+  <div class="dropdown" *ngIf="open">
+    <div class="dropdown-header">
+      <span>Notifications</span>
+      <button type="button" class="mark-all" (click)="markAllRead()" [disabled]="unreadCount === 0">
+        Mark all as read
+      </button>
+    </div>
+    <div class="dropdown-body">
+      <div *ngIf="loading" class="loading">Loading…</div>
+      <div *ngIf="!loading && notifications.length === 0" class="empty">No notifications</div>
+      <div *ngIf="!loading && notifications.length > 0" class="list">
+        <div *ngFor="let n of notifications" class="item" [class.unread]="!n.read">
+          <div class="title">{{ n.title }}</div>
+          <div *ngIf="n.message" class="message">{{ n.message }}</div>
+          <div class="date">{{ n.createdAt | myanmarDate:'short' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="backdrop" *ngIf="open" (click)="close()"></div>
+</div>
