@@ -51,6 +51,17 @@ public class AdminStudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(toDto(student));
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<StudentDto> update(@PathVariable String id, @RequestBody java.util.Map<String, Object> body) {
+        return studentRepository.findById(id)
+                .map(s -> {
+                    if (body.containsKey("active")) s.setActive(Boolean.TRUE.equals(body.get("active")));
+                    studentRepository.save(s);
+                    return ResponseEntity.ok(toDto(s));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     private StudentDto toDto(Student s) {
         StudentDto dto = new StudentDto();
         dto.setId(s.getId());
@@ -59,6 +70,7 @@ public class AdminStudentController {
         dto.setDateOfBirth(s.getDateOfBirth());
         dto.setParentId(s.getParent().getId());
         dto.setParentName(s.getParent().getFullName());
+        dto.setActive(Boolean.TRUE.equals(s.getActive()));
         return dto;
     }
 }

@@ -38,4 +38,8 @@ export class AdminStudentsComponent implements OnInit {
     if (this.form.dateOfBirth) body.dateOfBirth = this.form.dateOfBirth;
     this.api.createStudent(body).subscribe({ next: () => { this.load(); this.showAdd = false; }, error: () => {} });
   }
+
+  setActive(s: StudentDto, active: boolean): void {
+    this.api.updateStudent(s.id, { active }).subscribe(() => this.load());
+  }
 }

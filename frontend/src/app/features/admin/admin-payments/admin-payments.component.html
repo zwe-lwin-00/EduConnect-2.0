@@ -1,6 +1,9 @@
 <div class="page-block">
-  <h1>Subscriptions / Payments</h1>
-  <p class="hint">Renew monthly: extend subscription by 1 or more months.</p>
+  <header class="page-header">
+    <h1>Subscriptions / Payments</h1>
+    <button type="button" class="btn-primary" (click)="openCreate()">Create subscription (monthly)</button>
+  </header>
+  <p class="hint">Monthly billing only. Create a new subscription (1 month) or renew existing via Renew.</p>
   <div *ngIf="loading" class="loading">Loading…</div>
   <dx-data-grid *ngIf="!loading" [dataSource]="subscriptions" [showBorders]="true" keyExpr="id">
     <dxi-column dataField="studentName" caption="Student"></dxi-column>
@@ -12,4 +15,30 @@
       <dxi-button hint="Renew 1 month" (onClick)="renew($event.row.data, 1)"></dxi-button>
     </dxi-column>
   </dx-data-grid>
+</div>
+<div class="modal" *ngIf="showCreate">
+  <app-card class="modal-content">
+    <h2>Create subscription (monthly)</h2>
+    <div class="form-group">
+      <label>Student</label>
+      <select [(ngModel)]="createForm.studentId">
+        <option *ngFor="let s of students" [value]="s.id">{{ s.fullName }} ({{ s.grade }})</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Type</label>
+      <select [(ngModel)]="createForm.type">
+        <option value="ONE_TO_ONE">One-To-One</option>
+        <option value="GROUP">Group</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Start date (end = start + 1 month)</label>
+      <input type="date" [(ngModel)]="createForm.startDate" />
+    </div>
+    <div class="modal-actions">
+      <button type="button" (click)="submitCreate()">Create</button>
+      <button type="button" (click)="showCreate = false">Cancel</button>
+    </div>
+  </app-card>
 </div>

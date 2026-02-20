@@ -57,11 +57,13 @@ public class AdminSubscriptionListController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
+        java.time.LocalDate startDate = req.getStartDate();
+        java.time.LocalDate endDate = req.getEndDate() != null ? req.getEndDate() : startDate.plusMonths(1);
         Subscription sub = Subscription.builder()
                 .student(student)
                 .type(type)
-                .startDate(req.getStartDate())
-                .endDate(req.getEndDate())
+                .startDate(startDate)
+                .endDate(endDate)
                 .status(Subscription.SubscriptionStatus.ACTIVE)
                 .build();
         sub = subscriptionRepository.save(sub);

@@ -9,6 +9,7 @@ public class StudentDto {
     private LocalDate dateOfBirth;
     private String parentId;
     private String parentName;
+    private boolean active = true;
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -22,4 +23,6 @@ public class StudentDto {
     public void setParentId(String parentId) { this.parentId = parentId; }
     public String getParentName() { return parentName; }
     public void setParentName(String parentName) { this.parentName = parentName; }
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 }

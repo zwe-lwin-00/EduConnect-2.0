@@ -11,8 +11,7 @@ public class CreateSubscriptionRequest {
     private String type;   // ONE_TO_ONE, GROUP
     @NotNull
     private LocalDate startDate;
-    @NotNull
-    private LocalDate endDate;
+    private LocalDate endDate;  // optional; if null, set to startDate + 1 month (monthly billing)
 
     public String getStudentId() { return studentId; }
     public void setStudentId(String studentId) { this.studentId = studentId; }

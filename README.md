@@ -22,15 +22,36 @@ On first run you’ll see: `Default admin account CREATED. Login at /auth/login 
 
 In the UI, the admin sidebar uses **One-To-One** and **Group**. The technical term "Contract" means an One-To-One class.
 
-## Billing Model
+## Billing Model (monthly only)
 
-Parent-paid subscriptions drive access. Admin creates subscriptions (student, type, duration), then creates classes and assigns teachers/students. Subscriptions have a period (start–end). Renew via Subscriptions/Payments or `POST /admin/subscriptions/{id}/renew?additionalMonths=1`.
+Parent-paid subscriptions drive access. Billing is **monthly only**:
+
+- **Create subscription** – Admin creates a subscription (student, type One-To-One or Group, start date). End date is set to start + 1 month.
+- **Renew** – Admin renews via **Subscriptions/Payments**: use “Renew 1 month” or `POST /admin/subscriptions/{id}/renew?additionalMonths=1`.
+
+Admin creates classes and assigns teachers/students; subscriptions define the billing period.
+
+## Teacher Management
+
+- **Onboard** – Admin creates teacher (email, full name, phone, education, bio, specializations). A temporary password is generated and shown once.
+- **Edit** – Admin can edit full name, phone, education, bio, and specializations (comma-separated).
+- **Verify / Reject** – Set verification status.
+- **Activate / Suspend** – Enable or disable the teacher account.
+
+## Check-in / Check-out
+
+- **Teacher** – From **Sessions**: start a 1:1 session, then **Check in**, **Check out**, and add **Lesson notes** for One-To-One and Group sessions.
+- **Admin override** – In **Attendance**, filter by date and use **Override** on any row to set check-in time, check-out time, hours used, and lesson notes.
+
+## Student Active / Freeze
+
+Admin can **Freeze** or **Activate** a student from the **Students** page. Frozen students can be excluded from active class lists where applicable.
 
 ## Roles & Access
 
-- **Admin** – Full control: dashboard, teachers, parents, students, One-To-One, Group, attendance, payments, reports, Settings.
-- **Teacher** – Dashboard, availability, students, sessions (1:1 and Group), group classes (Zoom, enrollments), homework & grades, profile.
-- **Parent** – My Students and student learning overview (read-only). No self-registration; admin creates parent and shares credentials.
+- **Admin** – Dashboard, teachers (onboard, edit, verify, reject, activate/suspend), parents & students (create, list; student active/freeze), One-To-One, Group, attendance (with override), subscriptions (monthly create & renew), reports, Settings.
+- **Teacher** – Dashboard, availability (weekly), assigned students, sessions (1:1 and Group check-in/out and notes), group classes (edit name/Zoom/active; enroll by contract), homework & grades, profile (read-only; Zoom URL for 1:1).
+- **Parent** – My Students and student learning overview (assigned teacher, sessions, homework, grades). No self-registration; admin creates parent and shares credentials.
 
 ## Tech stack
 

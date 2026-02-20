@@ -50,6 +50,7 @@ export interface StudentDto {
   dateOfBirth?: string;
   parentId: string;
   parentName?: string;
+  active: boolean;
 }
 
 export interface ContractDto {
@@ -172,6 +173,9 @@ export class AdminApiService {
   createStudent(body: { fullName: string; grade: string; dateOfBirth?: string; parentId: string }): Observable<StudentDto> {
     return this.http.post<StudentDto>(`${BASE}/students`, body);
   }
+  updateStudent(id: string, body: { active?: boolean }): Observable<StudentDto> {
+    return this.http.patch<StudentDto>(`${BASE}/students/${id}`, body);
+  }
 
   // Contracts (One-To-One)
   getContracts(status?: string): Observable<ContractDto[]> {
@@ -226,7 +230,7 @@ export class AdminApiService {
     if (status) params = params.set('status', status);
     return this.http.get<SubscriptionDto[]>(`${BASE}/subscriptions`, { params });
   }
-  createSubscription(body: { studentId: string; type: string; startDate: string; endDate: string }): Observable<SubscriptionDto> {
+  createSubscription(body: { studentId: string; type: string; startDate: string; endDate?: string }): Observable<SubscriptionDto> {
     return this.http.post<SubscriptionDto>(`${BASE}/subscriptions`, body);
   }
   renewSubscription(id: string, additionalMonths?: number): Observable<{ id: string; endDate: string; message: string }> {

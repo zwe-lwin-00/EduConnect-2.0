@@ -33,6 +33,10 @@ public class Student {
     @JoinColumn(name = "parent_id", nullable = false)
     private ApplicationUser parent;
 
+    @Column(name = "active")  // null = active (for existing rows), false = frozen
+    @Builder.Default
+    private Boolean active = true;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
