@@ -14,11 +14,12 @@ import java.util.TimeZone;
 @ConfigurationProperties(prefix = "app")
 public class TimeZoneConfig {
 
-    private String timezone = "Asia/Yangon";
+    private String timezone; // from app.timezone in application.yml
 
     @PostConstruct
     public void init() {
-        TimeZone.setDefault(TimeZone.getTimeZone(timezone));
+        String tz = (timezone != null && !timezone.isBlank()) ? timezone : "UTC";
+        TimeZone.setDefault(TimeZone.getTimeZone(tz));
     }
 
     public String getTimezone() {

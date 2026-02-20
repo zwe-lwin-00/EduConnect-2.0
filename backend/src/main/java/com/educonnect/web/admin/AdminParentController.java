@@ -4,6 +4,7 @@ import com.educonnect.application.admin.dto.CreateParentRequest;
 import com.educonnect.application.admin.dto.CreateParentResponse;
 import com.educonnect.application.admin.dto.ParentDto;
 import com.educonnect.domain.ApplicationUser;
+import com.educonnect.config.SecurityProperties;
 import com.educonnect.repository.ApplicationUserRepository;
 import com.educonnect.service.PasswordGenerator;
 import jakarta.validation.Valid;
@@ -24,10 +25,11 @@ public class AdminParentController {
     private final ApplicationUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PasswordGenerator passwordGenerator;
+    private final SecurityProperties securityProperties;
 
     @GetMapping
     public List<ParentDto> list() {
-        return userRepository.findByRolesContaining("PARENT").stream()
+        return userRepository.findByRolesContaining(securityProperties.getRoles().getParent()).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
@@ -43,7 +45,7 @@ public class AdminParentController {
                 .passwordHash(passwordEncoder.encode(tempPassword))
                 .fullName(req.getFullName())
                 .phone(req.getPhone())
-                .roles(java.util.Set.of("PARENT"))
+                .roles(java.util.Set.of(securityProperties.getRoles().getParent()))
                 .mustChangePassword(true)
                 .active(true)
                 .build();

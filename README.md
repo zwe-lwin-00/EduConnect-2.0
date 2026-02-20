@@ -1,6 +1,28 @@
 # EduConnect Freelance School
 
-Full-stack application: **Angular 15** frontend and **Java 17** Spring Boot API.
+Full-stack application for managing a freelance school: teachers, parents, students, one-to-one and group classes, attendance, subscriptions, and reports.
+
+| Layer    | Tech                    | Port  | Path       |
+|----------|-------------------------|-------|------------|
+| Frontend | Angular 15 + DevExtreme | 9098  | `frontend/` |
+| Backend  | Java 17, Spring Boot 3.2| 9099  | `backend/` |
+| Database | SQL Server or H2 (dev)   | —     | —          |
+
+**Repository layout:** Single repo; `backend` (Maven) and `frontend` (Angular) at the root. No monorepo tooling—run each separately.
+
+---
+
+## Quick start
+
+1. **Backend** (H2, no DB install):  
+   `cd backend` → `mvn spring-boot:run -Dspring-boot.run.profiles=dev`
+2. **Frontend:**  
+   `cd frontend` → `npm install` → `npm start`
+3. **Open:** http://localhost:9098 — Login with default admin (see **Default Admin Account** below).
+
+API: http://localhost:9099 · H2 console (dev): http://localhost:9099/h2-console
+
+---
 
 ## Default Admin Account (auto-creation on startup)
 
@@ -117,33 +139,31 @@ From **Teachers** list, use **Reset password** on a teacher. A new temporary pas
 
 ## Backend (Java 17)
 
-**SQL Server (default)**  
-Create a database named `educonnect`. Configure URL, username, and password via environment or `application.yml`:
+**How to run (choose one):**
 
-- `SPRING_DATASOURCE_URL` (default: `jdbc:sqlserver://localhost:1433;databaseName=educonnect;encrypt=true;trustServerCertificate=true`)
-- `SPRING_DATASOURCE_USERNAME` (default: `sa`)
-- `SPRING_DATASOURCE_PASSWORD`
+1. **Run (default)** — H2 in-memory, no database setup.  
+   **VS Code:** Run → choose **Run** → F5.  
+   **Terminal:** `cd backend` then `mvn spring-boot:run -Dspring-boot.run.profiles=dev`
 
-**H2 (development only)**  
-Run with profile `dev` so the app uses in-memory H2 and no SQL Server:
+2. **Run (LocalDB)** — SQL Server LocalDB with Windows login.  
+   **One-time:** Download [Microsoft JDBC Driver](https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server), extract, and copy `sqljdbc_*/enu/auth/x64/mssql-jdbc_auth-*.dll` into `backend/native` (use `x86` for 32-bit Java).  
+   **VS Code:** Run → **Run (LocalDB)** → F5.  
+   **Terminal:** `cd backend` then `mvn spring-boot:run -Dspring-boot.run.profiles=localdb` (and `-Djava.library.path=native` if needed).
 
-```bash
-cd backend
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
-```
+3. **Run (SQL Server)** — SQL Server on localhost:1433. Create a database named `educonnect`. Configure via env or `application.yml`: `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`.  
+   **VS Code:** Run → **Run (SQL Server)**.  
+   **Terminal:** `cd backend` then `mvn spring-boot:run`
 
-Otherwise (SQL Server):
-
-```bash
-cd backend
-mvn spring-boot:run
-```
-
-- API: **http://localhost:8080**
-- H2 console (when using `dev` profile): http://localhost:8080/h2-console
+- Frontend: **http://localhost:9098**
+- API: **http://localhost:9099**
+- H2 console (when using `dev` profile): http://localhost:9099/h2-console
 - Login: `POST /auth/login` with `{"email":"admin@educonnect.com","password":"1qaz!QAZ"}`. Response includes **access token** and **refresh token** (refresh token is stored hashed in DB). Use **refresh**: `POST /auth/refresh` with `{"refreshToken":"..."}` to get new access + refresh tokens (rotation: old refresh token is revoked). **Logout**: `POST /auth/logout` with `Authorization: Bearer <access token>` revokes all refresh tokens for that user. The frontend on **401** tries refresh once and retries the request; on refresh failure it logs out and redirects to login.
 
-Configuration is in `src/main/resources/application.yml`: app thresholds, seed-data (default admin), JWT, CORS, etc. **No hardcoded config in code** – all values come from `application.yml` (with env overrides). See **Configuration (dynamic config)** below.
+**Backend structure** (`backend/src/main/java/com/educonnect/`): **config/** (AppProperties, SecurityProperties, Jwt, CORS, etc.), **domain/** (JPA entities), **repository/** (Spring Data), **security/** (JWT, filters), **service/** (seeding, password generation), **web/** (REST controllers: admin, auth, teacher, parent, config, notifications), **application/** (use cases, DTOs, ports), **infrastructure.persistence.adapter/**.
+
+**Database schema** (main tables): application_users, teacher_profiles, students, subscriptions, contract_sessions, group_classes, group_class_enrollments, group_sessions, group_session_attendances, attendance_logs, homework, student_grades, teacher_availabilities, refresh_tokens, notifications, holidays, system_settings. Schema is created/updated by Hibernate (`ddl-auto` in application.yml).
+
+Configuration is in `backend/src/main/resources/application.yml` (and `application-dev.yml`, `application-localdb.yml`). **No hardcoded config in code** – all values come from config (env overrides). See **Configuration (dynamic config)** below.
 
 ## Frontend (Angular 15 + DevExtreme)
 
@@ -153,21 +173,19 @@ npm install
 npm start
 ```
 
-- App: **http://localhost:4200**
+- App: **http://localhost:9098**
 - **DevExtreme 22.2.4** is used for DataGrid and other widgets (see Admin Dashboard). Theme: `dx.light.css` in `angular.json`.
 - Login at `/auth/login` with the default admin credentials above. After login, Admin is redirected to `/admin`.
 - **API URL normalization:** All API URLs are built via `getApiUrl()` / `getApiBase()` (`core/services/api-url.ts`) so `environment.apiUrl` + path never produces a double slash.
-- **Browser auto-launch:** `ng serve` does not open the browser by default (`angular.json` → serve `open: false`). Open http://localhost:4200 manually if needed.
+- **Browser auto-launch:** `ng serve` does not open the browser by default (`angular.json` → serve `open: false`). Open http://localhost:9098 manually if needed.
 - **Swagger:** Not included. If you add Swagger/OpenAPI (e.g. springdoc), keep it disabled by default and do not enable browser auto-launch.
 
 ## Project Structure
 
 The project follows **Clean Architecture** (backend) and **feature-based organization** (backend & frontend).
 
-- **backend** – **Domain** (`domain/`), **application** (`application/<feature>/` with ports, use cases, DTOs), **infrastructure** (`web/<feature>/`, `config/`, `security/`, `infrastructure.persistence.adapter/`). SQL Server (default) or H2 (profile `dev`).
+- **backend** – **Domain** (`domain/`), **application** (`application/<feature>/` with ports, use cases, DTOs), **infrastructure** (`web/<feature>/`, `config/`, `security/`, `infrastructure.persistence.adapter/`). Package layout is summarized in the **Backend (Java 17)** section above.
 - **frontend** – **core/** (auth, HTTP), **shared/** (SharedModule), **features/** (`auth`, `admin`, `teacher`, `parent`). Routes: `/auth/login`, `/admin/*`, `/teacher/*`, `/parent/*`.
-
-For the **full layout and dependency rules**, see **[docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md)**.
 
 ## Exception handling & API errors (backend)
 
@@ -225,8 +243,10 @@ All config is externalized; there are **no hardcoded values** in code for URLs, 
 
 ## Build
 
-- **Backend:** `mvn clean package` (or `./mvnw clean package`)
-- **Frontend:** `npm run build` (output in `frontend/dist/frontend`)
+- **Backend:** `cd backend` → `mvn clean package` (or `./mvnw clean package`)
+- **Frontend:** `cd frontend` → `npm run build` (output in `frontend/dist/frontend`)
+
+To test the full stack: start the backend with the `dev` profile, then start the frontend; use **http://localhost:9098** for the app and **http://localhost:9099** for the API.
 
 ## Frontend UI/UX standards
 

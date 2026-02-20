@@ -1,0 +1,14 @@
+# Profile: localdb — SQL Server LocalDB (SSMS). Uses your Windows login (no SQL user needed).
+# Requires mssql-jdbc_auth DLL on PATH or in backend/native — see README-RUN.md.
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:sqlserver://(localdb)\\MSSQLLocalDB;databaseName=educonnect;encrypt=false;trustServerCertificate=true;integratedSecurity=true}
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username:
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServerDialect

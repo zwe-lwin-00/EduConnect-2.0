@@ -1,6 +1,7 @@
 package com.educonnect.service;
 
 import com.educonnect.config.SeedDataProperties;
+import com.educonnect.config.SecurityProperties;
 import com.educonnect.domain.ApplicationUser;
 import com.educonnect.repository.ApplicationUserRepository;
 import com.educonnect.shared.logging.LoggerExtensions;
@@ -26,13 +27,16 @@ public class DefaultAdminSeeder {
     private final ApplicationUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final SeedDataProperties seedData;
+    private final SecurityProperties securityProperties;
 
     public DefaultAdminSeeder(ApplicationUserRepository userRepository,
                               PasswordEncoder passwordEncoder,
-                              SeedDataProperties seedData) {
+                              SeedDataProperties seedData,
+                              SecurityProperties securityProperties) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.seedData = seedData;
+        this.securityProperties = securityProperties;
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -44,15 +48,16 @@ public class DefaultAdminSeeder {
             LoggerExtensions.info(log, "Default admin already exists. Skipping seed.");
             return;
         }
+        String adminRole = securityProperties.getRoles().getAdmin();
         ApplicationUser admin = ApplicationUser.builder()
                 .email(email)
                 .passwordHash(passwordEncoder.encode(seedData.getAdmin().getPassword()))
                 .fullName(seedData.getAdmin().getFullName())
-                .roles(Set.of("ADMIN"))
+                .roles(Set.of(adminRole))
                 .mustChangePassword(false)
                 .active(true)
                 .build();
         userRepository.save(admin);
-        LoggerExtensions.info(log, "Default admin account CREATED. Login at /auth/login with: {} / (password in seed-data.admin)", email);
+        LoggerExtensions.info(log, "Default admin account CREATED. Login at {} with: {} / (password in seed-data.admin)", securityProperties.getAuth().getLoginPath(), email);
     }
 }

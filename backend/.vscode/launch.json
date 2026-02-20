@@ -3,9 +3,26 @@
   "configurations": [
     {
       "type": "java",
-      "name": "EduConnect Spring Boot",
+      "name": "Run",
       "request": "launch",
-      "mainClass": "com.educonnect.EduConnectApplication"
+      "mainClass": "com.educonnect.EduConnectApplication",
+      "vmArgs": "-Dspring.profiles.active=dev",
+      "projectName": "educonnect-api"
+    },
+    {
+      "type": "java",
+      "name": "Run (LocalDB)",
+      "request": "launch",
+      "mainClass": "com.educonnect.EduConnectApplication",
+      "vmArgs": "-Dspring.profiles.active=localdb -Djava.library.path=${workspaceFolder}/native",
+      "projectName": "educonnect-api"
+    },
+    {
+      "type": "java",
+      "name": "Run (SQL Server)",
+      "request": "launch",
+      "mainClass": "com.educonnect.EduConnectApplication",
+      "projectName": "educonnect-api"
     },
     {
       "type": "java",

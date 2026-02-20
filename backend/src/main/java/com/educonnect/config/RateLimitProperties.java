@@ -7,10 +7,13 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "rate-limiting")
 public class RateLimitProperties {
 
-    private boolean enabled;   // from rate-limiting.enabled
-    private int requestsPerMinute;   // from rate-limiting.requests-per-minute
-    private boolean loginRateLimitEnabled;   // from rate-limiting.login-rate-limit-enabled
-    private int loginMaxAttemptsPerMinute;   // from rate-limiting.login-max-attempts-per-minute
+    private boolean enabled;
+    private int requestsPerMinute;
+    private boolean loginRateLimitEnabled;
+    private int loginMaxAttemptsPerMinute;
+    private long loginWindowMs = 60_000L;
+    private String loginPath = "/auth/login";
+    private String rateLimitExceededJson = "{\"error\":\"Too many login attempts\",\"code\":\"RATE_LIMIT_EXCEEDED\"}";
 
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
@@ -20,4 +23,10 @@ public class RateLimitProperties {
     public void setLoginRateLimitEnabled(boolean loginRateLimitEnabled) { this.loginRateLimitEnabled = loginRateLimitEnabled; }
     public int getLoginMaxAttemptsPerMinute() { return loginMaxAttemptsPerMinute; }
     public void setLoginMaxAttemptsPerMinute(int loginMaxAttemptsPerMinute) { this.loginMaxAttemptsPerMinute = loginMaxAttemptsPerMinute; }
+    public long getLoginWindowMs() { return loginWindowMs; }
+    public void setLoginWindowMs(long loginWindowMs) { this.loginWindowMs = loginWindowMs; }
+    public String getLoginPath() { return loginPath; }
+    public void setLoginPath(String loginPath) { this.loginPath = loginPath; }
+    public String getRateLimitExceededJson() { return rateLimitExceededJson; }
+    public void setRateLimitExceededJson(String rateLimitExceededJson) { this.rateLimitExceededJson = rateLimitExceededJson; }
 }

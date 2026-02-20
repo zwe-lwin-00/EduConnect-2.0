@@ -1,5 +1,6 @@
 package com.educonnect.security;
 
+import com.educonnect.config.SecurityProperties;
 import com.educonnect.web.common.RequestIdFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,36 +24,39 @@ public class SecurityConfig {
     private final RequestIdFilter requestIdFilter;
     private final LoginRateLimitFilter loginRateLimitFilter;
     private final CorsConfigurationSource corsConfigurationSource;
+    private final SecurityProperties securityProperties;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
                           RequestIdFilter requestIdFilter,
                           LoginRateLimitFilter loginRateLimitFilter,
-                          CorsConfigurationSource corsConfigurationSource) {
+                          CorsConfigurationSource corsConfigurationSource,
+                          SecurityProperties securityProperties) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.requestIdFilter = requestIdFilter;
         this.loginRateLimitFilter = loginRateLimitFilter;
         this.corsConfigurationSource = corsConfigurationSource;
+        this.securityProperties = securityProperties;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        var auth = securityProperties.getAuth();
+        var roles = securityProperties.getRoles();
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/auth/refresh").permitAll()
-                        .requestMatchers("/config", "/config/**").permitAll()
-                        .requestMatchers("/actuator/health", "/actuator/health/**", "/actuator/info").permitAll()
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers(auth.getPermitAllPathPatterns().toArray(new String[0])).permitAll()
                         .requestMatchers("/notifications/**").authenticated()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/teacher/**").hasRole("TEACHER")
-                        .requestMatchers("/parent/**").hasRole("PARENT")
+                        .requestMatchers(auth.getAdminPathPattern()).hasRole(roles.getAdmin())
+                        .requestMatchers(auth.getTeacherPathPattern()).hasRole(roles.getTeacher())
+                        .requestMatchers(auth.getParentPathPattern()).hasRole(roles.getParent())
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(requestIdFilter, JwtAuthenticationFilter.class)
-                .addFilterBefore(loginRateLimitFilter, JwtAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(loginRateLimitFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(requestIdFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

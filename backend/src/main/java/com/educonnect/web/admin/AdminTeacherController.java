@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import com.educonnect.config.SecurityProperties;
 import com.educonnect.service.PasswordGenerator;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class AdminTeacherController {
     private final ApplicationUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PasswordGenerator passwordGenerator;
+    private final SecurityProperties securityProperties;
 
     @GetMapping
     public List<TeacherDto> list(@RequestParam(required = false) String verificationStatus) {
@@ -56,7 +58,7 @@ public class AdminTeacherController {
                 .passwordHash(passwordEncoder.encode(tempPassword))
                 .fullName(req.getFullName())
                 .phone(req.getPhone())
-                .roles(java.util.Set.of("TEACHER"))
+                .roles(java.util.Set.of(securityProperties.getRoles().getTeacher()))
                 .mustChangePassword(true)
                 .active(true)
                 .build();

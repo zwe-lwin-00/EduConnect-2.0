@@ -10,7 +10,7 @@ import java.util.List;
 public class SeedDataProperties {
 
     private Admin admin = new Admin();
-    private List<String> roles = List.of("ADMIN", "TEACHER", "PARENT");  // from application.yml
+    private List<String> roles; // from seed-data.roles in application.yml
 
     public static class Admin {
         private String email;   // from seed-data.admin.email

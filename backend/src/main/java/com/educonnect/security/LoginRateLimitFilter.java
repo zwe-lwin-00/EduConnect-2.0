@@ -19,7 +19,6 @@ public class LoginRateLimitFilter extends OncePerRequestFilter {
 
     private final RateLimitProperties config;
     private final ConcurrentHashMap<String, SlidingWindow> attemptsByIp = new ConcurrentHashMap<>();
-    private static final long WINDOW_MS = 60_000L; // 1 minute
 
     public LoginRateLimitFilter(RateLimitProperties config) {
         this.config = config;
@@ -28,18 +27,18 @@ public class LoginRateLimitFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         if (!config.isLoginRateLimitEnabled()) return true;
-        return !"POST".equalsIgnoreCase(request.getMethod()) || !request.getRequestURI().equals("/auth/login");
+        return !"POST".equalsIgnoreCase(request.getMethod()) || !request.getRequestURI().equals(config.getLoginPath());
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String clientIp = clientIp(request);
-        SlidingWindow window = attemptsByIp.computeIfAbsent(clientIp, k -> new SlidingWindow());
+        SlidingWindow window = attemptsByIp.computeIfAbsent(clientIp, k -> new SlidingWindow(config.getLoginWindowMs()));
         if (!window.tryAcquire(config.getLoginMaxAttemptsPerMinute())) {
             response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
             response.setContentType("application/json");
-            response.getWriter().write("{\"error\":\"Too many login attempts\",\"code\":\"RATE_LIMIT_EXCEEDED\"}");
+            response.getWriter().write(config.getRateLimitExceededJson());
             return;
         }
         filterChain.doFilter(request, response);
@@ -54,14 +53,19 @@ public class LoginRateLimitFilter extends OncePerRequestFilter {
     private static final class SlidingWindow {
         private long windowStart = System.currentTimeMillis();
         private final AtomicInteger count = new AtomicInteger(0);
+        private final long windowMs;
 
-        synchronized boolean tryAcquire(int maxPerMinute) {
+        SlidingWindow(long windowMs) {
+            this.windowMs = windowMs;
+        }
+
+        synchronized boolean tryAcquire(int maxPerWindow) {
             long now = System.currentTimeMillis();
-            if (now - windowStart >= WINDOW_MS) {
+            if (now - windowStart >= windowMs) {
                 windowStart = now;
                 count.set(0);
             }
-            return count.incrementAndGet() <= maxPerMinute;
+            return count.incrementAndGet() <= maxPerWindow;
         }
     }
 }

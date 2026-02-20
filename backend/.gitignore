@@ -55,3 +55,6 @@ application-local.properties
 # H2 (if you persist DB in dev)
 *.db
 *.trace.db
+
+# LocalDB Windows auth DLL (put here; do not commit)
+native/*.dll

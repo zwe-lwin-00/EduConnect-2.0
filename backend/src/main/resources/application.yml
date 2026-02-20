@@ -1,5 +1,13 @@
-# EduConnect API - Configuration (no magic numbers in code)
-# Use profile "dev" for H2 in-memory, or no profile for SQL Server
+# EduConnect API
+#
+# Database: use one of these when starting the app:
+#   - No profile (or sqlserver) = SQL Server on localhost:1433
+#   - Profile "dev"          = H2 in-memory (no install, use this to run locally)
+#   - Profile "localdb"      = SQL Server LocalDB (SSMS)
+#
+server:
+  port: 9099
+
 spring:
   application:
     name: educonnect-api
@@ -21,9 +29,19 @@ spring:
     console:
       enabled: false
 
-# App – Dashboard and reporting (all configurable via env or this file)
+# App settings (override via env if needed)
 app:
+  datasource:
+    auto-create-database: ${APP_AUTO_CREATE_DATABASE:true}
   timezone: ${APP_TIMEZONE:Asia/Yangon}   # Myanmar (UTC+6:30); "today" and reports use this
+  security:
+    roles:
+      admin: ${APP_SECURITY_ROLE_ADMIN:ADMIN}
+      teacher: ${APP_SECURITY_ROLE_TEACHER:TEACHER}
+      parent: ${APP_SECURITY_ROLE_PARENT:PARENT}
+    auth:
+      login-path: ${APP_AUTH_LOGIN_PATH:/auth/login}
+      refresh-path: ${APP_AUTH_REFRESH_PATH:/auth/refresh}
   subscription-expiring-alert-days: ${APP_SUBSCRIPTION_EXPIRING_ALERT_DAYS:7}
   contract-expiring-alert-days: ${APP_CONTRACT_EXPIRING_ALERT_DAYS:14}
   contract-ending-soon-notification-days: ${APP_CONTRACT_ENDING_SOON_DAYS:14}
@@ -37,7 +55,7 @@ app:
   # Admin reports default range when from/to not provided
   report-default-months-back: ${APP_REPORT_DEFAULT_MONTHS_BACK:11}
   # Public API URL (for frontend runtime config; CORS and links)
-  api-public-url: ${API_PUBLIC_URL:http://localhost:8080}
+  api-public-url: ${API_PUBLIC_URL:http://localhost:9099}
 
 # SeedData – Default admin and roles (override via env: SEED_DATA_ADMIN_EMAIL, SEED_DATA_ADMIN_PASSWORD, SEED_DATA_ADMIN_FULL_NAME)
 seed-data:
@@ -63,15 +81,15 @@ cors:
   allowed-headers: "*"
   allow-credentials: true
 
-# Time zone for reporting/scheduling
-time-zone: Asia/Yangon
-
 # Optional: rate limiting (requests per minute per IP)
 rate-limiting:
   enabled: false
   requests-per-minute: 60
   login-rate-limit-enabled: true
   login-max-attempts-per-minute: 10
+  login-window-ms: ${RATE_LIMIT_LOGIN_WINDOW_MS:60000}
+  login-path: ${RATE_LIMIT_LOGIN_PATH:/auth/login}
+  # rate-limit-exceeded-json default is in RateLimitProperties; override via env RATE_LIMIT_EXCEEDED_JSON if needed
 
 # Health checks (liveness/readiness for k8s or load balancers)
 management:

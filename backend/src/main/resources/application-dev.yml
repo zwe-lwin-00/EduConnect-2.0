@@ -1,4 +1,4 @@
-# Development profile: H2 in-memory (no SQL Server required)
+# Profile: dev — H2 in-memory (no SQL Server; use this to run the app locally)
 spring:
   datasource:
     url: jdbc:h2:mem:educonnect;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
