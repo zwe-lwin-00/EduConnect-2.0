@@ -1,10 +1,16 @@
 <div class="page-block">
-  <h1>Reports</h1>
+  <h1>Daily and monthly reports</h1>
+  <p class="hint">Sessions = One-To-One attendance records in the period. Revenue = hours × teacher hourly rate (or default).</p>
   <div class="toolbar">
     <label>From</label>
     <input type="date" [(ngModel)]="from" (ngModelChange)="loadDaily(); loadMonthly()" />
     <label>To</label>
     <input type="date" [(ngModel)]="to" (ngModelChange)="loadDaily(); loadMonthly()" />
+  </div>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <div *ngIf="!loading" class="summary">
+    <span class="summary-item">Total sessions: <strong>{{ totalSessions }}</strong></span>
+    <span class="summary-item">Total revenue: <strong>{{ totalRevenue | number:'1.2-2' }}</strong></span>
   </div>
   <h2>Daily</h2>
   <dx-data-grid [dataSource]="daily" [showBorders]="true" keyExpr="date">
@@ -14,7 +20,7 @@
   </dx-data-grid>
   <h2>Monthly</h2>
   <dx-data-grid [dataSource]="monthly" [showBorders]="true" keyExpr="date">
-    <dxi-column dataField="date" caption="Month" dataType="date"></dxi-column>
+    <dxi-column dataField="monthLabel" caption="Month"></dxi-column>
     <dxi-column dataField="sessionCount" caption="Sessions" dataType="number"></dxi-column>
     <dxi-column dataField="revenue" caption="Revenue" dataType="number" format="#0.00"></dxi-column>
   </dx-data-grid>

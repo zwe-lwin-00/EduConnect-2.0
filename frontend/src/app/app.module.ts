@@ -6,6 +6,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { JwtInterceptor } from './core/http/jwt.interceptor';
+import { ErrorInterceptor } from './core/http/error.interceptor';
 import { SharedModule } from './shared/shared.module';
 import { DxDataGridModule, DxButtonModule } from 'devextreme-angular';
 
@@ -71,7 +72,8 @@ import { ParentStudentOverviewComponent } from './features/parent/parent-student
     DxButtonModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

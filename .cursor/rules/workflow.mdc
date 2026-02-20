@@ -1,0 +1,13 @@
+---
+description: After each instruction, update README if needed and git push with a clear commit message
+alwaysApply: true
+---
+
+# Development workflow
+
+After completing each user instruction or logical change:
+
+1. **Update README** – If the change affects setup, behaviour, architecture, or new features, add or edit the relevant section in the project root `README.md` (e.g. new endpoints, new UI flows, exception handling, guards, config).
+2. **Git commit and push** – Stage all changes, commit with a **suitable conventional message** (e.g. `feat: add X`, `fix: Y`, `docs: update README for Z`), then push to the remote. Use a short summary line and optional body bullets.
+
+Do not skip these steps unless the user explicitly asks not to update docs or push.

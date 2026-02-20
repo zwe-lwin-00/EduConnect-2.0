@@ -4,6 +4,10 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { environment } from '../../../environments/environment';
 
+/**
+ * JWT interceptor: attaches Bearer token to outbound requests to the API.
+ * Skips requests that do not target environment.apiUrl.
+ */
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
   constructor(private auth: AuthService) {}

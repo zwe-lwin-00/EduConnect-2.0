@@ -117,7 +117,32 @@ The project follows **Clean Architecture** (backend) and **feature-based organiz
 
 For the **full layout and dependency rules**, see **[docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md)**.
 
+## Exception handling & API errors (backend)
+
+All API errors return a consistent JSON body via **GlobalExceptionHandler** (`@RestControllerAdvice`):
+
+- **Validation** (400) – `MethodArgumentNotValidException`: `error`, `message`, `details` (field errors), `path`.
+- **Bad request** (400) – `IllegalArgumentException`.
+- **Conflict** (409) – `IllegalStateException`.
+- **Forbidden** (403) – `AccessDeniedException`.
+- **Server error** (500) – any unhandled `Exception` (generic message, no stack in body).
+
+Shape: `{ "error": "...", "message": "...", "status": 400, "details": [], "path": "/..." }` (see `ApiErrorResponse`).
+
+## Guards & interceptors (Angular)
+
+- **AuthGuard** – Protects routes; redirects to `/auth/login?returnUrl=...` when not authenticated.
+- **RoleGuard** – Use after AuthGuard; allows access if user has one of the route’s `data.roles`. If authenticated but wrong role, redirects to the user’s role home (`/admin`, `/teacher`, `/parent`) with `?unauthorized=1`.
+- **JwtInterceptor** – Adds `Authorization: Bearer <token>` to requests to `environment.apiUrl`.
+- **ErrorInterceptor** – On 401: logout and redirect to login; on 403: redirect to role home or login. Rethrows so components can still read `err.error` (e.g. `message`, `details`). Typed as `ApiErrorBody` in `core/http/error.interceptor.ts`.
+
+Routes use `canActivate: [AuthGuard, RoleGuard]` and `data: { roles: [Roles.ADMIN] }` (or TEACHER/PARENT).
+
 ## Build
 
 - **Backend:** `mvn clean package` (or `./mvnw clean package`)
 - **Frontend:** `npm run build` (output in `frontend/dist/frontend`)
+
+## Development workflow
+
+After each logical change: update this README if the change affects setup, behaviour, or architecture; then commit and push with a clear, conventional message (e.g. `feat: ...`, `fix: ...`, `docs: ...`).
