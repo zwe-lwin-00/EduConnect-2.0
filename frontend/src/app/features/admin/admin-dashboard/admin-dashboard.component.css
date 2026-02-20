@@ -1,0 +1,17 @@
+.admin-dashboard { padding: 1.5rem; max-width: 1200px; margin: 0 auto; }
+.alerts { margin-bottom: 1rem; padding: 0.75rem; background: #fef3c7; border-radius: 8px; }
+.alerts ul { margin: 0.25rem 0 0 1rem; padding: 0; }
+.page-header { margin-bottom: 1.5rem; }
+.page-header h1 { margin: 0; font-size: 1.5rem; color: #1a1a2e; }
+.page-header p { margin: 0.25rem 0 0 0; color: #64748b; font-size: 0.95rem; }
+.loading { color: #64748b; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; }
+.card h3 { margin: 0 0 0.5rem 0; font-size: 0.9rem; color: #64748b; font-weight: 600; }
+.card .value { margin: 0 0 0.75rem 0; font-size: 1.75rem; font-weight: 700; color: #0f3460; }
+.card a { color: #0f3460; font-size: 0.9rem; text-decoration: none; }
+.card a:hover { text-decoration: underline; }
+.quick-links { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.quick-links a { padding: 0.5rem 1rem; background: #f1f5f9; border-radius: 8px; color: #334155; text-decoration: none; font-size: 0.9rem; }
+.quick-links a:hover { background: #e2e8f0; }
+.dx-grid-wrap { margin: 1.5rem 0; max-width: 500px; }

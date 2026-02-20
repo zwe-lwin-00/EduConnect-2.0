@@ -1,0 +1,24 @@
+<div class="admin-layout">
+  <aside class="sidebar">
+    <app-brand class="sidebar-brand"></app-brand>
+    <nav>
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+      <a routerLink="/admin/teachers" routerLinkActive="active">Teachers</a>
+      <a routerLink="/admin/parents" routerLinkActive="active">Parents</a>
+      <a routerLink="/admin/students" routerLinkActive="active">Students</a>
+      <a routerLink="/admin/contracts" routerLinkActive="active">One-To-One</a>
+      <a routerLink="/admin/group-classes" routerLinkActive="active">Group</a>
+      <a routerLink="/admin/attendance" routerLinkActive="active">Attendance</a>
+      <a routerLink="/admin/payments" routerLinkActive="active">Payments</a>
+      <a routerLink="/admin/reports" routerLinkActive="active">Reports</a>
+      <a routerLink="/admin/settings" routerLinkActive="active">Settings</a>
+    </nav>
+    <div class="user">
+      <span>{{ auth.getStoredUser()?.fullName }}</span>
+      <app-logout-button></app-logout-button>
+    </div>
+  </aside>
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

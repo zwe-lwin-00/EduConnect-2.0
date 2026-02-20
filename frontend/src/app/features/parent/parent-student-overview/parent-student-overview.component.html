@@ -1,0 +1,45 @@
+<div class="page-block">
+  <a routerLink="/parent" class="back">← My students</a>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <div *ngIf="!loading && overview">
+    <header class="header">
+      <h1>{{ overview.studentName }}</h1>
+      <p class="grade">Grade {{ overview.grade }}</p>
+      <p *ngIf="overview.assignedTeacherName" class="teacher">Assigned teacher: {{ overview.assignedTeacherName }}</p>
+    </header>
+    <section>
+      <h2>Progress</h2>
+      <p>Total sessions: {{ overview.totalSessionsCount }} · Homework completed: {{ overview.completedHomeworkCount }}</p>
+    </section>
+    <section>
+      <h2>Recent sessions</h2>
+      <dx-data-grid [dataSource]="overview.recentSessions" [showBorders]="true">
+        <dxi-column dataField="sessionDate" caption="Date" dataType="date"></dxi-column>
+        <dxi-column dataField="type" caption="Type"></dxi-column>
+        <dxi-column dataField="teacherOrClassName" caption="Teacher / Class"></dxi-column>
+        <dxi-column dataField="checkInAt" caption="Check-in"></dxi-column>
+        <dxi-column dataField="checkOutAt" caption="Check-out"></dxi-column>
+        <dxi-column dataField="lessonNotes" caption="Notes"></dxi-column>
+      </dx-data-grid>
+    </section>
+    <section>
+      <h2>Homework</h2>
+      <dx-data-grid [dataSource]="overview.homework" [showBorders]="true" keyExpr="id">
+        <dxi-column dataField="title" caption="Title"></dxi-column>
+        <dxi-column dataField="dueDate" caption="Due" dataType="date"></dxi-column>
+        <dxi-column dataField="status" caption="Status"></dxi-column>
+        <dxi-column dataField="teacherFeedback" caption="Feedback"></dxi-column>
+      </dx-data-grid>
+    </section>
+    <section>
+      <h2>Grades</h2>
+      <dx-data-grid [dataSource]="overview.grades" [showBorders]="true" keyExpr="id">
+        <dxi-column dataField="title" caption="Title"></dxi-column>
+        <dxi-column dataField="gradeValue" caption="Score" dataType="number"></dxi-column>
+        <dxi-column dataField="maxValue" caption="Max" dataType="number"></dxi-column>
+        <dxi-column dataField="gradeDate" caption="Date" dataType="date"></dxi-column>
+        <dxi-column dataField="notes" caption="Notes"></dxi-column>
+      </dx-data-grid>
+    </section>
+  </div>
+</div>

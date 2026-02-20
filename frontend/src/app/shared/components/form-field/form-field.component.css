@@ -1,0 +1,32 @@
+.form-field {
+  margin-bottom: 1.25rem;
+}
+.label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 0.9rem;
+}
+.input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+.input:focus {
+  outline: none;
+  border-color: #0f3460;
+  box-shadow: 0 0 0 2px rgba(15, 52, 96, 0.2);
+}
+.input.ng-invalid.ng-touched {
+  border-color: #c53030;
+}
+.error {
+  color: #c53030;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
+}

@@ -1,0 +1,19 @@
+.btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: #0f3460;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn:hover:not(:disabled):not(.loading) {
+  background: #16213e;
+}
+.btn:disabled,
+.btn.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

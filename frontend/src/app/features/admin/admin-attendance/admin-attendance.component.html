@@ -1,0 +1,47 @@
+<div class="page-block">
+  <h1>Attendance</h1>
+  <p class="hint">Teachers check in/out from Sessions. Use Override to correct times, hours, or notes.</p>
+  <div class="toolbar">
+    <label>Date</label>
+    <input type="date" [(ngModel)]="date" (ngModelChange)="onDateChange()" />
+  </div>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <dx-data-grid *ngIf="!loading" [dataSource]="list" [showBorders]="true" keyExpr="id">
+    <dxi-column dataField="sessionDate" caption="Date" dataType="date"></dxi-column>
+    <dxi-column dataField="teacherName" caption="Teacher"></dxi-column>
+    <dxi-column dataField="studentName" caption="Student"></dxi-column>
+    <dxi-column dataField="checkInAt" caption="Check-in"></dxi-column>
+    <dxi-column dataField="checkOutAt" caption="Check-out"></dxi-column>
+    <dxi-column dataField="hoursUsed" caption="Hours" dataType="number"></dxi-column>
+    <dxi-column dataField="lessonNotes" caption="Notes"></dxi-column>
+    <dxi-column type="buttons" width="90">
+      <dxi-button hint="Override" (onClick)="openOverride($event.row.data)"></dxi-button>
+    </dxi-column>
+  </dx-data-grid>
+</div>
+<div class="modal" *ngIf="showOverride && selected">
+  <app-card class="modal-content">
+    <h2>Override check-in / check-out</h2>
+    <p class="session-info">{{ selected.teacherName }} – {{ selected.studentName }} ({{ selected.sessionDate }})</p>
+    <div class="form-group">
+      <label>Check-in</label>
+      <input type="datetime-local" [(ngModel)]="overrideForm.checkInAt" />
+    </div>
+    <div class="form-group">
+      <label>Check-out</label>
+      <input type="datetime-local" [(ngModel)]="overrideForm.checkOutAt" />
+    </div>
+    <div class="form-group">
+      <label>Hours used</label>
+      <input type="number" step="0.25" [(ngModel)]="overrideForm.hoursUsed" />
+    </div>
+    <div class="form-group">
+      <label>Lesson notes</label>
+      <textarea [(ngModel)]="overrideForm.lessonNotes" rows="3" style="width:100%"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button type="button" (click)="saveOverride()">Save</button>
+      <button type="button" (click)="closeOverride()">Cancel</button>
+    </div>
+  </app-card>
+</div>

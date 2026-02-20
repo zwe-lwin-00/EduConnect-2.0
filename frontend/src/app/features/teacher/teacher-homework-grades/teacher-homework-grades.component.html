@@ -1,0 +1,104 @@
+<div class="page-block">
+  <header class="page-header">
+    <h1>Homework & Grades</h1>
+    <div>
+      <button type="button" class="btn-primary" (click)="openHomeworkForm()">Assign homework</button>
+      <button type="button" class="btn-secondary" (click)="openGradeForm()">Add grade</button>
+    </div>
+  </header>
+  <h2>Homework</h2>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <dx-data-grid *ngIf="!loading" [dataSource]="homework" [showBorders]="true" keyExpr="id">
+    <dxi-column dataField="studentName" caption="Student"></dxi-column>
+    <dxi-column dataField="title" caption="Title"></dxi-column>
+    <dxi-column dataField="dueDate" caption="Due" dataType="date"></dxi-column>
+    <dxi-column dataField="status" caption="Status"></dxi-column>
+    <dxi-column type="buttons" width="180">
+      <dxi-button hint="Mark submitted" (onClick)="markSubmitted($event.row.data)"></dxi-button>
+      <dxi-button hint="Grade / Feedback" (onClick)="openFeedback($event.row.data)"></dxi-button>
+    </dxi-column>
+  </dx-data-grid>
+  <h2>Grades</h2>
+  <dx-data-grid [dataSource]="grades" [showBorders]="true" keyExpr="id">
+    <dxi-column dataField="studentName" caption="Student"></dxi-column>
+    <dxi-column dataField="title" caption="Title"></dxi-column>
+    <dxi-column dataField="gradeValue" caption="Score" dataType="number"></dxi-column>
+    <dxi-column dataField="maxValue" caption="Max" dataType="number"></dxi-column>
+    <dxi-column dataField="gradeDate" caption="Date" dataType="date"></dxi-column>
+  </dx-data-grid>
+</div>
+<div class="modal" *ngIf="showHomeworkForm">
+  <app-card class="modal-content">
+    <h2>Assign homework</h2>
+    <div class="form-group">
+      <label>Student</label>
+      <select [(ngModel)]="homeworkForm.studentId">
+        <option *ngFor="let s of students" [value]="s.id">{{ s.fullName }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" [(ngModel)]="homeworkForm.title" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <input type="text" [(ngModel)]="homeworkForm.description" />
+    </div>
+    <div class="form-group">
+      <label>Due date</label>
+      <input type="date" [(ngModel)]="homeworkForm.dueDate" />
+    </div>
+    <div class="modal-actions">
+      <button type="button" (click)="submitHomework()">Assign</button>
+      <button type="button" (click)="showHomeworkForm = false">Cancel</button>
+    </div>
+  </app-card>
+</div>
+<div class="modal" *ngIf="showGradeForm">
+  <app-card class="modal-content">
+    <h2>Add grade</h2>
+    <div class="form-group">
+      <label>Student</label>
+      <select [(ngModel)]="gradeForm.studentId">
+        <option *ngFor="let s of students" [value]="s.id">{{ s.fullName }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" [(ngModel)]="gradeForm.title" />
+    </div>
+    <div class="form-group">
+      <label>Score</label>
+      <input type="number" [(ngModel)]="gradeForm.gradeValue" />
+    </div>
+    <div class="form-group">
+      <label>Max</label>
+      <input type="number" [(ngModel)]="gradeForm.maxValue" />
+    </div>
+    <div class="form-group">
+      <label>Date</label>
+      <input type="date" [(ngModel)]="gradeForm.gradeDate" />
+    </div>
+    <div class="form-group">
+      <label>Notes</label>
+      <input type="text" [(ngModel)]="gradeForm.notes" />
+    </div>
+    <div class="modal-actions">
+      <button type="button" (click)="submitGrade()">Add</button>
+      <button type="button" (click)="showGradeForm = false">Cancel</button>
+    </div>
+  </app-card>
+</div>
+<div class="modal" *ngIf="showFeedback && selectedHomework">
+  <app-card class="modal-content">
+    <h2>Grade / Feedback: {{ selectedHomework.title }}</h2>
+    <div class="form-group">
+      <label>Feedback</label>
+      <textarea [(ngModel)]="teacherFeedback" rows="4" style="width:100%"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button type="button" (click)="saveFeedback()">Save (mark graded)</button>
+      <button type="button" (click)="showFeedback = false; selectedHomework = null">Cancel</button>
+    </div>
+  </app-card>
+</div>

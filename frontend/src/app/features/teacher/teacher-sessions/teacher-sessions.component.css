@@ -1,0 +1,11 @@
+.page-block { padding: 1rem; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.btn-primary { padding: 0.5rem 1rem; background: #1e3a5f; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+.toolbar { margin-bottom: 1rem; }
+.toolbar input { margin: 0 0.5rem; padding: 0.35rem; }
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { max-width: 420px; width: 90%; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; margin-bottom: 0.25rem; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.5rem; box-sizing: border-box; }
+.modal-actions { margin-top: 1rem; display: flex; gap: 0.5rem; }

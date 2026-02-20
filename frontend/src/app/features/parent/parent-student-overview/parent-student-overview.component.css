@@ -1,0 +1,7 @@
+.page-block { padding: 1rem; }
+.back { display: inline-block; margin-bottom: 1rem; color: #0f3460; text-decoration: none; }
+.header { margin-bottom: 1.5rem; }
+.header h1 { margin: 0 0 0.25rem 0; }
+.grade, .teacher { margin: 0; color: #64748b; }
+section { margin-bottom: 1.5rem; }
+section h2 { margin-bottom: 0.5rem; }

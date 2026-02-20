@@ -1,0 +1,7 @@
+.page-block { padding: 1rem; }
+.hint { color: #64748b; margin-bottom: 1rem; }
+.profile-card { max-width: 560px; }
+.profile-card dl { margin: 0; }
+.profile-card dt { font-weight: 600; margin-top: 0.75rem; color: #475569; }
+.profile-card dd { margin: 0.25rem 0 0 0; }
+.profile-card a { color: #1e3a5f; }

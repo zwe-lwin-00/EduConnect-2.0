@@ -1,0 +1,15 @@
+<div class="page-block">
+  <h1>Subscriptions / Payments</h1>
+  <p class="hint">Renew monthly: extend subscription by 1 or more months.</p>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <dx-data-grid *ngIf="!loading" [dataSource]="subscriptions" [showBorders]="true" keyExpr="id">
+    <dxi-column dataField="studentName" caption="Student"></dxi-column>
+    <dxi-column dataField="type" caption="Type"></dxi-column>
+    <dxi-column dataField="startDate" caption="Start" dataType="date"></dxi-column>
+    <dxi-column dataField="endDate" caption="End" dataType="date"></dxi-column>
+    <dxi-column dataField="status" caption="Status"></dxi-column>
+    <dxi-column type="buttons" width="120">
+      <dxi-button hint="Renew 1 month" (onClick)="renew($event.row.data, 1)"></dxi-button>
+    </dxi-column>
+  </dx-data-grid>
+</div>

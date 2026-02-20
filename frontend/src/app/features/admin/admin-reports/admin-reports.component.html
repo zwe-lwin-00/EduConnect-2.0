@@ -1,0 +1,21 @@
+<div class="page-block">
+  <h1>Reports</h1>
+  <div class="toolbar">
+    <label>From</label>
+    <input type="date" [(ngModel)]="from" (ngModelChange)="loadDaily(); loadMonthly()" />
+    <label>To</label>
+    <input type="date" [(ngModel)]="to" (ngModelChange)="loadDaily(); loadMonthly()" />
+  </div>
+  <h2>Daily</h2>
+  <dx-data-grid [dataSource]="daily" [showBorders]="true" keyExpr="date">
+    <dxi-column dataField="date" caption="Date" dataType="date"></dxi-column>
+    <dxi-column dataField="sessionCount" caption="Sessions" dataType="number"></dxi-column>
+    <dxi-column dataField="revenue" caption="Revenue" dataType="number" format="#0.00"></dxi-column>
+  </dx-data-grid>
+  <h2>Monthly</h2>
+  <dx-data-grid [dataSource]="monthly" [showBorders]="true" keyExpr="date">
+    <dxi-column dataField="date" caption="Month" dataType="date"></dxi-column>
+    <dxi-column dataField="sessionCount" caption="Sessions" dataType="number"></dxi-column>
+    <dxi-column dataField="revenue" caption="Revenue" dataType="number" format="#0.00"></dxi-column>
+  </dx-data-grid>
+</div>

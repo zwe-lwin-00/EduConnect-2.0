@@ -1,0 +1,9 @@
+<div class="page-block">
+  <h1>Assigned students</h1>
+  <p class="hint">Students linked to your active One-To-One contracts.</p>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <dx-data-grid *ngIf="!loading" [dataSource]="students" [showBorders]="true" keyExpr="id">
+    <dxi-column dataField="fullName" caption="Name"></dxi-column>
+    <dxi-column dataField="grade" caption="Grade"></dxi-column>
+  </dx-data-grid>
+</div>

@@ -1,0 +1,36 @@
+<div class="page-block">
+  <h1>Group classes</h1>
+  <p class="hint">Edit name, Zoom link, and active status. Enroll students from Admin (One-To-One contract or Group subscription).</p>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <dx-data-grid *ngIf="!loading" [dataSource]="list" [showBorders]="true" keyExpr="id">
+    <dxi-column dataField="name" caption="Name"></dxi-column>
+    <dxi-column dataField="zoomJoinUrl" caption="Zoom URL"></dxi-column>
+    <dxi-column dataField="active" caption="Active" dataType="boolean"></dxi-column>
+    <dxi-column dataField="enrollmentCount" caption="Enrollments" dataType="number"></dxi-column>
+    <dxi-column dataField="scheduleStartTime" caption="Start"></dxi-column>
+    <dxi-column dataField="scheduleEndTime" caption="End"></dxi-column>
+    <dxi-column type="buttons" width="80">
+      <dxi-button hint="Edit" (onClick)="openEdit($event.row.data)"></dxi-button>
+    </dxi-column>
+  </dx-data-grid>
+</div>
+<div class="modal" *ngIf="showEdit && selected">
+  <app-card class="modal-content">
+    <h2>Edit group class</h2>
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" [(ngModel)]="editForm.name" />
+    </div>
+    <div class="form-group">
+      <label>Zoom join URL</label>
+      <input type="text" [(ngModel)]="editForm.zoomJoinUrl" placeholder="https://..." />
+    </div>
+    <div class="form-group">
+      <label><input type="checkbox" [(ngModel)]="editForm.active" /> Active</label>
+    </div>
+    <div class="modal-actions">
+      <button type="button" (click)="saveEdit()">Save</button>
+      <button type="button" (click)="showEdit = false; selected = null">Cancel</button>
+    </div>
+  </app-card>
+</div>

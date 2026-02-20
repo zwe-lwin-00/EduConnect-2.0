@@ -1,0 +1,11 @@
+.page-block { padding: 1rem; }
+.hint { color: #64748b; margin-bottom: 1rem; }
+.toolbar { margin-bottom: 1rem; }
+.toolbar input { margin-left: 0.5rem; padding: 0.35rem; }
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { max-width: 420px; width: 90%; max-height: 90vh; overflow: auto; }
+.session-info { margin: 0 0 1rem 0; color: #475569; font-size: 0.9rem; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; margin-bottom: 0.25rem; }
+.form-group input, .form-group textarea { width: 100%; padding: 0.5rem; box-sizing: border-box; }
+.modal-actions { margin-top: 1rem; display: flex; gap: 0.5rem; }

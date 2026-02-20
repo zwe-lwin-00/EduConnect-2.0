@@ -1,0 +1,49 @@
+<div class="page-block">
+  <h1>Settings</h1>
+  <section>
+    <h2>Holidays</h2>
+    <div class="toolbar">
+      <label>Year</label>
+      <input type="number" [(ngModel)]="holidayYear" (ngModelChange)="onYearChange()" />
+      <button type="button" class="btn-primary" (click)="openHolidayForm()">Add holiday</button>
+    </div>
+    <div *ngIf="loading" class="loading">Loading…</div>
+    <dx-data-grid *ngIf="!loading" [dataSource]="holidays" [showBorders]="true" keyExpr="id">
+      <dxi-column dataField="holidayDate" caption="Date" dataType="date"></dxi-column>
+      <dxi-column dataField="name" caption="Name"></dxi-column>
+      <dxi-column dataField="description" caption="Description"></dxi-column>
+      <dxi-column type="buttons" width="80">
+        <dxi-button hint="Delete" (onClick)="deleteHoliday($event.row.data)"></dxi-button>
+      </dxi-column>
+    </dx-data-grid>
+  </section>
+  <section>
+    <h2>Key-value settings</h2>
+    <dx-data-grid [dataSource]="settings" [showBorders]="true" keyExpr="id">
+      <dxi-column dataField="keyName" caption="Key"></dxi-column>
+      <dxi-column dataField="value" caption="Value"></dxi-column>
+      <dxi-column dataField="description" caption="Description"></dxi-column>
+    </dx-data-grid>
+  </section>
+</div>
+<div class="modal" *ngIf="showHolidayForm">
+  <app-card class="modal-content">
+    <h2>Add holiday</h2>
+    <div class="form-group">
+      <label>Date</label>
+      <input type="date" [(ngModel)]="holidayForm.holidayDate" />
+    </div>
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" [(ngModel)]="holidayForm.name" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <input type="text" [(ngModel)]="holidayForm.description" />
+    </div>
+    <div class="modal-actions">
+      <button type="button" (click)="submitHoliday()">Add</button>
+      <button type="button" (click)="showHolidayForm = false">Cancel</button>
+    </div>
+  </app-card>
+</div>

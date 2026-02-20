@@ -1,0 +1,23 @@
+<div class="page-block">
+  <h1>Profile</h1>
+  <p class="hint">Read-only. Zoom join URL is used for One-To-One sessions when no session-specific link is set.</p>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <app-card *ngIf="!loading && profile" class="profile-card">
+    <dl>
+      <dt>Name</dt>
+      <dd>{{ profile.fullName }}</dd>
+      <dt>Email</dt>
+      <dd>{{ profile.email }}</dd>
+      <dt>Phone</dt>
+      <dd>{{ profile.phone || '—' }}</dd>
+      <dt>Education</dt>
+      <dd>{{ profile.education || '—' }}</dd>
+      <dt>Bio</dt>
+      <dd>{{ profile.bio || '—' }}</dd>
+      <dt>Verification</dt>
+      <dd>{{ profile.verificationStatus }}</dd>
+      <dt>Zoom join URL (1:1)</dt>
+      <dd><a *ngIf="profile.zoomJoinUrl" [href]="profile.zoomJoinUrl" target="_blank" rel="noopener">{{ profile.zoomJoinUrl }}</a><span *ngIf="!profile.zoomJoinUrl">—</span></dd>
+    </dl>
+  </app-card>
+</div>

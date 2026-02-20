@@ -1,0 +1,61 @@
+<div class="admin-dashboard">
+  <header class="page-header">
+    <h1>Admin Dashboard</h1>
+    <p>EduConnect Freelance School</p>
+  </header>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <div *ngIf="!loading && data.pendingActions?.length" class="alerts">
+    <strong>Pending actions:</strong>
+    <ul>
+      <li *ngFor="let a of data.pendingActions">{{ a }}</li>
+    </ul>
+  </div>
+  <div *ngIf="!loading" class="cards">
+    <div class="card">
+      <h3>Pending teacher verifications</h3>
+      <p class="value">{{ data.pendingTeacherVerifications ?? 0 }}</p>
+      <a routerLink="/admin/teachers">Teachers</a>
+    </div>
+    <div class="card">
+      <h3>Today's sessions</h3>
+      <p class="value">{{ data.todaySessionsCount ?? 0 }}</p>
+      <a routerLink="/admin/attendance">Attendance</a>
+    </div>
+    <div class="card">
+      <h3>Subscriptions expiring soon</h3>
+      <p class="value">{{ data.subscriptionsExpiringSoon ?? 0 }}</p>
+      <a routerLink="/admin/payments">Payments</a>
+    </div>
+    <div class="card">
+      <h3>Contracts expiring soon</h3>
+      <p class="value">{{ data.contractsExpiringSoon ?? 0 }}</p>
+      <a routerLink="/admin/contracts">One-To-One</a>
+    </div>
+    <div class="card">
+      <h3>Revenue this month</h3>
+      <p class="value">{{ data.revenueThisMonth ?? 0 | number:'1.2-2' }}</p>
+      <a routerLink="/admin/reports">Reports</a>
+    </div>
+  </div>
+  <div *ngIf="!loading && summaryData.length" class="dx-grid-wrap">
+    <dx-data-grid
+      [dataSource]="summaryData"
+      [showBorders]="true"
+      [columnAutoWidth]="true"
+      height="180">
+      <dxi-column dataField="metric" caption="Metric"></dxi-column>
+      <dxi-column dataField="value" caption="Value" dataType="number"></dxi-column>
+    </dx-data-grid>
+  </div>
+  <nav class="quick-links">
+    <a routerLink="/admin/teachers">Teachers</a>
+    <a routerLink="/admin/parents">Parents</a>
+    <a routerLink="/admin/students">Students</a>
+    <a routerLink="/admin/contracts">One-To-One</a>
+    <a routerLink="/admin/group-classes">Group</a>
+    <a routerLink="/admin/attendance">Attendance</a>
+    <a routerLink="/admin/payments">Payments</a>
+    <a routerLink="/admin/reports">Reports</a>
+    <a routerLink="/admin/settings">Settings</a>
+  </nav>
+</div>

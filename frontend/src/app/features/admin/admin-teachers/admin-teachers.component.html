@@ -1,0 +1,93 @@
+<div class="page-block">
+  <header class="page-header">
+    <h1>Teachers</h1>
+    <button type="button" class="btn-primary" (click)="openOnboard()">Onboard teacher</button>
+  </header>
+  <p *ngIf="error" class="error">{{ error }}</p>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <dx-data-grid
+    *ngIf="!loading"
+    [dataSource]="teachers"
+    [showBorders]="true"
+    [columnAutoWidth]="true"
+    keyExpr="id">
+    <dxi-column dataField="fullName" caption="Name"></dxi-column>
+    <dxi-column dataField="email" caption="Email"></dxi-column>
+    <dxi-column dataField="verificationStatus" caption="Status"></dxi-column>
+    <dxi-column dataField="active" caption="Active" dataType="boolean"></dxi-column>
+    <dxi-column type="buttons" width="260" caption="Actions">
+      <dxi-button hint="Edit" (onClick)="openEdit($event.row.data)"></dxi-button>
+      <dxi-button hint="Verify" (onClick)="verify($event.row.data)"></dxi-button>
+      <dxi-button hint="Reject" (onClick)="reject($event.row.data)"></dxi-button>
+      <dxi-button hint="Activate" (onClick)="activate($event.row.data)"></dxi-button>
+      <dxi-button hint="Suspend" (onClick)="suspend($event.row.data)"></dxi-button>
+    </dxi-column>
+  </dx-data-grid>
+</div>
+
+<div class="modal" *ngIf="showOnboard">
+  <app-card class="modal-content">
+    <h2>Onboard teacher</h2>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" [(ngModel)]="onboardForm.email" placeholder="email@example.com" />
+    </div>
+    <div class="form-group">
+      <label>Full name</label>
+      <input type="text" [(ngModel)]="onboardForm.fullName" />
+    </div>
+    <div class="form-group">
+      <label>Phone</label>
+      <input type="text" [(ngModel)]="onboardForm.phone" />
+    </div>
+    <div class="form-group">
+      <label>Education</label>
+      <input type="text" [(ngModel)]="onboardForm.education" />
+    </div>
+    <div class="form-group">
+      <label>Bio</label>
+      <textarea [(ngModel)]="onboardForm.bio" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Specializations (comma-separated)</label>
+      <input type="text" [(ngModel)]="onboardForm.specializations" placeholder="e.g. Math, Science" />
+    </div>
+    <div *ngIf="tempPassword" class="temp-password">
+      <strong>Temporary password (share with teacher):</strong> {{ tempPassword }}
+    </div>
+    <div class="modal-actions">
+      <button type="button" (click)="submitOnboard()">Create</button>
+      <button type="button" (click)="closeOnboard()">Close</button>
+    </div>
+  </app-card>
+</div>
+
+<div class="modal" *ngIf="showEdit && selectedTeacher">
+  <app-card class="modal-content">
+    <h2>Edit teacher</h2>
+    <div class="form-group">
+      <label>Full name</label>
+      <input type="text" [(ngModel)]="editForm.fullName" />
+    </div>
+    <div class="form-group">
+      <label>Phone</label>
+      <input type="text" [(ngModel)]="editForm.phone" />
+    </div>
+    <div class="form-group">
+      <label>Education</label>
+      <input type="text" [(ngModel)]="editForm.education" />
+    </div>
+    <div class="form-group">
+      <label>Bio</label>
+      <textarea [(ngModel)]="editForm.bio" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Specializations (comma-separated)</label>
+      <input type="text" [(ngModel)]="editForm.specializations" placeholder="e.g. Math, Science" />
+    </div>
+    <div class="modal-actions">
+      <button type="button" (click)="saveEdit()">Save</button>
+      <button type="button" (click)="closeEdit()">Cancel</button>
+    </div>
+  </app-card>
+</div>

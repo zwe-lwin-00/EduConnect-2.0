@@ -1,0 +1,57 @@
+<div class="page-block">
+  <header class="page-header">
+    <h1>Sessions</h1>
+    <button type="button" class="btn-primary" (click)="openStart()">Start 1:1 session</button>
+  </header>
+  <div class="toolbar">
+    <label>From</label>
+    <input type="date" [(ngModel)]="from" (ngModelChange)="load()" />
+    <label>To</label>
+    <input type="date" [(ngModel)]="to" (ngModelChange)="load()" />
+  </div>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <dx-data-grid *ngIf="!loading" [dataSource]="sessions" [showBorders]="true" keyExpr="id">
+    <dxi-column dataField="sessionDate" caption="Date" dataType="date"></dxi-column>
+    <dxi-column caption="Type" [calculateCellValue]="(e) => e.type"></dxi-column>
+    <dxi-column caption="Student / Class" [calculateCellValue]="(e) => studentDisplay(e)"></dxi-column>
+    <dxi-column dataField="checkInAt" caption="Check-in"></dxi-column>
+    <dxi-column dataField="checkOutAt" caption="Check-out"></dxi-column>
+    <dxi-column dataField="lessonNotes" caption="Notes" [visible]="false"></dxi-column>
+    <dxi-column type="buttons" width="220" caption="Actions">
+      <dxi-button hint="Check in" (onClick)="checkIn($event.row.data)"></dxi-button>
+      <dxi-button hint="Check out" (onClick)="checkOut($event.row.data)"></dxi-button>
+      <dxi-button hint="Notes" (onClick)="openNotes($event.row.data)"></dxi-button>
+    </dxi-column>
+  </dx-data-grid>
+</div>
+<div class="modal" *ngIf="showStart">
+  <app-card class="modal-content">
+    <h2>Start 1:1 session</h2>
+    <div class="form-group">
+      <label>Contract (student)</label>
+      <select [(ngModel)]="startContractId">
+        <option *ngFor="let c of contracts" [value]="c.id">{{ c.studentName }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Date</label>
+      <input type="date" [(ngModel)]="startDate" />
+    </div>
+    <div class="modal-actions">
+      <button type="button" (click)="submitStart()">Start</button>
+      <button type="button" (click)="showStart = false">Cancel</button>
+    </div>
+  </app-card>
+</div>
+<div class="modal" *ngIf="showNotes">
+  <app-card class="modal-content">
+    <h2>Lesson notes</h2>
+    <div class="form-group">
+      <textarea [(ngModel)]="lessonNotes" rows="4" style="width:100%"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button type="button" (click)="saveNotes()">Save</button>
+      <button type="button" (click)="showNotes = false; selectedSession = null">Cancel</button>
+    </div>
+  </app-card>
+</div>

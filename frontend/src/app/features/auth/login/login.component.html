@@ -1,0 +1,31 @@
+<div class="login-page">
+  <app-card class="login-card">
+    <app-brand subtitle="Freelance School"></app-brand>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <app-form-field
+        label="Email"
+        id="email"
+        type="email"
+        placeholder="admin@educonnect.com"
+        [control]="form.get('email')"
+        errorMessage="Valid email required">
+      </app-form-field>
+      <app-form-field
+        label="Password"
+        id="password"
+        type="password"
+        placeholder="Password"
+        [control]="form.get('password')"
+        errorMessage="Required">
+      </app-form-field>
+      <div class="error" *ngIf="error">{{ error }}</div>
+      <app-primary-button
+        label="Sign in"
+        loadingLabel="Signing in…"
+        [loading]="loading"
+        [disabled]="form.invalid">
+      </app-primary-button>
+    </form>
+    <p class="hint">Default admin: admin@educonnect.com / 1qaz!QAZ</p>
+  </app-card>
+</div>

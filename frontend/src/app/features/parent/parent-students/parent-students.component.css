@@ -1,0 +1,7 @@
+.page-block { padding: 1rem; }
+.student-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+.student-card { padding: 1.25rem; background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-decoration: none; color: inherit; display: block; }
+.student-card h3 { margin: 0 0 0.25rem 0; }
+.student-card p { margin: 0; color: #64748b; }
+.student-card .link { font-size: 0.9rem; color: #0f3460; margin-top: 0.5rem; display: inline-block; }
+.empty { color: #64748b; padding: 1rem; }

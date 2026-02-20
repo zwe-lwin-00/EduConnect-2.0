@@ -1,0 +1,43 @@
+<div class="page-block">
+  <header class="page-header">
+    <h1>Group classes</h1>
+    <button type="button" class="btn-primary" (click)="openCreate()">Create group class</button>
+  </header>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <dx-data-grid *ngIf="!loading" [dataSource]="list" [showBorders]="true" keyExpr="id">
+    <dxi-column dataField="name" caption="Name"></dxi-column>
+    <dxi-column dataField="teacherName" caption="Teacher"></dxi-column>
+    <dxi-column dataField="active" caption="Active" dataType="boolean"></dxi-column>
+    <dxi-column dataField="enrollmentCount" caption="Enrollments" dataType="number"></dxi-column>
+    <dxi-column dataField="scheduleStartTime" caption="Start"></dxi-column>
+    <dxi-column dataField="scheduleEndTime" caption="End"></dxi-column>
+  </dx-data-grid>
+</div>
+<div class="modal" *ngIf="showCreate">
+  <app-card class="modal-content">
+    <h2>Create group class</h2>
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" [(ngModel)]="form.name" />
+    </div>
+    <div class="form-group">
+      <label>Teacher</label>
+      <select [(ngModel)]="form.teacherId">
+        <option value="">--</option>
+        <option *ngFor="let t of teachers" [value]="t.id">{{ t.fullName }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Schedule start</label>
+      <input type="time" [(ngModel)]="form.scheduleStartTime" />
+    </div>
+    <div class="form-group">
+      <label>Schedule end</label>
+      <input type="time" [(ngModel)]="form.scheduleEndTime" />
+    </div>
+    <div class="modal-actions">
+      <button type="button" (click)="submitCreate()">Create</button>
+      <button type="button" (click)="showCreate = false">Cancel</button>
+    </div>
+  </app-card>
+</div>

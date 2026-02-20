@@ -1,0 +1,12 @@
+<div class="form-field">
+  <label *ngIf="label" [attr.for]="id || null" class="label">{{ label }}</label>
+  <input
+    *ngIf="control"
+    [id]="id"
+    [type]="type"
+    [placeholder]="placeholder"
+    [formControl]="control"
+    class="input"
+  />
+  <span class="error" *ngIf="showError">{{ errorMessage || 'Invalid' }}</span>
+</div>

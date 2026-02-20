@@ -1,0 +1,73 @@
+# EduConnect API - Configuration (no magic numbers in code)
+# Use profile "dev" for H2 in-memory, or no profile for SQL Server
+spring:
+  application:
+    name: educonnect-api
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:sqlserver://localhost:1433;databaseName=educonnect;encrypt=true;trustServerCertificate=true}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER:com.microsoft.sqlserver.jdbc.SQLServerDriver}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.SQLServerDialect
+    open-in-view: false
+  h2:
+    console:
+      enabled: false
+
+# App – Dashboard and reporting
+app:
+  subscription-expiring-alert-days: 7
+  contract-expiring-alert-days: 14
+  contract-ending-soon-notification-days: 14
+  default-hourly-rate-for-revenue: 0
+  group-session-min-hours-per-student: 0.25
+  password-generation-length: 12
+
+# SeedData – Default admin and roles
+seed-data:
+  admin:
+    email: admin@educonnect.com
+    password: "1qaz!QAZ"
+    full-name: "EduConnect Admin"
+  roles:
+    - ADMIN
+    - TEACHER
+    - PARENT
+
+# JWT
+jwt:
+  secret: ${JWT_SECRET:EduConnectSecretKeyForJWTTokenGenerationChangeInProduction}
+  expiration-ms: 86400000  # 24 hours
+  refresh-expiration-ms: 604800000  # 7 days
+
+# CORS (allowed origins for Angular app)
+cors:
+  allowed-origins: http://localhost:4200
+  allowed-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+
+# Time zone for reporting/scheduling
+time-zone: Asia/Yangon
+
+# Optional: rate limiting (requests per minute per IP)
+rate-limiting:
+  enabled: false
+  requests-per-minute: 60
+
+# Health checks
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized

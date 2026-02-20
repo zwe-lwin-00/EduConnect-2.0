@@ -1,0 +1,32 @@
+<div class="teacher-dashboard">
+  <header class="page-header">
+    <h1>Teacher Dashboard</h1>
+  </header>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <div *ngIf="!loading" class="cards">
+    <a routerLink="/teacher/sessions" class="card">
+      <h3>Today's 1:1 sessions</h3>
+      <p class="value">{{ data.todayOneToOneSessions }}</p>
+    </a>
+    <a routerLink="/teacher/sessions" class="card">
+      <h3>Today's group sessions</h3>
+      <p class="value">{{ data.todayGroupSessions }}</p>
+    </a>
+    <a routerLink="/teacher/sessions" class="card">
+      <h3>Upcoming 1:1</h3>
+      <p class="value">{{ data.upcomingOneToOneCount }}</p>
+    </a>
+    <a routerLink="/teacher/homework-grades" class="card">
+      <h3>Homework to grade</h3>
+      <p class="value">{{ data.pendingHomeworkToGrade }}</p>
+    </a>
+  </div>
+  <nav class="quick-links">
+    <a routerLink="/teacher/availability">Availability</a>
+    <a routerLink="/teacher/students">Students</a>
+    <a routerLink="/teacher/sessions">Sessions</a>
+    <a routerLink="/teacher/group-classes">Group classes</a>
+    <a routerLink="/teacher/homework-grades">Homework & Grades</a>
+    <a routerLink="/teacher/profile">Profile</a>
+  </nav>
+</div>

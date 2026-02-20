@@ -1,0 +1,27 @@
+<div class="page-block">
+  <h1>Weekly availability</h1>
+  <p class="hint">Set your available time slots (1–7 = Mon–Sun). Save to update.</p>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <div *ngIf="!loading">
+    <div class="slot-list">
+      <div *ngFor="let s of slots; let i = index" class="slot-row">
+        <select [(ngModel)]="s.dayOfWeek" style="width:80px">
+          <option *ngFor="let d of [1,2,3,4,5,6,7]" [value]="d">{{ dayLabel(d) }}</option>
+        </select>
+        <input type="time" [(ngModel)]="s.startTime" />
+        <span>–</span>
+        <input type="time" [(ngModel)]="s.endTime" />
+        <button type="button" (click)="removeSlot(i)">Remove</button>
+      </div>
+    </div>
+    <div class="add-row">
+      <select [(ngModel)]="newSlot.dayOfWeek">
+        <option *ngFor="let d of [1,2,3,4,5,6,7]" [value]="d">{{ dayLabel(d) }}</option>
+      </select>
+      <input type="time" [(ngModel)]="newSlot.startTime" />
+      <input type="time" [(ngModel)]="newSlot.endTime" />
+      <button type="button" (click)="addSlot()">Add slot</button>
+    </div>
+    <button type="button" class="btn-primary" (click)="save()" [disabled]="saving">{{ saving ? 'Saving…' : 'Save availability' }}</button>
+  </div>
+</div>

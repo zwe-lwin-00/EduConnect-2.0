@@ -1,0 +1,14 @@
+.brand .title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: inherit;
+}
+.brand .subtitle {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+.brand:not(.light) .subtitle {
+  color: #94a3b8;
+}
