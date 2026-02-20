@@ -133,7 +133,7 @@ mvn spring-boot:run
 
 - API: **http://localhost:8080**
 - H2 console (when using `dev` profile): http://localhost:8080/h2-console
-- Login: `POST /auth/login` with `{"email":"admin@educonnect.com","password":"1qaz!QAZ"}`
+- Login: `POST /auth/login` with `{"email":"admin@educonnect.com","password":"1qaz!QAZ"}`. Response includes **access token** and **refresh token** (refresh token is stored hashed in DB). Use **refresh**: `POST /auth/refresh` with `{"refreshToken":"..."}` to get new access + refresh tokens (rotation: old refresh token is revoked). **Logout**: `POST /auth/logout` with `Authorization: Bearer <access token>` revokes all refresh tokens for that user. The frontend on **401** tries refresh once and retries the request; on refresh failure it logs out and redirects to login.
 
 Configuration is in `src/main/resources/application.yml`: app thresholds, seed-data (default admin), JWT, CORS, etc.
 
@@ -172,6 +172,13 @@ All API errors return a consistent JSON body via **GlobalExceptionHandler** (`@R
 - **Server error** (500) – any unhandled `Exception` (generic message, no stack in body).
 
 Shape: `{ "error": "...", "message": "...", "status": 400, "details": [], "path": "/..." }` (see `ApiErrorResponse`).
+
+## Refresh tokens
+
+- **Login** returns an **access token** and a **refresh token**. The refresh token is stored **hashed** (SHA-256) in the DB (`refresh_tokens` table).
+- **401** on an API request: the frontend calls **POST /auth/refresh** with the stored refresh token; on success it stores the new tokens and **retries** the original request. On refresh failure it logs out and redirects to login.
+- **Logout**: frontend calls **POST /auth/logout** with the current access token; the backend **revokes all refresh tokens** for that user. Then the frontend clears local storage.
+- **Rotation**: each **POST /auth/refresh** returns a new access and a new refresh token; the previous refresh token is **revoked** (one-time use).
 
 ## Guards & interceptors (Angular)
 

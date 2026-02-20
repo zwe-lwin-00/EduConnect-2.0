@@ -7,7 +7,7 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { AuthRoutes } from '../../shared/constants/auth.constants';
@@ -43,6 +43,23 @@ export class ErrorInterceptor implements HttpInterceptor {
         const body: ApiErrorBody = err.error;
 
         if (status === 401) {
+          const isRefreshRequest = err.url?.includes('/auth/refresh');
+          if (!isRefreshRequest && this.auth.getRefreshToken()) {
+            return this.auth.refreshAndGetNewAccessToken().pipe(
+              switchMap((newToken) => {
+                if (!newToken) {
+                  this.auth.logout();
+                  const returnUrl = this.router.url || '/';
+                  this.router.navigate([AuthRoutes.LOGIN], { queryParams: { returnUrl } });
+                  return throwError(() => err);
+                }
+                const cloned = request.clone({
+                  setHeaders: { Authorization: `Bearer ${newToken}` }
+                });
+                return next.handle(cloned);
+              })
+            );
+          }
           this.auth.logout();
           const returnUrl = this.router.url || '/';
           this.router.navigate([AuthRoutes.LOGIN], { queryParams: { returnUrl } });

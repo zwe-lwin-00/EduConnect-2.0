@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, BehaviorSubject } from 'rxjs';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, tap, catchError, finalize, shareReplay } from 'rxjs/operators';
 import { getApiUrl } from '../services/api-url';
 import { AuthRoutes, Roles, ROLE_HOME } from '../../shared/constants/auth.constants';
 
@@ -34,6 +34,7 @@ const USER_KEY = 'educonnect_user';
 export class AuthService {
   private readonly api = getApiUrl('auth');
   private currentUser$ = new BehaviorSubject<UserInfo | null>(this.getStoredUser());
+  private refreshInProgress: Observable<string | null> | null = null;
 
   constructor(private http: HttpClient) {}
 
@@ -49,6 +50,20 @@ export class AuthService {
   }
 
   logout(): void {
+    const token = this.getToken();
+    if (token) {
+      this.http.post(`${this.api}/logout`, {}, {
+        headers: new HttpHeaders({ Authorization: `Bearer ${token}` })
+      }).subscribe({
+        complete: () => this.clearStorage(),
+        error: () => this.clearStorage()
+      });
+    } else {
+      this.clearStorage();
+    }
+  }
+
+  private clearStorage(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(REFRESH_KEY);
     localStorage.removeItem(USER_KEY);
@@ -57,6 +72,33 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem(TOKEN_KEY);
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem(REFRESH_KEY);
+  }
+
+  /**
+   * Call POST /auth/refresh; on success store new tokens and return new access token.
+   * Shared in-flight: concurrent callers get the same observable.
+   */
+  refreshAndGetNewAccessToken(): Observable<string | null> {
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) return of(null);
+    if (this.refreshInProgress) return this.refreshInProgress;
+    this.refreshInProgress = this.http.post<LoginResponse>(`${this.api}/refresh`, { refreshToken }).pipe(
+      tap((res) => {
+        this.setToken(res.accessToken);
+        this.setRefreshToken(res.refreshToken);
+        this.setStoredUser(res.user);
+        this.currentUser$.next(res.user);
+      }),
+      map((res) => res.accessToken),
+      catchError(() => of(null)),
+      finalize(() => { this.refreshInProgress = null; }),
+      shareReplay(1)
+    );
+    return this.refreshInProgress;
   }
 
   getStoredUser(): UserInfo | null {

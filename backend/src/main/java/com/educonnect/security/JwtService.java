@@ -1,6 +1,5 @@
 package com.educonnect.security;
 
-import com.educonnect.application.auth.port.TokenPort;
 import com.educonnect.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class JwtService implements TokenPort {
+public class JwtService {
 
     private final JwtProperties props;
     private final SecretKey key;
@@ -65,7 +64,6 @@ public class JwtService implements TokenPort {
         return props.getRefreshExpirationMs();
     }
 
-    @Override
     public long getAccessTokenExpirationSeconds() {
         return props.getExpirationMs() / 1000;
     }
