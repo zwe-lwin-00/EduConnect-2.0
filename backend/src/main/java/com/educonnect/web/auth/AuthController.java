@@ -1,6 +1,7 @@
 package com.educonnect.web.auth;
 
 import com.educonnect.application.auth.dto.AuthDto;
+import com.educonnect.application.auth.usecase.ChangePasswordUseCase;
 import com.educonnect.application.auth.usecase.LoginUseCase;
 import com.educonnect.application.auth.usecase.RefreshUseCase;
 import com.educonnect.application.auth.usecase.RevokeRefreshTokensUseCase;
@@ -26,6 +27,7 @@ public class AuthController {
     private final LoginUseCase loginUseCase;
     private final RefreshUseCase refreshUseCase;
     private final RevokeRefreshTokensUseCase revokeRefreshTokensUseCase;
+    private final ChangePasswordUseCase changePasswordUseCase;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody AuthDto.LoginRequest request) {
@@ -70,8 +72,22 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "Logged out"));
     }
 
+    /** Requires authentication. Changes password for the current user. */
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@Valid @RequestBody AuthDto.ChangePasswordRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || auth.getPrincipal() == null) {
+            ApiErrorResponse body = ApiErrorResponse.of("Unauthorized", "NOT_AUTHENTICATED", "Authentication required", 401);
+            body.setRequestId(MDC.get("requestId"));
+            return ResponseEntity.status(401).body(body);
+        }
+        String userId = (String) auth.getPrincipal();
+        boolean changed = changePasswordUseCase.execute(userId, request.getCurrentPassword(), request.getNewPassword());
+        if (!changed) {
+            ApiErrorResponse body = ApiErrorResponse.of("Bad Request", "INVALID_CURRENT_PASSWORD", "Current password is incorrect", 400);
+            body.setRequestId(MDC.get("requestId"));
+            return ResponseEntity.status(400).body(body);
+        }
         return ResponseEntity.ok(Map.of("message", "Password changed. Re-login to use new password."));
     }
 }

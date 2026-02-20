@@ -74,7 +74,7 @@ The app shows **“Join Zoom meeting”** in the **Sessions** grid when a sessio
 
 - **One-To-One** – Teacher selects a contract session from **Sessions**, then **Check in**, **Check out**, and **Lesson notes**; duration (hours used) is stored on the contract’s attendance log.
 - **Group** – Teacher selects a group session (by class and date), then **Check in**, **Check out**, and **Lesson notes**; duration is recorded **per student** in the group session attendances.
-- **Admin override** – In **Attendance**, filter by date and use **Override** on any row to set check-in time, check-out time, hours used, and lesson notes.
+- **Admin override** – In **Attendance**, filter by date and use **Override** on any row to set check-in time, check-out time, hours used, and lesson notes. Admin attendance lists and overrides **One-To-One** sessions only; group session attendance is managed from the teacher **Sessions** UI.
 
 ## Student Active / Freeze
 
@@ -83,7 +83,7 @@ Admin can **Freeze** or **Activate** a student from the **Students** page. Froze
 ## Roles & Access
 
 - **Admin** – Dashboard, teachers (onboard, edit, verify, reject, activate/suspend), parents & students (create, list; student active/freeze), One-To-One, Group, attendance (with override), subscriptions (monthly create & renew), reports, Settings.
-- **Teacher** – Dashboard, availability (weekly), assigned students, sessions (One-To-One and Group check-in/out and notes; “Join Zoom meeting” when session in progress), **month calendar** (1:1 and group, upcoming and completed), group classes (edit name/Zoom/active; students enrolled by One-To-One or Group subscription), homework & grades, profile (set default Zoom join URL for 1:1).
+- **Teacher** – Dashboard, availability (weekly), assigned students, sessions (One-To-One and Group check-in/out and notes; “Join Zoom meeting” when session in progress), **month calendar** (1:1 and group, upcoming and completed), group classes (edit name/Zoom/active; students enrolled by One-To-One or Group subscription), homework & grades (homework can only be assigned to students the teacher teaches via 1:1 contract or group enrollment), profile (set default Zoom join URL for 1:1).
 - **Parent** – My Students and student learning overview (assigned teacher, sessions, homework, grades); **month calendar per student** (1:1 and group as “Group: &lt;class name&gt;”, DateYmd and holidays); parent notifications/alerts driven by config (e.g. contract or subscription ending soon). No self-registration; admin creates parent and shares credentials.
 
 ## Calendars (teacher & parent)
@@ -93,7 +93,7 @@ Month calendars use **DateYmd** (`yyyy-MM-dd`) for correct day matching and holi
 - **Teacher calendar** (`/teacher/calendar`) – Shows one-to-one and group sessions for the month:
   - **Upcoming** from contract/group schedule (recurrence by days of week; days that fall on holidays are excluded).
   - **Completed** from attendance logs and group sessions.
-- **Parent student calendar** (`/parent/student/:studentId/calendar`) – Same for a single student (1:1 + group). Group sessions are shown as **“Group: &lt;class name&gt;”**. Only sessions for that student are included (for group, only sessions where the student has an attendance record count as completed; upcoming group days come from the student’s enrolled classes).
+- **Parent student calendar** (`/parent/student/:studentId/calendar`) – Same for a single student (1:1 + group). Group sessions are shown as **“Group: &lt;class name&gt;”**. Only sessions for that student are included (for group, only sessions where the student has an attendance record count as completed; upcoming group days come from the student’s enrolled classes). **Parent student overview** (recent sessions and total sessions count) uses the same rule: group sessions count only when the student has a `GroupSessionAttendance` record (i.e. actually attended).
 - **Holidays** – Admin-configured holidays (Settings) are excluded from upcoming schedule generation and returned in the calendar API so the UI can highlight or grey out holiday days.
 
 ## Notifications (bell and Mark all as read)
@@ -188,6 +188,10 @@ All API errors return a consistent JSON body via **GlobalExceptionHandler** (`@R
 
 Shape: `{ "error": "...", "message": "...", "status": 400, "details": [], "path": "/..." }` (see `ApiErrorResponse`).
 
+## Change password
+
+- **POST /auth/change-password** requires **authentication** (Bearer token). Body: `currentPassword`, `newPassword`. Updates the current user’s password and clears `mustChangePassword`. Returns 400 if current password is incorrect, 401 if not authenticated.
+
 ## Refresh tokens
 
 - **Login** returns an **access token** and a **refresh token**. The refresh token is stored **hashed** (SHA-256) in the DB (`refresh_tokens` table).
@@ -208,7 +212,7 @@ Routes use `canActivate: [AuthGuard, RoleGuard]` and `data: { roles: [Roles.ADMI
 
 The following flows are implemented and verified:
 
-- **Auth** – Login (`/auth/login`), change-password; **returnUrl** is set when guards redirect to login and used after successful login to send the user back. **Guards**: AuthGuard (require token, redirect with `returnUrl`), RoleGuard (require one of route’s roles, else redirect to role home or login).
+- **Auth** – Login (`/auth/login`), change-password (requires auth; updates password and clears mustChangePassword); **returnUrl** is set when guards redirect to login and used after successful login to send the user back. **Guards**: AuthGuard (require token, redirect with `returnUrl`), RoleGuard (require one of route’s roles, else redirect to role home or login).
 - **401 refresh** – ErrorInterceptor tries **POST /auth/refresh** on 401, then retries the failed request with the new token; on refresh failure, logout and redirect to login.
 - **Role-based routing** – `/admin/*`, `/teacher/*`, `/parent/*` protected by AuthGuard + RoleGuard with the corresponding roles.
 - **API ↔ frontend IDs** – Contract, student, teacher, parent IDs are passed consistently (e.g. route params, request bodies, DTOs). Payloads match backend DTOs (e.g. CreateContractRequest, StudentDto, TeacherDto, CreateParentRequest).

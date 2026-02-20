@@ -1,7 +1,12 @@
 package com.educonnect.web.teacher;
 
 import com.educonnect.application.teacher.dto.TeacherHomeworkDto;
+import com.educonnect.domain.ContractSession;
+import com.educonnect.domain.GroupClassEnrollment;
 import com.educonnect.domain.Homework;
+import com.educonnect.repository.ContractSessionRepository;
+import com.educonnect.repository.GroupClassEnrollmentRepository;
+import com.educonnect.repository.GroupClassRepository;
 import com.educonnect.repository.HomeworkRepository;
 import com.educonnect.repository.StudentRepository;
 import com.educonnect.web.common.CurrentUserResolver;
@@ -10,8 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -22,6 +29,9 @@ public class TeacherHomeworkController {
     private final CurrentUserResolver currentUserResolver;
     private final HomeworkRepository homeworkRepository;
     private final StudentRepository studentRepository;
+    private final ContractSessionRepository contractSessionRepository;
+    private final GroupClassRepository groupClassRepository;
+    private final GroupClassEnrollmentRepository enrollmentRepository;
 
     @GetMapping
     public ResponseEntity<List<TeacherHomeworkDto>> list(
@@ -45,6 +55,18 @@ public class TeacherHomeworkController {
         }
         var student = studentRepository.findById(studentId).orElse(null);
         if (student == null) return ResponseEntity.badRequest().build();
+        Set<String> allowedStudentIds = new HashSet<>();
+        for (ContractSession c : contractSessionRepository.findByTeacher_IdAndStatus(teacher.getId(), ContractSession.ContractStatus.ACTIVE)) {
+            allowedStudentIds.add(c.getStudent().getId());
+        }
+        for (var gc : groupClassRepository.findByTeacher_IdAndActiveTrue(teacher.getId())) {
+            for (GroupClassEnrollment en : enrollmentRepository.findByGroupClassId(gc.getId())) {
+                allowedStudentIds.add(en.getStudent().getId());
+            }
+        }
+        if (!allowedStudentIds.contains(studentId)) {
+            return ResponseEntity.status(403).build();
+        }
         Homework h = Homework.builder()
                 .teacher(teacher)
                 .student(student)

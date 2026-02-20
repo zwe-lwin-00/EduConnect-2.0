@@ -29,6 +29,7 @@ public class ParentStudentOverviewController {
     private final StudentGradeRepository gradeRepository;
     private final GroupClassEnrollmentRepository enrollmentRepository;
     private final GroupSessionRepository groupSessionRepository;
+    private final GroupSessionAttendanceRepository groupSessionAttendanceRepository;
 
     @GetMapping("/{studentId}/overview")
     public ResponseEntity<StudentOverviewDto> overview(@PathVariable String studentId) {
@@ -58,17 +59,16 @@ public class ParentStudentOverviewController {
                     log.getLessonNotes()
             ));
         }
-        for (var en : enrollmentRepository.findByStudent_Id(studentId)) {
-            for (GroupSession gs : groupSessionRepository.findByGroupClass_IdAndSessionDateBetweenOrderBySessionDateDesc(en.getGroupClass().getId(), from, to)) {
-                recentSessions.add(new StudentOverviewDto.SessionSummaryDto(
-                        gs.getSessionDate(),
-                        "GROUP",
-                        gs.getGroupClass().getName(),
-                        gs.getCheckInAt(),
-                        gs.getCheckOutAt(),
-                        gs.getLessonNotes()
-                ));
-            }
+        for (GroupSessionAttendance att : groupSessionAttendanceRepository.findByStudent_IdAndGroupSession_SessionDateBetweenOrderByGroupSession_SessionDateDesc(studentId, from, to)) {
+            GroupSession gs = att.getGroupSession();
+            recentSessions.add(new StudentOverviewDto.SessionSummaryDto(
+                    gs.getSessionDate(),
+                    "GROUP",
+                    gs.getGroupClass().getName(),
+                    gs.getCheckInAt(),
+                    gs.getCheckOutAt(),
+                    gs.getLessonNotes()
+            ));
         }
         recentSessions.sort((a, b) -> (b.getSessionDate() != null && a.getSessionDate() != null)
                 ? b.getSessionDate().compareTo(a.getSessionDate()) : 0);
@@ -85,10 +85,8 @@ public class ParentStudentOverviewController {
                 .collect(Collectors.toList());
 
         int totalSessions = attendanceLogRepository.findByContract_Student_Id(studentId).size();
-        for (var en : enrollmentRepository.findByStudent_Id(studentId)) {
-            totalSessions += groupSessionRepository.findByGroupClass_IdAndSessionDateBetweenOrderBySessionDateDesc(
-                    en.getGroupClass().getId(), LocalDate.now().minusYears(1), LocalDate.now()).size();
-        }
+        totalSessions += groupSessionAttendanceRepository.findByStudent_IdAndGroupSession_SessionDateBetweenOrderByGroupSession_SessionDateDesc(
+                studentId, LocalDate.now().minusYears(1), LocalDate.now()).size();
         int completedHomework = (int) homework.stream().filter(h -> "GRADED".equals(h.getStatus()) || "SUBMITTED".equals(h.getStatus())).count();
 
         StudentOverviewDto dto = StudentOverviewDto.builder()
