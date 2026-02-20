@@ -46,6 +46,10 @@ public class GroupClass {
     @Column(name = "schedule_end_time")
     private LocalTime scheduleEndTime;
 
+    /** Set when admin changes schedule (days/times); teacher can see when schedule was last updated. */
+    @Column(name = "schedule_updated_at")
+    private Instant scheduleUpdatedAt;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 

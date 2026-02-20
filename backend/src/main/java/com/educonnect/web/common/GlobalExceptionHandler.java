@@ -1,6 +1,10 @@
 package com.educonnect.web.common;
 
+import com.educonnect.shared.logging.LoggerExtensions;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -12,10 +16,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Exception handling middleware: consistent API error responses for all controller exceptions.
+ * Exception handling middleware: consistent API error responses (error, code, details?, requestId?).
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final String REQUEST_ID_MDC = "requestId";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidation(
@@ -25,11 +32,14 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.toList());
         ApiErrorResponse body = ApiErrorResponse.builder()
                 .error("Validation failed")
+                .code("VALIDATION_FAILED")
                 .message("Invalid request body")
                 .status(HttpStatus.BAD_REQUEST.value())
                 .details(details)
                 .path(request.getRequestURI())
+                .requestId(MDC.get(REQUEST_ID_MDC))
                 .build();
+        LoggerExtensions.warn(log, "Validation failed path={} details={}", request.getRequestURI(), details);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
@@ -38,9 +48,12 @@ public class GlobalExceptionHandler {
             IllegalArgumentException ex, HttpServletRequest request) {
         ApiErrorResponse body = ApiErrorResponse.of(
                 "Bad request",
+                "BAD_REQUEST",
                 ex.getMessage() != null ? ex.getMessage() : "Bad request",
                 HttpStatus.BAD_REQUEST.value());
         body.setPath(request.getRequestURI());
+        body.setRequestId(MDC.get(REQUEST_ID_MDC));
+        LoggerExtensions.warn(log, "Bad request path={} message={}", request.getRequestURI(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
@@ -49,9 +62,12 @@ public class GlobalExceptionHandler {
             IllegalStateException ex, HttpServletRequest request) {
         ApiErrorResponse body = ApiErrorResponse.of(
                 "Conflict",
+                "CONFLICT",
                 ex.getMessage() != null ? ex.getMessage() : "Conflict",
                 HttpStatus.CONFLICT.value());
         body.setPath(request.getRequestURI());
+        body.setRequestId(MDC.get(REQUEST_ID_MDC));
+        LoggerExtensions.warn(log, "Conflict path={} message={}", request.getRequestURI(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 
@@ -60,9 +76,12 @@ public class GlobalExceptionHandler {
             AccessDeniedException ex, HttpServletRequest request) {
         ApiErrorResponse body = ApiErrorResponse.of(
                 "Forbidden",
+                "FORBIDDEN",
                 ex.getMessage() != null ? ex.getMessage() : "Access denied",
                 HttpStatus.FORBIDDEN.value());
         body.setPath(request.getRequestURI());
+        body.setRequestId(MDC.get(REQUEST_ID_MDC));
+        LoggerExtensions.warn(log, "Forbidden path={}", request.getRequestURI());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
     }
 
@@ -71,9 +90,12 @@ public class GlobalExceptionHandler {
             Exception ex, HttpServletRequest request) {
         ApiErrorResponse body = ApiErrorResponse.of(
                 "Internal server error",
+                "INTERNAL_ERROR",
                 "An unexpected error occurred",
                 HttpStatus.INTERNAL_SERVER_ERROR.value());
         body.setPath(request.getRequestURI());
+        body.setRequestId(MDC.get(REQUEST_ID_MDC));
+        LoggerExtensions.error(log, "Unhandled exception path=" + request.getRequestURI(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
 }

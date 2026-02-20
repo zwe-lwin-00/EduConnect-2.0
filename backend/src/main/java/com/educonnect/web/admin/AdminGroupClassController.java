@@ -2,11 +2,15 @@ package com.educonnect.web.admin;
 
 import com.educonnect.application.admin.dto.CreateGroupClassRequest;
 import com.educonnect.application.admin.dto.GroupClassDto;
+import com.educonnect.application.shared.ContractEnrollmentAccess;
+import com.educonnect.application.shared.ScheduleValidator;
+import com.educonnect.domain.ContractSession;
 import com.educonnect.domain.GroupClass;
 import com.educonnect.domain.GroupClassEnrollment;
 import com.educonnect.domain.Student;
 import com.educonnect.domain.Subscription;
 import com.educonnect.domain.TeacherProfile;
+import com.educonnect.repository.ContractSessionRepository;
 import com.educonnect.repository.GroupClassEnrollmentRepository;
 import com.educonnect.repository.GroupClassRepository;
 import com.educonnect.repository.StudentRepository;
@@ -31,6 +35,7 @@ public class AdminGroupClassController {
     private final GroupClassEnrollmentRepository enrollmentRepository;
     private final StudentRepository studentRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final ContractSessionRepository contractSessionRepository;
 
     @GetMapping
     public List<GroupClassDto> list() {
@@ -39,6 +44,8 @@ public class AdminGroupClassController {
 
     @PostMapping
     public ResponseEntity<GroupClassDto> create(@Valid @RequestBody CreateGroupClassRequest req) {
+        ScheduleValidator.validateDaysOfWeek(req.getDaysOfWeek());
+        ScheduleValidator.validateScheduleTimes(req.getScheduleStartTime(), req.getScheduleEndTime());
         TeacherProfile teacher = teacherProfileRepository.findById(req.getTeacherId()).orElse(null);
         if (teacher == null) return ResponseEntity.badRequest().build();
         GroupClass gc = GroupClass.builder()
@@ -56,17 +63,23 @@ public class AdminGroupClassController {
     @PatchMapping("/{id}")
     public ResponseEntity<GroupClassDto> update(@PathVariable String id,
                                                 @RequestBody CreateGroupClassRequest req) {
+        if (req.getDaysOfWeek() != null) ScheduleValidator.validateDaysOfWeek(req.getDaysOfWeek());
         return groupClassRepository.findById(id)
                 .map(gc -> {
+                    java.time.LocalTime effectiveStart = req.getScheduleStartTime() != null ? req.getScheduleStartTime() : gc.getScheduleStartTime();
+                    java.time.LocalTime effectiveEnd = req.getScheduleEndTime() != null ? req.getScheduleEndTime() : gc.getScheduleEndTime();
+                    ScheduleValidator.validateScheduleTimes(effectiveStart, effectiveEnd);
                     if (enrollmentRepository.findByGroupClassId(id).isEmpty()) {
                         if (req.getTeacherId() != null) {
                             teacherProfileRepository.findById(req.getTeacherId()).ifPresent(gc::setTeacher);
                         }
                     }
                     if (req.getName() != null) gc.setName(req.getName());
-                    if (req.getDaysOfWeek() != null) gc.setDaysOfWeek(req.getDaysOfWeek());
-                    if (req.getScheduleStartTime() != null) gc.setScheduleStartTime(req.getScheduleStartTime());
-                    if (req.getScheduleEndTime() != null) gc.setScheduleEndTime(req.getScheduleEndTime());
+                    boolean scheduleChanged = false;
+                    if (req.getDaysOfWeek() != null) { gc.setDaysOfWeek(req.getDaysOfWeek()); scheduleChanged = true; }
+                    if (req.getScheduleStartTime() != null) { gc.setScheduleStartTime(req.getScheduleStartTime()); scheduleChanged = true; }
+                    if (req.getScheduleEndTime() != null) { gc.setScheduleEndTime(req.getScheduleEndTime()); scheduleChanged = true; }
+                    if (scheduleChanged) gc.setScheduleUpdatedAt(java.time.Instant.now());
                     groupClassRepository.save(gc);
                     return ResponseEntity.ok(toDto(gc));
                 })
@@ -76,7 +89,8 @@ public class AdminGroupClassController {
     @PostMapping("/{id}/enrollments")
     public ResponseEntity<?> addEnrollment(@PathVariable String id,
                                            @RequestParam String studentId,
-                                           @RequestParam(required = false) String subscriptionId) {
+                                           @RequestParam(required = false) String subscriptionId,
+                                           @RequestParam(required = false) String contractId) {
         return groupClassRepository.findById(id)
                 .flatMap(gc -> studentRepository.findById(studentId).map(student -> {
                     if (enrollmentRepository.existsByGroupClassIdAndStudentId(id, studentId)) {
@@ -87,7 +101,21 @@ public class AdminGroupClassController {
                             .student(student)
                             .build();
                     if (subscriptionId != null && !subscriptionId.isBlank()) {
-                        subscriptionRepository.findById(subscriptionId).ifPresent(en::setSubscription);
+                        subscriptionRepository.findById(subscriptionId)
+                                .filter(s -> s.getStudent().getId().equals(studentId))
+                                .ifPresent(en::setSubscription);
+                    }
+                    if (contractId != null && !contractId.isBlank()) {
+                        ContractSession contract = contractSessionRepository.findById(contractId).orElse(null);
+                        if (contract == null || !contract.getStudent().getId().equals(studentId)
+                                || !contract.getTeacher().getId().equals(gc.getTeacher().getId())) {
+                            return ResponseEntity.badRequest().body("Invalid or mismatched contract");
+                        }
+                        if (!ContractEnrollmentAccess.hasAccess(contract)) {
+                            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                    .body("Contract has no access: ensure subscription is ACTIVE and in period, or legacy end date is not past");
+                        }
+                        en.setContract(contract);
                     }
                     enrollmentRepository.save(en);
                     return ResponseEntity.status(HttpStatus.CREATED).build();

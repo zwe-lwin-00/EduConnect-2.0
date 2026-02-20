@@ -1,6 +1,8 @@
 package com.educonnect.web.teacher;
 
+import com.educonnect.application.shared.ContractEnrollmentAccess;
 import com.educonnect.application.teacher.dto.TeacherGroupClassDto;
+import com.educonnect.domain.ContractSession;
 import com.educonnect.domain.GroupClass;
 import com.educonnect.domain.GroupClassEnrollment;
 import com.educonnect.repository.ContractSessionRepository;
@@ -75,9 +77,15 @@ public class TeacherGroupClassController {
                         subscriptionRepository.findById(subscriptionId).ifPresent(en::setSubscription);
                     }
                     if (contractId != null && !contractId.isBlank()) {
-                        contractSessionRepository.findById(contractId)
-                                .filter(c -> c.getTeacher().getId().equals(teacherId) && c.getStudent().getId().equals(studentId))
-                                .ifPresent(en::setContract);
+                        ContractSession contract = contractSessionRepository.findById(contractId).orElse(null);
+                        if (contract == null || !contract.getTeacher().getId().equals(teacherId)
+                                || !contract.getStudent().getId().equals(studentId)) {
+                            return ResponseEntity.badRequest().build();
+                        }
+                        if (!ContractEnrollmentAccess.hasAccess(contract)) {
+                            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                        }
+                        en.setContract(contract);
                     }
                     enrollmentRepository.save(en);
                     return ResponseEntity.status(HttpStatus.CREATED).<Void>build();
@@ -107,6 +115,7 @@ public class TeacherGroupClassController {
                 .daysOfWeek(gc.getDaysOfWeek())
                 .scheduleStartTime(gc.getScheduleStartTime())
                 .scheduleEndTime(gc.getScheduleEndTime())
+                .scheduleUpdatedAt(gc.getScheduleUpdatedAt())
                 .enrollmentCount(enrollmentRepository.findByGroupClassId(gc.getId()).size())
                 .build();
     }

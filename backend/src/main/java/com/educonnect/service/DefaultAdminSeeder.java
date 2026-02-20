@@ -3,6 +3,7 @@ package com.educonnect.service;
 import com.educonnect.config.SeedDataProperties;
 import com.educonnect.domain.ApplicationUser;
 import com.educonnect.repository.ApplicationUserRepository;
+import com.educonnect.shared.logging.LoggerExtensions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -38,9 +39,9 @@ public class DefaultAdminSeeder {
     @Transactional
     public void seedDefaultAdmin() {
         String email = seedData.getAdmin().getEmail();
-        log.info("EduConnect startup: default admin check ({}). Created on first run if missing.", email);
+        LoggerExtensions.info(log, "EduConnect startup: default admin check ({}). Created on first run if missing.", email);
         if (userRepository.existsByEmailIgnoreCase(email)) {
-            log.info("Default admin already exists. Skipping seed.");
+            LoggerExtensions.info(log, "Default admin already exists. Skipping seed.");
             return;
         }
         ApplicationUser admin = ApplicationUser.builder()
@@ -52,6 +53,6 @@ public class DefaultAdminSeeder {
                 .active(true)
                 .build();
         userRepository.save(admin);
-        log.info("Default admin account CREATED. Login at /auth/login with: {} / (password in seed-data.admin)", email);
+        LoggerExtensions.info(log, "Default admin account CREATED. Login at /auth/login with: {} / (password in seed-data.admin)", email);
     }
 }

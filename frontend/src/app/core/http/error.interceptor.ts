@@ -11,7 +11,7 @@ import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { AuthRoutes } from '../../shared/constants/auth.constants';
-import { environment } from '../../../environments/environment';
+import { getApiBase } from '../services/api-url';
 
 /** API error body shape from backend GlobalExceptionHandler. */
 export interface ApiErrorBody {
@@ -35,7 +35,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
-        if (!err.url?.startsWith(environment.apiUrl)) {
+        if (!err.url?.startsWith(getApiBase())) {
           return throwError(() => err);
         }
 

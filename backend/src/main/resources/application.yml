@@ -62,8 +62,10 @@ time-zone: Asia/Yangon
 rate-limiting:
   enabled: false
   requests-per-minute: 60
+  login-rate-limit-enabled: true
+  login-max-attempts-per-minute: 10
 
-# Health checks
+# Health checks (liveness/readiness for k8s or load balancers)
 management:
   endpoints:
     web:
@@ -72,3 +74,8 @@ management:
   endpoint:
     health:
       show-details: when-authorized
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true

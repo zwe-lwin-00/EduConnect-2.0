@@ -4,6 +4,7 @@ import com.educonnect.application.teacher.dto.AvailabilitySlotDto;
 import com.educonnect.domain.TeacherAvailability;
 import com.educonnect.repository.TeacherAvailabilityRepository;
 import com.educonnect.web.common.CurrentUserResolver;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class TeacherAvailabilityController {
     }
 
     @PutMapping
-    public ResponseEntity<List<AvailabilitySlotDto>> put(@RequestBody List<AvailabilitySlotDto> slots) {
+    public ResponseEntity<List<AvailabilitySlotDto>> put(@Valid @RequestBody List<AvailabilitySlotDto> slots) {
         var teacher = currentUserResolver.requireCurrentTeacher();
         String teacherId = teacher.getId();
         availabilityRepository.findByTeacher_Id(teacherId).forEach(availabilityRepository::delete);

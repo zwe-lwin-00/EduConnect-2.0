@@ -13,14 +13,35 @@ Check the API console on every startup:
 `EduConnect startup: default admin check (admin@educonnect.com). Created on first run if missing.`  
 On first run you’ll see: `Default admin account CREATED. Login at /auth/login with: admin@educonnect.com ...`
 
+## Names (full name only)
+
+**Users** (`ApplicationUser`) and **students** use a **single FullName field** (no separate first/last name). This is used consistently across:
+
+- **Backend:** Domain entities (`full_name` column), DTOs (`fullName`), and request validators (`@NotBlank` on `fullName` in CreateTeacherRequest, CreateParentRequest, CreateStudentRequest).
+- **API:** All create/update endpoints accept and return `fullName`.
+- **Frontend:** Forms and grids use `fullName`; labels are “Full name” or “Name” for person names (group class and holiday use “Name” for the entity title, not person).
+
+Do not introduce first name / last name fields; keep a single full name everywhere.
+
 ## Class Types
 
-| Type       | Description              | In the system                    |
-|-----------|---------------------------|----------------------------------|
-| One-To-One| One teacher, one student  | Stored as Contract (ContractSession) |
-| Group     | One teacher, many students| GroupClass + enrollments         |
+There are **two class types**:
 
-In the UI, the admin sidebar uses **One-To-One** and **Group**. The technical term "Contract" means an One-To-One class.
+### One-To-One (contract-based)
+
+- **Model:** One teacher, one student. Stored as a **Contract** (`ContractSession`) linked to an optional One-To-One subscription.
+- **Flow:** Admin creates the contract (teacher, student, schedule). Teacher runs a 1:1 session from **Sessions**: **Check in**, **Check out**, and optional lesson notes. Duration (hours used) is recorded on the attendance log.
+- **In the system:** Contract + `AttendanceLog` per session (check-in, check-out, hours used, notes).
+
+### Group
+
+- **Model:** One teacher, many students. Admin creates a **Group class** (`GroupClass`); students are **enrolled** via a **One-To-One** or **Group** subscription (or legacy contract).
+- **Flow:** Admin creates the group class and enrolls students (subscription or contract). Teacher starts a **Group session** for that class on a date, then **Check in** / **Check out** and lesson notes. **Duration is recorded per student** in `GroupSessionAttendance` (hours used per attendee).
+- **Parent visibility:** Parents see their students’ learning overview (assigned teacher, sessions, homework, grades). Parent-facing notifications and alerts (e.g. contract/subscription ending soon) are driven by app config (e.g. `contract-ending-soon-notification-days`, `subscription-expiring-alert-days`).
+
+In the UI, the admin sidebar uses **One-To-One** and **Group**. The technical term **Contract** means an One-To-One class.
+
+**Schedule validation (Group and One-To-One):** Days of week must be 1–7 with no duplicates; end time must be after start time when both are set. The API enforces this on create/update. When admin changes a Group class schedule (days or times), the backend sets `scheduleUpdatedAt`; the teacher API exposes it so the UI can show “Schedule updated on …”. **Enrollment by contract:** When enrolling a student in a group class by contract, the API checks access: for subscription-backed contracts the subscription must be ACTIVE and today within its period; for legacy contracts the legacy end date must not be past.
 
 ## Billing Model (monthly only)
 
@@ -41,7 +62,8 @@ Admin creates classes and assigns teachers/students; subscriptions define the bi
 
 ## Check-in / Check-out
 
-- **Teacher** – From **Sessions**: start a 1:1 session, then **Check in**, **Check out**, and add **Lesson notes** for One-To-One and Group sessions.
+- **One-To-One** – Teacher selects a contract session from **Sessions**, then **Check in**, **Check out**, and **Lesson notes**; duration (hours used) is stored on the contract’s attendance log.
+- **Group** – Teacher selects a group session (by class and date), then **Check in**, **Check out**, and **Lesson notes**; duration is recorded **per student** in the group session attendances.
 - **Admin override** – In **Attendance**, filter by date and use **Override** on any row to set check-in time, check-out time, hours used, and lesson notes.
 
 ## Student Active / Freeze
@@ -51,8 +73,8 @@ Admin can **Freeze** or **Activate** a student from the **Students** page. Froze
 ## Roles & Access
 
 - **Admin** – Dashboard, teachers (onboard, edit, verify, reject, activate/suspend), parents & students (create, list; student active/freeze), One-To-One, Group, attendance (with override), subscriptions (monthly create & renew), reports, Settings.
-- **Teacher** – Dashboard, availability (weekly), assigned students, sessions (1:1 and Group check-in/out and notes), group classes (edit name/Zoom/active; enroll by contract), homework & grades, profile (read-only; Zoom URL for 1:1).
-- **Parent** – My Students and student learning overview (assigned teacher, sessions, homework, grades). No self-registration; admin creates parent and shares credentials.
+- **Teacher** – Dashboard, availability (weekly), assigned students, sessions (One-To-One contract check-in/out and Group session check-in/out and notes), group classes (edit name/Zoom/active; students enrolled by One-To-One or Group subscription), homework & grades, profile (read-only; Zoom URL for 1:1).
+- **Parent** – My Students and student learning overview (assigned teacher, sessions, homework, grades); parent notifications/alerts driven by config (e.g. contract or subscription ending soon). No self-registration; admin creates parent and shares credentials.
 
 ## Time zone (Myanmar, Asia/Yangon UTC+6:30)
 
@@ -117,6 +139,9 @@ npm start
 - App: **http://localhost:4200**
 - **DevExtreme 22.2.4** is used for DataGrid and other widgets (see Admin Dashboard). Theme: `dx.light.css` in `angular.json`.
 - Login at `/auth/login` with the default admin credentials above. After login, Admin is redirected to `/admin`.
+- **API URL normalization:** All API URLs are built via `getApiUrl()` / `getApiBase()` (`core/services/api-url.ts`) so `environment.apiUrl` + path never produces a double slash.
+- **Browser auto-launch:** `ng serve` does not open the browser by default (`angular.json` → serve `open: false`). Open http://localhost:4200 manually if needed.
+- **Swagger:** Not included. If you add Swagger/OpenAPI (e.g. springdoc), keep it disabled by default and do not enable browser auto-launch.
 
 ## Project Structure
 

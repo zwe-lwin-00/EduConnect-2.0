@@ -84,6 +84,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "open": false
+          },
           "configurations": {
             "production": {
               "browserTarget": "frontend:build:production"

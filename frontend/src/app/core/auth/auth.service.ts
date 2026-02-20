@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
+import { getApiUrl } from '../services/api-url';
 import { AuthRoutes, Roles, ROLE_HOME } from '../../shared/constants/auth.constants';
 
 export interface LoginResponse {
@@ -32,7 +32,7 @@ const USER_KEY = 'educonnect_user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly api = `${environment.apiUrl}/auth`;
+  private readonly api = getApiUrl('auth');
   private currentUser$ = new BehaviorSubject<UserInfo | null>(this.getStoredUser());
 
   constructor(private http: HttpClient) {}

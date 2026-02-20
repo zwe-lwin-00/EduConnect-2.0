@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { getApiUrl } from './api-url';
 
-const BASE = `${environment.apiUrl}/parent`;
+const BASE = getApiUrl('parent');
 
 export interface ParentStudentDto {
   id: string;

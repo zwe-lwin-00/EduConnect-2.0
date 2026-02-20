@@ -2,6 +2,7 @@ package com.educonnect.web.admin;
 
 import com.educonnect.application.admin.dto.ContractDto;
 import com.educonnect.application.admin.dto.CreateContractRequest;
+import com.educonnect.application.shared.ScheduleValidator;
 import com.educonnect.domain.ContractSession;
 import com.educonnect.domain.Student;
 import com.educonnect.domain.Subscription;
@@ -44,6 +45,8 @@ public class AdminContractController {
 
     @PostMapping
     public ResponseEntity<ContractDto> create(@Valid @RequestBody CreateContractRequest req) {
+        ScheduleValidator.validateDaysOfWeek(req.getDaysOfWeek());
+        ScheduleValidator.validateScheduleTimes(req.getScheduleStartTime(), req.getScheduleEndTime());
         TeacherProfile teacher = teacherProfileRepository.findById(req.getTeacherId()).orElse(null);
         Student student = studentRepository.findById(req.getStudentId()).orElse(null);
         if (teacher == null || student == null) return ResponseEntity.badRequest().build();

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { getApiUrl } from './api-url';
 
-const BASE = `${environment.apiUrl}/teacher`;
+const BASE = getApiUrl('teacher');
 
 export interface TeacherDashboardData {
   todayOneToOneSessions: number;

@@ -2,12 +2,12 @@ package com.educonnect.web.auth;
 
 import com.educonnect.application.auth.dto.AuthDto;
 import com.educonnect.application.auth.usecase.LoginUseCase;
+import com.educonnect.web.common.ApiErrorResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.MDC;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 /**
  * Auth feature: login and change-password endpoints.
@@ -23,7 +23,13 @@ public class AuthController {
     public ResponseEntity<?> login(@Valid @RequestBody AuthDto.LoginRequest request) {
         AuthDto.LoginResponse response = loginUseCase.execute(request.getEmail(), request.getPassword());
         if (response == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Invalid credentials"));
+            ApiErrorResponse body = ApiErrorResponse.of(
+                    "Unauthorized",
+                    "INVALID_CREDENTIALS",
+                    "Invalid credentials",
+                    401);
+            body.setRequestId(MDC.get("requestId"));
+            return ResponseEntity.status(401).body(body);
         }
         return ResponseEntity.ok(response);
     }

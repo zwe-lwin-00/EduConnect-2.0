@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.LocalTime;
 import java.util.Set;
 
@@ -20,5 +21,7 @@ public class TeacherGroupClassDto {
     private Set<Integer> daysOfWeek;
     private LocalTime scheduleStartTime;
     private LocalTime scheduleEndTime;
+    /** When admin last changed the schedule; teacher can show "Schedule updated on ...". */
+    private Instant scheduleUpdatedAt;
     private int enrollmentCount;
 }
