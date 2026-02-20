@@ -1,7 +1,11 @@
 <div class="page-block">
   <a routerLink="/parent" class="back">← My students</a>
   <div *ngIf="loading" class="loading">Loading…</div>
-  <div *ngIf="!loading && overview">
+  <div *ngIf="!loading && invalidStudent" class="invalid-student">
+    <p>Invalid student.</p>
+    <p>This student is not linked to your account. <a routerLink="/parent">Return to My students</a>.</p>
+  </div>
+  <div *ngIf="!loading && !invalidStudent && overview">
     <header class="header">
       <h1>{{ overview.studentName }}</h1>
       <p class="grade">Grade {{ overview.grade }}</p>

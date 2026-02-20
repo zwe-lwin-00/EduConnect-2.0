@@ -193,6 +193,16 @@ Shape: `{ "error": "...", "message": "...", "status": 400, "details": [], "path"
 
 Routes use `canActivate: [AuthGuard, RoleGuard]` and `data: { roles: [Roles.ADMIN] }` (or TEACHER/PARENT).
 
+## Project flow validation
+
+The following flows are implemented and verified:
+
+- **Auth** – Login (`/auth/login`), change-password; **returnUrl** is set when guards redirect to login and used after successful login to send the user back. **Guards**: AuthGuard (require token, redirect with `returnUrl`), RoleGuard (require one of route’s roles, else redirect to role home or login).
+- **401 refresh** – ErrorInterceptor tries **POST /auth/refresh** on 401, then retries the failed request with the new token; on refresh failure, logout and redirect to login.
+- **Role-based routing** – `/admin/*`, `/teacher/*`, `/parent/*` protected by AuthGuard + RoleGuard with the corresponding roles.
+- **API ↔ frontend IDs** – Contract, student, teacher, parent IDs are passed consistently (e.g. route params, request bodies, DTOs). Payloads match backend DTOs (e.g. CreateContractRequest, StudentDto, TeacherDto, CreateParentRequest).
+- **Invalid Parent student route** – For `/parent/student/:studentId`, the frontend **validates** that `studentId` is one of the current parent’s students (from `GET /parent/students`) **before** calling `GET /parent/students/:studentId/overview`. If the ID is not in the list (e.g. `/parent/student/xyz` or another parent’s student), the app shows **“Invalid student”** and does **not** call the overview API.
+
 ## Build
 
 - **Backend:** `mvn clean package` (or `./mvnw clean package`)

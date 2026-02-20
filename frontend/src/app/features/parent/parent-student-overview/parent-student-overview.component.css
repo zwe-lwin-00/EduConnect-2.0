@@ -1,5 +1,8 @@
 .page-block { padding: 1rem; }
 .back { display: inline-block; margin-bottom: 1rem; color: #0f3460; text-decoration: none; }
+.invalid-student { padding: 1.5rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b; }
+.invalid-student p { margin: 0 0 0.5rem 0; }
+.invalid-student a { color: #0f3460; }
 .header { margin-bottom: 1.5rem; }
 .header h1 { margin: 0 0 0.25rem 0; }
 .grade, .teacher { margin: 0; color: #64748b; }
