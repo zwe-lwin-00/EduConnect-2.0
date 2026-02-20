@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { ParentApiService, StudentOverviewDto } from '../../../../core/services/parent-api.service';
+import { ParentApiService, StudentOverviewDto } from '../../../core/services/parent-api.service';
 
 @Component({
   selector: 'app-parent-student-overview',

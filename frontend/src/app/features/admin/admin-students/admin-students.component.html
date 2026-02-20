@@ -16,8 +16,8 @@
     <dxi-column dataField="dateOfBirth" caption="DOB" dataType="date"></dxi-column>
     <dxi-column dataField="active" caption="Active" dataType="boolean"></dxi-column>
     <dxi-column type="buttons" width="140" caption="Actions">
-      <dxi-button hint="Freeze" (onClick)="setActive($event.row.data, false)"></dxi-button>
-      <dxi-button hint="Activate" (onClick)="setActive($event.row.data, true)"></dxi-button>
+      <dxi-button hint="Freeze" (onClick)="setActive($any($event).row.data, false)"></dxi-button>
+      <dxi-button hint="Activate" (onClick)="setActive($any($event).row.data, true)"></dxi-button>
     </dxi-column>
   </dx-data-grid>
 </div>

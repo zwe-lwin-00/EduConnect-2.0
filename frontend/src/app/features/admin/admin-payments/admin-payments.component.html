@@ -17,7 +17,7 @@
     <dxi-column dataField="endDate" caption="End" dataType="date"></dxi-column>
     <dxi-column dataField="status" caption="Status"></dxi-column>
     <dxi-column type="buttons" width="120">
-      <dxi-button hint="Renew 1 month" (onClick)="renew($event.row.data, 1)"></dxi-button>
+      <dxi-button hint="Renew 1 month" (onClick)="renew($any($event).row.data, 1)"></dxi-button>
     </dxi-column>
   </dx-data-grid>
 </div>

@@ -13,9 +13,9 @@
     <dxi-column dataField="teacherName" caption="Teacher"></dxi-column>
     <dxi-column dataField="studentName" caption="Student"></dxi-column>
     <dxi-column dataField="status" caption="Status"></dxi-column>
-    <dxi-column caption="Schedule" [calculateCellValue]="(e) => formatSchedule(e)"></dxi-column>
+    <dxi-column caption="Schedule" [calculateCellValue]="formatScheduleCell"></dxi-column>
     <dxi-column type="buttons" width="100">
-      <dxi-button hint="Cancel" (onClick)="cancelContract($event.row.data)"></dxi-button>
+      <dxi-button hint="Cancel" (onClick)="cancelContract($any($event).row.data)"></dxi-button>
     </dxi-column>
   </dx-data-grid>
 </div>

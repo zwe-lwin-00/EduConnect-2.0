@@ -34,7 +34,6 @@ public class GroupClass {
     @Builder.Default
     private boolean active = true;
 
-    @Column(name = "days_of_week")
     @ElementCollection
     @CollectionTable(name = "group_class_schedule_days", joinColumns = @JoinColumn(name = "group_class_id"))
     @Column(name = "day_of_week")

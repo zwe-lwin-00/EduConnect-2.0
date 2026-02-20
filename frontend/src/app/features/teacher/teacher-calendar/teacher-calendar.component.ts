@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TeacherApiService, CalendarDayItemDto, TeacherCalendarResponseDto } from '../../../../core/services/teacher-api.service';
+import { TeacherApiService, CalendarDayItemDto, TeacherCalendarResponseDto } from '../../../core/services/teacher-api.service';
 
 interface DayCell {
   dateYmd: string;

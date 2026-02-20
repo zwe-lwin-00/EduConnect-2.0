@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TeacherApiService, TeacherSessionDto } from '../../../../core/services/teacher-api.service';
+import { TeacherApiService, TeacherSessionDto } from '../../../core/services/teacher-api.service';
 
 @Component({
   selector: 'app-teacher-sessions',
@@ -96,12 +96,17 @@ export class TeacherSessionsComponent implements OnInit {
     }
   }
 
+  typeCell = (e: { data: TeacherSessionDto }): string => e.data?.type ?? '';
+  studentDisplayCell = (e: { data: TeacherSessionDto }): string => this.studentDisplay(e.data);
+
   studentDisplay(s: TeacherSessionDto): string {
     if (s.type === 'ONE_TO_ONE') return s.studentName || '';
     return s.studentNames?.join(', ') || s.groupClassName || '';
   }
 
   /** Zoom URL to show only when session is in progress (checked in, not checked out). */
+  zoomCell = (e: { data: TeacherSessionDto }): string | null => this.zoomJoinUrlWhenInProgress(e.data);
+
   zoomJoinUrlWhenInProgress = (row: TeacherSessionDto): string | null => {
     if (!this.isSessionInProgress(row) || !row.zoomJoinUrl) return null;
     return row.zoomJoinUrl;

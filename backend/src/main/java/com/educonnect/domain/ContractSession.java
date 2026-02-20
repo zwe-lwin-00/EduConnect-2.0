@@ -36,10 +36,9 @@ public class ContractSession {
     @Column(name = "legacy_period_end")  // used when no subscription linked
     private LocalDate legacyPeriodEnd;
 
-    @Column(name = "days_of_week")  // 1-7 (e.g. Mon-Sun)
     @ElementCollection
     @CollectionTable(name = "contract_schedule_days", joinColumns = @JoinColumn(name = "contract_id"))
-    @Column(name = "day_of_week")
+    @Column(name = "day_of_week")  // 1-7 (e.g. Mon-Sun)
     private Set<Integer> daysOfWeek;
 
     @Column(name = "schedule_start_time")

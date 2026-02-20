@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminApiService, HolidayDto, SystemSettingDto } from '../../../../core/services/admin-api.service';
+import { AdminApiService, HolidayDto, SystemSettingDto } from '../../../core/services/admin-api.service';
 
 @Component({
   selector: 'app-admin-settings',

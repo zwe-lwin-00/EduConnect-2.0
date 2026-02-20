@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TeacherApiService, TeacherGroupClassDto } from '../../../../core/services/teacher-api.service';
+import { TeacherApiService, TeacherGroupClassDto } from '../../../core/services/teacher-api.service';
 
 @Component({
   selector: 'app-teacher-group-classes',

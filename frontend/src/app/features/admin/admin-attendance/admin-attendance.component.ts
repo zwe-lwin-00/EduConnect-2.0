@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminApiService, AttendanceDto } from '../../../../core/services/admin-api.service';
+import { AdminApiService, AttendanceDto } from '../../../core/services/admin-api.service';
 
 @Component({
   selector: 'app-admin-attendance',

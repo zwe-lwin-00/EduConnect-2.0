@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TeacherApiService, TeacherStudentDto } from '../../../../core/services/teacher-api.service';
+import { TeacherApiService, TeacherStudentDto } from '../../../core/services/teacher-api.service';
 
 @Component({
   selector: 'app-teacher-students',

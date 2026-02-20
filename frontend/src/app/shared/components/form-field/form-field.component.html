@@ -5,7 +5,7 @@
     [id]="id"
     [type]="type"
     [placeholder]="placeholder"
-    [formControl]="control"
+    [formControl]="$any(control)"
     class="input"
   />
   <span class="error" *ngIf="showError">{{ errorMessage || 'Invalid' }}</span>

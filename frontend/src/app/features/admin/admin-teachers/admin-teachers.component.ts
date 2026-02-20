@@ -1,5 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminApiService, TeacherDto } from '../../../../core/services/admin-api.service';
+import { AdminApiService, TeacherDto } from '../../../core/services/admin-api.service';
+
+interface OnboardForm {
+  email: string;
+  fullName: string;
+  phone: string;
+  education: string;
+  bio: string;
+  specializations: string;
+}
+interface EditForm {
+  fullName: string;
+  phone: string;
+  education: string;
+  bio: string;
+  specializations: string;
+}
 
 @Component({
   selector: 'app-admin-teachers',
@@ -11,11 +27,11 @@ export class AdminTeachersComponent implements OnInit {
   loading = true;
   error = '';
   showOnboard = false;
-  onboardForm: Record<string, string> = { email: '', fullName: '', phone: '', education: '', bio: '', specializations: '' };
+  onboardForm: OnboardForm = { email: '', fullName: '', phone: '', education: '', bio: '', specializations: '' };
   tempPassword = '';
   showEdit = false;
   selectedTeacher: TeacherDto | null = null;
-  editForm: Record<string, string> = { fullName: '', phone: '', education: '', bio: '', specializations: '' };
+  editForm: EditForm = { fullName: '', phone: '', education: '', bio: '', specializations: '' };
   showResetPassword = false;
   resetTeacher: TeacherDto | null = null;
   resetPasswordResult: { temporaryPassword: string; email: string } | null = null;
@@ -43,7 +59,7 @@ export class AdminTeachersComponent implements OnInit {
   submitOnboard(): void {
     const body: Record<string, unknown> = { ...this.onboardForm };
     if (this.onboardForm.specializations?.trim()) {
-      body.specializations = this.onboardForm.specializations.split(',').map(s => s.trim()).filter(Boolean);
+      body['specializations'] = this.onboardForm.specializations.split(',').map(s => s.trim()).filter(Boolean);
     }
     this.api.onboardTeacher(body).subscribe({
       next: (res) => {
@@ -81,7 +97,7 @@ export class AdminTeachersComponent implements OnInit {
       bio: this.editForm.bio
     };
     if (this.editForm.specializations?.trim()) {
-      body.specializations = this.editForm.specializations.split(',').map(s => s.trim()).filter(Boolean);
+      body['specializations'] = this.editForm.specializations.split(',').map(s => s.trim()).filter(Boolean);
     }
     this.api.updateTeacher(this.selectedTeacher.id, body).subscribe({
       next: () => { this.load(); this.showEdit = false; this.selectedTeacher = null; },

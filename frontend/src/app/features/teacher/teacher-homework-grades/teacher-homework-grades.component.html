@@ -19,8 +19,8 @@
     <dxi-column dataField="dueDate" caption="Due" dataType="date"></dxi-column>
     <dxi-column dataField="status" caption="Status"></dxi-column>
     <dxi-column type="buttons" width="180">
-      <dxi-button hint="Mark submitted" (onClick)="markSubmitted($event.row.data)"></dxi-button>
-      <dxi-button hint="Grade / Feedback" (onClick)="openFeedback($event.row.data)"></dxi-button>
+      <dxi-button hint="Mark submitted" (onClick)="markSubmitted($any($event).row.data)"></dxi-button>
+      <dxi-button hint="Grade / Feedback" (onClick)="openFeedback($any($event).row.data)"></dxi-button>
     </dxi-column>
   </dx-data-grid>
   <h2>Grades</h2>

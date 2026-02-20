@@ -16,7 +16,7 @@
     <dxi-column dataField="scheduleStartTime" caption="Start"></dxi-column>
     <dxi-column dataField="scheduleEndTime" caption="End"></dxi-column>
     <dxi-column type="buttons" width="80">
-      <dxi-button hint="Edit" (onClick)="openEdit($event.row.data)"></dxi-button>
+      <dxi-button hint="Edit" (onClick)="openEdit($any($event).row.data)"></dxi-button>
     </dxi-column>
   </dx-data-grid>
 </div>

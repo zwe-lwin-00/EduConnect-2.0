@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -63,7 +64,7 @@ public class TeacherGroupClassController {
             @RequestParam(required = false) String subscriptionId,
             @RequestParam(required = false) String contractId) {
         String teacherId = currentUserResolver.requireCurrentTeacher().getId();
-        return groupClassRepository.findById(id)
+        Optional<ResponseEntity<Void>> result = groupClassRepository.findById(id)
                 .filter(gc -> gc.getTeacher().getId().equals(teacherId))
                 .flatMap(gc -> studentRepository.findById(studentId).map(student -> {
                     if (enrollmentRepository.existsByGroupClassIdAndStudentId(id, studentId)) {
@@ -80,30 +81,30 @@ public class TeacherGroupClassController {
                         ContractSession contract = contractSessionRepository.findById(contractId).orElse(null);
                         if (contract == null || !contract.getTeacher().getId().equals(teacherId)
                                 || !contract.getStudent().getId().equals(studentId)) {
-                            return ResponseEntity.badRequest().build();
+                            return ResponseEntity.<Void>badRequest().build();
                         }
                         if (!ContractEnrollmentAccess.hasAccess(contract)) {
-                            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                            return ResponseEntity.<Void>status(HttpStatus.BAD_REQUEST).build();
                         }
                         en.setContract(contract);
                     }
                     enrollmentRepository.save(en);
                     return ResponseEntity.status(HttpStatus.CREATED).<Void>build();
-                }))
-                .orElse(ResponseEntity.notFound().build());
+                }));
+        return result.orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}/enrollments/{studentId}")
     public ResponseEntity<Void> removeEnrollment(@PathVariable String id, @PathVariable String studentId) {
         String teacherId = currentUserResolver.requireCurrentTeacher().getId();
-        return groupClassRepository.findById(id)
+        Optional<ResponseEntity<Void>> result = groupClassRepository.findById(id)
                 .filter(gc -> gc.getTeacher().getId().equals(teacherId))
                 .flatMap(gc -> enrollmentRepository.findByGroupClassIdAndStudentId(id, studentId)
                         .map(en -> {
                             enrollmentRepository.delete(en);
                             return ResponseEntity.<Void>noContent().build();
-                        }))
-                .orElse(ResponseEntity.notFound().build());
+                        }));
+        return result.orElse(ResponseEntity.notFound().build());
     }
 
     private TeacherGroupClassDto toDto(GroupClass gc) {

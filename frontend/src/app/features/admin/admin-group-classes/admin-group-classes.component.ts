@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminApiService, GroupClassDto, TeacherDto } from '../../../../core/services/admin-api.service';
+import { AdminApiService, GroupClassDto, TeacherDto } from '../../../core/services/admin-api.service';
 
 const DAY_LABELS: { value: number; label: string }[] = [
   { value: 1, label: 'Mon' }, { value: 2, label: 'Tue' }, { value: 3, label: 'Wed' },

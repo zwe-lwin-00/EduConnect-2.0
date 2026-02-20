@@ -21,7 +21,7 @@
     <dxi-column dataField="hoursUsed" caption="Hours" dataType="number"></dxi-column>
     <dxi-column dataField="lessonNotes" caption="Notes"></dxi-column>
     <dxi-column type="buttons" width="90">
-      <dxi-button hint="Override" (onClick)="openOverride($event.row.data)"></dxi-button>
+      <dxi-button hint="Override" (onClick)="openOverride($any($event).row.data)"></dxi-button>
     </dxi-column>
   </dx-data-grid>
 </div>

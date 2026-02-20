@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "EduConnect Spring Boot",
+      "request": "launch",
+      "mainClass": "com.educonnect.EduConnectApplication"
+    },
+    {
+      "type": "java",
+      "name": "Attach to Backend",
+      "request": "attach",
+      "hostName": "localhost",
+      "port": 5005
+    }
+  ]
+}

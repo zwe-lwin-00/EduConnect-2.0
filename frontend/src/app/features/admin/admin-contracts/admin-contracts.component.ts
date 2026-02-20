@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminApiService, ContractDto, TeacherDto, StudentDto, SubscriptionDto } from '../../../../core/services/admin-api.service';
+import { AdminApiService, ContractDto, TeacherDto, StudentDto, SubscriptionDto } from '../../../core/services/admin-api.service';
 
 const DAY_LABELS: { value: number; label: string }[] = [
   { value: 1, label: 'Mon' }, { value: 2, label: 'Tue' }, { value: 3, label: 'Wed' },
@@ -38,6 +38,8 @@ export class AdminContractsComponent implements OnInit {
   }
 
   /** Schedule column text: e.g. "Mon, Wed · 09:00–10:00" */
+  formatScheduleCell = (e: { data: ContractDto }): string => this.formatSchedule(e.data);
+
   formatSchedule(c: ContractDto): string {
     const days = (c.daysOfWeek && c.daysOfWeek.length) ? c.daysOfWeek.slice().sort((a, b) => a - b).map(d => DAY_LABELS[d - 1]?.label || String(d)).join(', ') : '';
     const start = c.scheduleStartTime ? String(c.scheduleStartTime).slice(0, 5) : '';

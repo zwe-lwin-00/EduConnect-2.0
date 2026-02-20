@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminApiService, ReportDto } from '../../../../core/services/admin-api.service';
+import { AdminApiService, ReportDto } from '../../../core/services/admin-api.service';
 
 export interface ReportRow extends ReportDto {
   monthLabel?: string;

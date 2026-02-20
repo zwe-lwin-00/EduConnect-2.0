@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NotificationsApiService, NotificationDto } from '../../../../core/services/notifications-api.service';
+import { NotificationsApiService, NotificationDto } from '../../../core/services/notifications-api.service';
 
 @Component({
   selector: 'app-notification-bell',

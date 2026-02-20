@@ -19,7 +19,7 @@
       <dxi-column dataField="name" caption="Name"></dxi-column>
       <dxi-column dataField="description" caption="Description"></dxi-column>
       <dxi-column type="buttons" width="80">
-        <dxi-button hint="Delete" (onClick)="deleteHoliday($event.row.data)"></dxi-button>
+        <dxi-button hint="Delete" (onClick)="deleteHoliday($any($event).row.data)"></dxi-button>
       </dxi-column>
     </dx-data-grid>
   </section>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ParentApiService } from '../../../../core/services/parent-api.service';
+import { ParentApiService } from '../../../core/services/parent-api.service';
 
 interface CalendarItem {
   dateYmd: string;

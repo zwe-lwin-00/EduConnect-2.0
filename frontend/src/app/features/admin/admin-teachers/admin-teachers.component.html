@@ -20,12 +20,12 @@
     <dxi-column dataField="verificationStatus" caption="Status"></dxi-column>
     <dxi-column dataField="active" caption="Active" dataType="boolean"></dxi-column>
     <dxi-column type="buttons" width="340" caption="Actions">
-      <dxi-button hint="Edit" (onClick)="openEdit($event.row.data)"></dxi-button>
-      <dxi-button hint="Reset password" (onClick)="openResetPassword($event.row.data)"></dxi-button>
-      <dxi-button hint="Verify" (onClick)="verify($event.row.data)"></dxi-button>
-      <dxi-button hint="Reject" (onClick)="reject($event.row.data)"></dxi-button>
-      <dxi-button hint="Activate" (onClick)="activate($event.row.data)"></dxi-button>
-      <dxi-button hint="Suspend" (onClick)="suspend($event.row.data)"></dxi-button>
+      <dxi-button hint="Edit" (onClick)="openEdit($any($event).row.data)"></dxi-button>
+      <dxi-button hint="Reset password" (onClick)="openResetPassword($any($event).row.data)"></dxi-button>
+      <dxi-button hint="Verify" (onClick)="verify($any($event).row.data)"></dxi-button>
+      <dxi-button hint="Reject" (onClick)="reject($any($event).row.data)"></dxi-button>
+      <dxi-button hint="Activate" (onClick)="activate($any($event).row.data)"></dxi-button>
+      <dxi-button hint="Suspend" (onClick)="suspend($any($event).row.data)"></dxi-button>
     </dxi-column>
   </dx-data-grid>
 </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TeacherApiService, AvailabilitySlotDto } from '../../../../core/services/teacher-api.service';
+import { TeacherApiService, AvailabilitySlotDto } from '../../../core/services/teacher-api.service';
 
 const DAYS = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 

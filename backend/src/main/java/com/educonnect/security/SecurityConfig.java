@@ -1,6 +1,5 @@
 package com.educonnect.security;
 
-import com.educonnect.config.RateLimitProperties;
 import com.educonnect.web.common.RequestIdFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,10 +59,5 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public LoginRateLimitFilter loginRateLimitFilter(RateLimitProperties rateLimitProperties) {
-        return new LoginRateLimitFilter(rateLimitProperties);
     }
 }

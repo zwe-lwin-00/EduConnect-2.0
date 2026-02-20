@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ParentApiService, ParentStudentDto } from '../../../../core/services/parent-api.service';
+import { ParentApiService, ParentStudentDto } from '../../../core/services/parent-api.service';
 
 @Component({
   selector: 'app-parent-students',
