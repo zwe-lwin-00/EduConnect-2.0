@@ -89,4 +89,14 @@ export class TeacherSessionsComponent implements OnInit {
     if (s.type === 'ONE_TO_ONE') return s.studentName || '';
     return s.studentNames?.join(', ') || s.groupClassName || '';
   }
+
+  /** Zoom URL to show only when session is in progress (checked in, not checked out). */
+  zoomJoinUrlWhenInProgress = (row: TeacherSessionDto): string | null => {
+    if (!this.isSessionInProgress(row) || !row.zoomJoinUrl) return null;
+    return row.zoomJoinUrl;
+  };
+
+  isSessionInProgress(s: TeacherSessionDto): boolean {
+    return !!s.checkInAt && !s.checkOutAt;
+  }
 }

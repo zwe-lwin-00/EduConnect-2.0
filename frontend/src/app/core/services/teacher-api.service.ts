@@ -175,4 +175,7 @@ export class TeacherApiService {
   getProfile(): Observable<TeacherProfileDto> {
     return this.http.get<TeacherProfileDto>(`${BASE}/profile`);
   }
+  updateProfile(body: { zoomJoinUrl?: string }): Observable<TeacherProfileDto> {
+    return this.http.patch<TeacherProfileDto>(`${BASE}/profile`, body);
+  }
 }

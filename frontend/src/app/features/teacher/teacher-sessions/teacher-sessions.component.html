@@ -17,6 +17,11 @@
     <dxi-column dataField="checkInAt" caption="Check-in"></dxi-column>
     <dxi-column dataField="checkOutAt" caption="Check-out"></dxi-column>
     <dxi-column dataField="lessonNotes" caption="Notes" [visible]="false"></dxi-column>
+    <dxi-column caption="Zoom" width="150" [calculateCellValue]="zoomJoinUrlWhenInProgress" cellTemplate="zoomCellTemplate"></dxi-column>
+    <div *dxTemplate="let cell of 'zoomCellTemplate'">
+      <a *ngIf="cell.value" [href]="cell.value" target="_blank" rel="noopener" class="zoom-join-link">Join Zoom meeting</a>
+      <span *ngIf="!cell.value">—</span>
+    </div>
     <dxi-column type="buttons" width="220" caption="Actions">
       <dxi-button hint="Check in" (onClick)="checkIn($event.row.data)"></dxi-button>
       <dxi-button hint="Check out" (onClick)="checkOut($event.row.data)"></dxi-button>

@@ -8,14 +8,33 @@ import { TeacherApiService, TeacherProfileDto } from '../../../../core/services/
 })
 export class TeacherProfileComponent implements OnInit {
   profile: TeacherProfileDto | null = null;
+  zoomJoinUrl = '';
   loading = true;
+  saving = false;
 
   constructor(public api: TeacherApiService) {}
 
   ngOnInit(): void {
     this.api.getProfile().subscribe({
-      next: (p) => { this.profile = p; this.loading = false; },
+      next: (p) => {
+        this.profile = p;
+        this.zoomJoinUrl = p?.zoomJoinUrl ?? '';
+        this.loading = false;
+      },
       error: () => this.loading = false
+    });
+  }
+
+  saveZoom(): void {
+    if (this.saving) return;
+    this.saving = true;
+    this.api.updateProfile({ zoomJoinUrl: this.zoomJoinUrl || undefined }).subscribe({
+      next: (p) => {
+        this.profile = p;
+        this.zoomJoinUrl = p?.zoomJoinUrl ?? '';
+        this.saving = false;
+      },
+      error: () => this.saving = false
     });
   }
 }

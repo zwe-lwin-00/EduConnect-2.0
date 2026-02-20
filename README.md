@@ -60,6 +60,15 @@ Admin creates classes and assigns teachers/students; subscriptions define the bi
 - **Verify / Reject** – Set verification status.
 - **Activate / Suspend** – Enable or disable the teacher account.
 
+## Zoom for teaching
+
+Each teacher uses **their own Zoom account**. No shared Zoom; teachers set their own join URLs:
+
+- **Profile (One-To-One default)** – In **Profile**, the teacher sets their default **Zoom join URL** used for One-To-One sessions when no session-specific link is set. This is the only profile field teachers can edit.
+- **Per Group class** – In **Group classes**, the teacher can set a **Zoom join URL** per class (edit the class and save the Zoom link).
+
+The app shows **“Join Zoom meeting”** in the **Sessions** grid when a session is **in progress** (checked in, not yet checked out) and a Zoom URL is available for that session (from profile for 1:1, or from the group class for group sessions). The link opens in a new tab.
+
 ## Check-in / Check-out
 
 - **One-To-One** – Teacher selects a contract session from **Sessions**, then **Check in**, **Check out**, and **Lesson notes**; duration (hours used) is stored on the contract’s attendance log.
@@ -73,7 +82,7 @@ Admin can **Freeze** or **Activate** a student from the **Students** page. Froze
 ## Roles & Access
 
 - **Admin** – Dashboard, teachers (onboard, edit, verify, reject, activate/suspend), parents & students (create, list; student active/freeze), One-To-One, Group, attendance (with override), subscriptions (monthly create & renew), reports, Settings.
-- **Teacher** – Dashboard, availability (weekly), assigned students, sessions (One-To-One contract check-in/out and Group session check-in/out and notes), group classes (edit name/Zoom/active; students enrolled by One-To-One or Group subscription), homework & grades, profile (read-only; Zoom URL for 1:1).
+- **Teacher** – Dashboard, availability (weekly), assigned students, sessions (One-To-One and Group check-in/out and notes; “Join Zoom meeting” when session in progress), group classes (edit name/Zoom/active; students enrolled by One-To-One or Group subscription), homework & grades, profile (set default Zoom join URL for 1:1).
 - **Parent** – My Students and student learning overview (assigned teacher, sessions, homework, grades); parent notifications/alerts driven by config (e.g. contract or subscription ending soon). No self-registration; admin creates parent and shares credentials.
 
 ## Time zone (Myanmar, Asia/Yangon UTC+6:30)
