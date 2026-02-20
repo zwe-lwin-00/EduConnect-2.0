@@ -35,6 +35,7 @@ Admin creates classes and assigns teachers/students; subscriptions define the bi
 
 - **Onboard** – Admin creates teacher (email, full name, phone, education, bio, specializations). A temporary password is generated and shown once.
 - **Edit** – Admin can edit full name, phone, education, bio, and specializations (comma-separated).
+- **Reset password** – Admin can reset a teacher’s password from the Teachers list; a new temporary password is shown once and the teacher must change it on next login.
 - **Verify / Reject** – Set verification status.
 - **Activate / Suspend** – Enable or disable the teacher account.
 
@@ -52,6 +53,15 @@ Admin can **Freeze** or **Activate** a student from the **Students** page. Froze
 - **Admin** – Dashboard, teachers (onboard, edit, verify, reject, activate/suspend), parents & students (create, list; student active/freeze), One-To-One, Group, attendance (with override), subscriptions (monthly create & renew), reports, Settings.
 - **Teacher** – Dashboard, availability (weekly), assigned students, sessions (1:1 and Group check-in/out and notes), group classes (edit name/Zoom/active; enroll by contract), homework & grades, profile (read-only; Zoom URL for 1:1).
 - **Parent** – My Students and student learning overview (assigned teacher, sessions, homework, grades). No self-registration; admin creates parent and shares credentials.
+
+## Time zone (Myanmar, Asia/Yangon UTC+6:30)
+
+- **Backend** – Default time zone is set to `Asia/Yangon` (`app.timezone` in `application.yml`). “Today” and report date ranges use Myanmar date. Date/time values in the API are serialized as **UTC with Z** (ISO-8601) so the client can display them correctly.
+- **Frontend** – User-facing dates and times are shown in **+0630** using the shared `myanmarDate` pipe (e.g. `{{ value | myanmarDate:'short' }}`). Use this pipe for any API date/time (check-in, check-out, etc.).
+
+## Admin reset teacher password
+
+From **Teachers** list, use **Reset password** on a teacher. A new temporary password is generated and shown once; the teacher must change it on next login (`mustChangePassword` is set).
 
 ## Tech stack
 

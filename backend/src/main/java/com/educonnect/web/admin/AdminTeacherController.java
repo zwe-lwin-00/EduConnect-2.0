@@ -13,8 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import com.educonnect.service.PasswordGenerator;
+
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,7 @@ public class AdminTeacherController {
     private final TeacherProfileRepository teacherProfileRepository;
     private final ApplicationUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PasswordGenerator passwordGenerator;
 
     @GetMapping
     public List<TeacherDto> list(@RequestParam(required = false) String verificationStatus) {
@@ -47,7 +50,7 @@ public class AdminTeacherController {
         if (userRepository.existsByEmailIgnoreCase(req.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already in use");
         }
-        String tempPassword = UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+        String tempPassword = passwordGenerator.generate();
         ApplicationUser user = ApplicationUser.builder()
                 .email(req.getEmail())
                 .passwordHash(passwordEncoder.encode(tempPassword))
@@ -68,10 +71,28 @@ public class AdminTeacherController {
                 .build();
         profile = teacherProfileRepository.save(profile);
         TeacherDto dto = toDto(profile);
-        return ResponseEntity.status(HttpStatus.CREATED).body(java.util.Map.of(
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "teacher", dto,
                 "temporaryPassword", tempPassword
         ));
+    }
+
+    @PostMapping("/{id}/reset-password")
+    public ResponseEntity<?> resetPassword(@PathVariable String id) {
+        return teacherProfileRepository.findById(id)
+                .map(p -> {
+                    ApplicationUser u = p.getUser();
+                    String tempPassword = passwordGenerator.generate();
+                    u.setPasswordHash(passwordEncoder.encode(tempPassword));
+                    u.setMustChangePassword(true);
+                    userRepository.save(u);
+                    return ResponseEntity.ok(Map.of(
+                            "message", "Password reset; teacher must change on next login",
+                            "temporaryPassword", tempPassword,
+                            "email", u.getEmail()
+                    ));
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PatchMapping("/{id}")

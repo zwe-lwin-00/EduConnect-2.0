@@ -22,7 +22,7 @@
 <div class="modal" *ngIf="showOverride && selected">
   <app-card class="modal-content">
     <h2>Override check-in / check-out</h2>
-    <p class="session-info">{{ selected.teacherName }} – {{ selected.studentName }} ({{ selected.sessionDate }})</p>
+    <p class="session-info">{{ selected.teacherName }} – {{ selected.studentName }} ({{ selected.sessionDate }}) · Check-in: {{ selected.checkInAt | myanmarDate:'short' }} · Check-out: {{ selected.checkOutAt | myanmarDate:'short' }}</p>
     <div class="form-group">
       <label>Check-in</label>
       <input type="datetime-local" [(ngModel)]="overrideForm.checkInAt" />

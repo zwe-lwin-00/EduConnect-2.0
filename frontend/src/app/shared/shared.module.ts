@@ -8,6 +8,7 @@ import { PrimaryButtonComponent } from './components/primary-button/primary-butt
 import { BrandComponent } from './components/brand/brand.component';
 import { LogoutButtonComponent } from './components/logout-button/logout-button.component';
 import { CardComponent } from './components/card/card.component';
+import { MyanmarDatePipe } from './pipes/myanmar-date.pipe';
 
 /**
  * Shared module for reusable components used across auth, admin, teacher, and parent.
@@ -19,7 +20,8 @@ import { CardComponent } from './components/card/card.component';
     PrimaryButtonComponent,
     BrandComponent,
     LogoutButtonComponent,
-    CardComponent
+    CardComponent,
+    MyanmarDatePipe
   ],
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
   exports: [
@@ -28,7 +30,8 @@ import { CardComponent } from './components/card/card.component';
     PrimaryButtonComponent,
     BrandComponent,
     LogoutButtonComponent,
-    CardComponent
+    CardComponent,
+    MyanmarDatePipe
   ]
 })
 export class SharedModule { }

@@ -23,6 +23,7 @@ spring:
 
 # App – Dashboard and reporting
 app:
+  timezone: Asia/Yangon   # Myanmar (UTC+6:30); "today" and reports use this; API serializes Instant as UTC (Z)
   subscription-expiring-alert-days: 7
   contract-expiring-alert-days: 14
   contract-ending-soon-notification-days: 14

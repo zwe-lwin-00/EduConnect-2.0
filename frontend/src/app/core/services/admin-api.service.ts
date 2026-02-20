@@ -156,6 +156,9 @@ export class AdminApiService {
   suspendTeacher(id: string): Observable<TeacherDto> {
     return this.http.post<TeacherDto>(`${BASE}/teachers/${id}/suspend`, {});
   }
+  resetTeacherPassword(id: string): Observable<{ temporaryPassword: string; email: string; message: string }> {
+    return this.http.post<{ temporaryPassword: string; email: string; message: string }>(`${BASE}/teachers/${id}/reset-password`, {});
+  }
 
   // Parents
   getParents(): Observable<ParentDto[]> {

@@ -16,6 +16,9 @@ export class AdminTeachersComponent implements OnInit {
   showEdit = false;
   selectedTeacher: TeacherDto | null = null;
   editForm: Record<string, string> = { fullName: '', phone: '', education: '', bio: '', specializations: '' };
+  showResetPassword = false;
+  resetTeacher: TeacherDto | null = null;
+  resetPasswordResult: { temporaryPassword: string; email: string } | null = null;
 
   constructor(public api: AdminApiService) {}
 
@@ -105,5 +108,28 @@ export class AdminTeachersComponent implements OnInit {
 
   suspend(t: TeacherDto): void {
     this.api.suspendTeacher(t.id).subscribe(() => this.load());
+  }
+
+  openResetPassword(t: TeacherDto): void {
+    this.resetTeacher = t;
+    this.resetPasswordResult = null;
+    this.showResetPassword = true;
+  }
+
+  confirmResetPassword(): void {
+    if (!this.resetTeacher) return;
+    this.api.resetTeacherPassword(this.resetTeacher.id).subscribe({
+      next: (res) => {
+        this.resetPasswordResult = { temporaryPassword: res.temporaryPassword, email: res.email };
+        this.load();
+      },
+      error: (e) => { this.error = e?.error?.message || 'Failed'; }
+    });
+  }
+
+  closeResetPassword(): void {
+    this.showResetPassword = false;
+    this.resetTeacher = null;
+    this.resetPasswordResult = null;
   }
 }
