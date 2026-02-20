@@ -31,6 +31,7 @@ There are **two class types**:
 
 - **Model:** One teacher, one student. Stored as a **Contract** (`ContractSession`) linked to an optional One-To-One subscription.
 - **Flow:** Admin creates the contract (teacher, student, schedule). Teacher runs a 1:1 session from **Sessions**: **Check in**, **Check out**, and optional lesson notes. Duration (hours used) is recorded on the attendance log.
+- **Admin UI:** Create form uses **days-of-week checkboxes** (Mon–Sun), like Group class, and **optional Start/End time**. The contracts table includes a **Schedule** column (e.g. *Mon, Wed · 09:00–10:00*).
 - **In the system:** Contract + `AttendanceLog` per session (check-in, check-out, hours used, notes).
 
 ### Group
@@ -82,8 +83,18 @@ Admin can **Freeze** or **Activate** a student from the **Students** page. Froze
 ## Roles & Access
 
 - **Admin** – Dashboard, teachers (onboard, edit, verify, reject, activate/suspend), parents & students (create, list; student active/freeze), One-To-One, Group, attendance (with override), subscriptions (monthly create & renew), reports, Settings.
-- **Teacher** – Dashboard, availability (weekly), assigned students, sessions (One-To-One and Group check-in/out and notes; “Join Zoom meeting” when session in progress), group classes (edit name/Zoom/active; students enrolled by One-To-One or Group subscription), homework & grades, profile (set default Zoom join URL for 1:1).
-- **Parent** – My Students and student learning overview (assigned teacher, sessions, homework, grades); parent notifications/alerts driven by config (e.g. contract or subscription ending soon). No self-registration; admin creates parent and shares credentials.
+- **Teacher** – Dashboard, availability (weekly), assigned students, sessions (One-To-One and Group check-in/out and notes; “Join Zoom meeting” when session in progress), **month calendar** (1:1 and group, upcoming and completed), group classes (edit name/Zoom/active; students enrolled by One-To-One or Group subscription), homework & grades, profile (set default Zoom join URL for 1:1).
+- **Parent** – My Students and student learning overview (assigned teacher, sessions, homework, grades); **month calendar per student** (1:1 and group as “Group: &lt;class name&gt;”, DateYmd and holidays); parent notifications/alerts driven by config (e.g. contract or subscription ending soon). No self-registration; admin creates parent and shares credentials.
+
+## Calendars (teacher & parent)
+
+Month calendars use **DateYmd** (`yyyy-MM-dd`) for correct day matching and holiday handling.
+
+- **Teacher calendar** (`/teacher/calendar`) – Shows one-to-one and group sessions for the month:
+  - **Upcoming** from contract/group schedule (recurrence by days of week; days that fall on holidays are excluded).
+  - **Completed** from attendance logs and group sessions.
+- **Parent student calendar** (`/parent/student/:studentId/calendar`) – Same for a single student (1:1 + group). Group sessions are shown as **“Group: &lt;class name&gt;”**. Only sessions for that student are included (for group, only sessions where the student has an attendance record count as completed; upcoming group days come from the student’s enrolled classes).
+- **Holidays** – Admin-configured holidays (Settings) are excluded from upcoming schedule generation and returned in the calendar API so the UI can highlight or grey out holiday days.
 
 ## Notifications (bell and Mark all as read)
 

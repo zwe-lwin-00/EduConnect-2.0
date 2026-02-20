@@ -6,4 +6,7 @@
 .form-group { margin-bottom: 1rem; }
 .form-group label { display: block; margin-bottom: 0.25rem; }
 .form-group input, .form-group select { width: 100%; padding: 0.5rem; box-sizing: border-box; }
+.days-row { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
+.day-checkbox { display: inline-flex; align-items: center; gap: 0.35rem; margin: 0; font-weight: normal; cursor: pointer; }
+.day-checkbox input { width: auto; }
 .modal-actions { margin-top: 1rem; display: flex; gap: 0.5rem; }

@@ -8,8 +8,7 @@
     <dxi-column dataField="teacherName" caption="Teacher"></dxi-column>
     <dxi-column dataField="studentName" caption="Student"></dxi-column>
     <dxi-column dataField="status" caption="Status"></dxi-column>
-    <dxi-column dataField="scheduleStartTime" caption="Start"></dxi-column>
-    <dxi-column dataField="scheduleEndTime" caption="End"></dxi-column>
+    <dxi-column caption="Schedule" [calculateCellValue]="(e) => formatSchedule(e)"></dxi-column>
     <dxi-column type="buttons" width="100">
       <dxi-button hint="Cancel" (onClick)="cancelContract($event.row.data)"></dxi-button>
     </dxi-column>
@@ -44,11 +43,20 @@
       <input type="date" [(ngModel)]="form.legacyPeriodEnd" />
     </div>
     <div class="form-group">
-      <label>Schedule start (optional)</label>
+      <label>Days of week</label>
+      <div class="days-row">
+        <label *ngFor="let opt of dayOptions" class="day-checkbox">
+          <input type="checkbox" [checked]="isDayChecked(opt.value)" (change)="toggleDay(opt.value)" />
+          {{ opt.label }}
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Start time (optional)</label>
       <input type="time" [(ngModel)]="form.scheduleStartTime" />
     </div>
     <div class="form-group">
-      <label>Schedule end (optional)</label>
+      <label>End time (optional)</label>
       <input type="time" [(ngModel)]="form.scheduleEndTime" />
     </div>
     <div class="modal-actions">

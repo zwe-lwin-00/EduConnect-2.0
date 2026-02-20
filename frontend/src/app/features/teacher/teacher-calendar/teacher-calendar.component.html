@@ -1,0 +1,35 @@
+<div class="page-block">
+  <header class="page-header">
+    <h1>Calendar</h1>
+    <div class="month-nav">
+      <button type="button" class="btn-secondary" (click)="prevMonth()">← Prev</button>
+      <span class="month-label">{{ monthLabel() }}</span>
+      <button type="button" class="btn-secondary" (click)="nextMonth()">Next →</button>
+    </div>
+  </header>
+  <div *ngIf="loading" class="loading">Loading…</div>
+  <div *ngIf="!loading" class="calendar-wrap">
+    <table class="month-grid">
+      <thead>
+        <tr>
+          <th *ngFor="let w of weekDays" class="weekday">{{ w }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of weeks">
+          <td *ngFor="let cell of row" class="day-cell" [class.other-month]="!cell.isCurrentMonth" [class.holiday]="cell.isHoliday">
+            <div class="day-num">{{ cell.dayOfMonth }}</div>
+            <div *ngIf="cell.isHoliday" class="holiday-label">Holiday</div>
+            <ul class="day-items">
+              <li *ngFor="let it of cell.items" [class.completed]="it.completed" [class.upcoming]="!it.completed">
+                <span class="type">{{ it.type === 'ONE_TO_ONE' ? '1:1' : 'Group' }}</span>
+                <span class="label">{{ it.label }}</span>
+                <span class="status">{{ it.completed ? '✓' : '—' }}</span>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

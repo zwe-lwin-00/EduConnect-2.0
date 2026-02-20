@@ -11,6 +11,7 @@ import { Component } from '@angular/core';
           <a routerLink="/teacher/availability" routerLinkActive="active">Availability</a>
           <a routerLink="/teacher/students" routerLinkActive="active">Students</a>
           <a routerLink="/teacher/sessions" routerLinkActive="active">Sessions</a>
+          <a routerLink="/teacher/calendar" routerLinkActive="active">Calendar</a>
           <a routerLink="/teacher/group-classes" routerLinkActive="active">Group classes</a>
           <a routerLink="/teacher/homework-grades" routerLinkActive="active">Homework & Grades</a>
           <a routerLink="/teacher/profile" routerLinkActive="active">Profile</a>

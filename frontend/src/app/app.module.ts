@@ -30,7 +30,9 @@ import { TeacherSessionsComponent } from './features/teacher/teacher-sessions/te
 import { TeacherGroupClassesComponent } from './features/teacher/teacher-group-classes/teacher-group-classes.component';
 import { TeacherHomeworkGradesComponent } from './features/teacher/teacher-homework-grades/teacher-homework-grades.component';
 import { TeacherProfileComponent } from './features/teacher/teacher-profile/teacher-profile.component';
+import { TeacherCalendarComponent } from './features/teacher/teacher-calendar/teacher-calendar.component';
 import { ParentLayoutComponent } from './features/parent/parent-layout/parent-layout.component';
+import { ParentStudentCalendarComponent } from './features/parent/parent-student-calendar/parent-student-calendar.component';
 import { ParentStudentsComponent } from './features/parent/parent-students/parent-students.component';
 import { ParentStudentOverviewComponent } from './features/parent/parent-student-overview/parent-student-overview.component';
 
@@ -57,7 +59,9 @@ import { ParentStudentOverviewComponent } from './features/parent/parent-student
     TeacherGroupClassesComponent,
     TeacherHomeworkGradesComponent,
     TeacherProfileComponent,
+    TeacherCalendarComponent,
     ParentLayoutComponent,
+    ParentStudentCalendarComponent,
     ParentStudentsComponent,
     ParentStudentOverviewComponent
   ],

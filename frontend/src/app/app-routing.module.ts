@@ -26,6 +26,8 @@ import { TeacherSessionsComponent } from './features/teacher/teacher-sessions/te
 import { TeacherGroupClassesComponent } from './features/teacher/teacher-group-classes/teacher-group-classes.component';
 import { TeacherHomeworkGradesComponent } from './features/teacher/teacher-homework-grades/teacher-homework-grades.component';
 import { TeacherProfileComponent } from './features/teacher/teacher-profile/teacher-profile.component';
+import { TeacherCalendarComponent } from './features/teacher/teacher-calendar/teacher-calendar.component';
+import { ParentStudentCalendarComponent } from './features/parent/parent-student-calendar/parent-student-calendar.component';
 import { AuthRoutes } from './shared/constants/auth.constants';
 import { Roles } from './shared/constants/auth.constants';
 
@@ -60,6 +62,7 @@ const routes: Routes = [
       { path: 'availability', component: TeacherAvailabilityComponent, data: { title: 'Availability' } },
       { path: 'students', component: TeacherStudentsComponent, data: { title: 'Students' } },
       { path: 'sessions', component: TeacherSessionsComponent, data: { title: 'Sessions' } },
+      { path: 'calendar', component: TeacherCalendarComponent, data: { title: 'Calendar' } },
       { path: 'group-classes', component: TeacherGroupClassesComponent, data: { title: 'Group classes' } },
       { path: 'homework-grades', component: TeacherHomeworkGradesComponent, data: { title: 'Homework & Grades' } },
       { path: 'profile', component: TeacherProfileComponent, data: { title: 'Profile' } }
@@ -72,7 +75,8 @@ const routes: Routes = [
     data: { roles: [Roles.PARENT] },
     children: [
       { path: '', pathMatch: 'full', component: ParentStudentsComponent },
-      { path: 'student/:studentId', component: ParentStudentOverviewComponent, data: { title: 'Student Learning' } }
+      { path: 'student/:studentId', component: ParentStudentOverviewComponent, data: { title: 'Student Learning' } },
+      { path: 'student/:studentId/calendar', component: ParentStudentCalendarComponent, data: { title: 'Student Calendar' } }
     ]
   },
   { path: '**', redirectTo: 'auth/login' }

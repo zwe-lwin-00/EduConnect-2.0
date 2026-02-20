@@ -10,6 +10,7 @@
       <h1>{{ overview.studentName }}</h1>
       <p class="grade">Grade {{ overview.grade }}</p>
       <p *ngIf="overview.assignedTeacherName" class="teacher">Assigned teacher: {{ overview.assignedTeacherName }}</p>
+      <a [routerLink]="['/parent', 'student', overview.studentId, 'calendar']" class="calendar-link">View month calendar →</a>
     </header>
     <section>
       <h2>Progress</h2>

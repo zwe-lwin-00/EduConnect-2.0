@@ -5,6 +5,19 @@ import { getApiUrl } from './api-url';
 
 const BASE = getApiUrl('teacher');
 
+export interface CalendarDayItemDto {
+  dateYmd: string;
+  type: string;
+  label: string;
+  completed: boolean;
+  id?: string;
+}
+
+export interface TeacherCalendarResponseDto {
+  items: CalendarDayItemDto[];
+  holidays: string[];
+}
+
 export interface TeacherDashboardData {
   todayOneToOneSessions: number;
   todayGroupSessions: number;
@@ -177,5 +190,10 @@ export class TeacherApiService {
   }
   updateProfile(body: { zoomJoinUrl?: string }): Observable<TeacherProfileDto> {
     return this.http.patch<TeacherProfileDto>(`${BASE}/profile`, body);
+  }
+
+  getCalendar(year: number, month: number): Observable<TeacherCalendarResponseDto> {
+    const params = new HttpParams().set('year', String(year)).set('month', String(month));
+    return this.http.get<TeacherCalendarResponseDto>(`${BASE}/calendar`, { params });
   }
 }

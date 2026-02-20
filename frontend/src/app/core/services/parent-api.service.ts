@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { getApiUrl } from './api-url';
 
@@ -59,5 +59,14 @@ export class ParentApiService {
 
   getStudentOverview(studentId: string): Observable<StudentOverviewDto> {
     return this.http.get<StudentOverviewDto>(`${BASE}/students/${studentId}/overview`);
+  }
+
+  /** Month calendar for one student (items + holidays, DateYmd). */
+  getStudentCalendar(studentId: string, year: number, month: number): Observable<{ items: { dateYmd: string; type: string; label: string; completed: boolean; id?: string }[]; holidays: string[] }> {
+    const params = new HttpParams().set('year', String(year)).set('month', String(month));
+    return this.http.get<{ items: { dateYmd: string; type: string; label: string; completed: boolean; id?: string }[]; holidays: string[] }>(
+      `${BASE}/students/${studentId}/calendar`,
+      { params }
+    );
   }
 }
