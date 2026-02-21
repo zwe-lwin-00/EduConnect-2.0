@@ -21,7 +21,7 @@ public class SystemSetting {
     @Column(name = "key_name", nullable = false, unique = true)
     private String keyName;
 
-    @Column(name = "value", length = 2000)
+    @Column(name = "setting_value", length = 2000)
     private String value;
 
     @Column(length = 500)

@@ -1,13 +1,13 @@
 <div class="page-block">
   <header class="page-header">
     <h1>Students</h1>
-    <button type="button" class="btn-primary" (click)="openAdd()">Add student</button>
+    <dx-button text="Add student" type="default" (onClick)="openAdd()"></dx-button>
   </header>
-  <p *ngIf="error" class="error">{{ error }}</p>
-  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <dx-toast [visible]="!!error" type="error" [message]="error" [displayTime]="6000" (onHidden)="error = ''" [position]="{ at: { x: 'center', y: 'top' }, my: { x: 'center', y: 'top' } }"></dx-toast>
+  <dx-load-panel [visible]="loading" [showIndicator]="true" [showPane]="true" [shading]="false" message="Loading…"></dx-load-panel>
   <div *ngIf="!loading && !error && !students.length" class="empty-state">
     <p>No students yet.</p>
-    <button type="button" class="btn-primary" (click)="openAdd()">Add student</button>
+    <dx-button text="Add student" type="default" (onClick)="openAdd()"></dx-button>
   </div>
   <dx-data-grid *ngIf="!loading && !error && students.length" [dataSource]="students" [showBorders]="true" keyExpr="id">
     <dxi-column dataField="fullName" caption="Name"></dxi-column>
@@ -21,36 +21,38 @@
     </dxi-column>
   </dx-data-grid>
 </div>
-<div class="modal" *ngIf="showAdd">
-  <app-card class="modal-content">
-    <h2>Add student</h2>
-    <div class="form-group">
+<dx-popup [(visible)]="showAdd" title="Add student" [showCloseButton]="true" [width]="420" (onHiding)="closeAdd()">
+  <div class="popup-form">
+    <div class="form-item">
       <label>Parent</label>
-      <select [(ngModel)]="form.parentId">
-        <option value="" disabled>— Select parent —</option>
-        <option *ngFor="let p of parents" [value]="p.id">{{ p.fullName }} ({{ p.email }})</option>
-      </select>
+      <dx-select-box
+        [dataSource]="parentOptions"
+        displayExpr="label"
+        valueExpr="id"
+        [(value)]="form.parentId"
+        placeholder="— Select parent —">
+      </dx-select-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Full name</label>
-      <input type="text" [(ngModel)]="form.fullName" />
+      <dx-text-box [(value)]="form.fullName"></dx-text-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Grade</label>
-      <select [(ngModel)]="form.grade">
-        <option value="P1">P1</option>
-        <option value="P2">P2</option>
-        <option value="P3">P3</option>
-        <option value="P4">P4</option>
-      </select>
+      <dx-select-box
+        [dataSource]="gradeOptions"
+        displayExpr="label"
+        valueExpr="value"
+        [(value)]="form.grade">
+      </dx-select-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Date of birth</label>
-      <input type="date" [(ngModel)]="form.dateOfBirth" />
+      <dx-date-box [value]="form.dateOfBirth" (valueChange)="form.dateOfBirth = $event" type="date" placeholder=""></dx-date-box>
     </div>
-    <div class="modal-actions">
-      <button type="button" (click)="submitAdd()">Add</button>
-      <button type="button" (click)="closeAdd()">Cancel</button>
+    <div class="popup-actions">
+      <dx-button text="Add" type="default" (onClick)="submitAdd()"></dx-button>
+      <dx-button text="Cancel" type="normal" (onClick)="closeAdd()"></dx-button>
     </div>
-  </app-card>
-</div>
+  </div>
+</dx-popup>

@@ -1,8 +1,8 @@
-<div class="admin-layout">
-  <aside class="sidebar" aria-label="Admin navigation">
-    <app-brand class="sidebar-brand"></app-brand>
+<div class="teacher-layout">
+  <aside class="sidebar" aria-label="Teacher navigation">
+    <app-brand subtitle="Teacher" class="sidebar-brand"></app-brand>
     <dx-menu
-      class="admin-nav-menu"
+      class="teacher-nav-menu"
       [items]="navItems"
       orientation="vertical"
       selectionMode="single"
@@ -15,8 +15,6 @@
     </dx-menu>
     <div class="user" role="region" aria-label="User menu">
       <app-notification-bell></app-notification-bell>
-      <span class="user-name">{{ auth.getStoredUser()?.fullName }}</span>
-      <span class="user-role">Admin</span>
       <app-logout-button></app-logout-button>
     </div>
   </aside>

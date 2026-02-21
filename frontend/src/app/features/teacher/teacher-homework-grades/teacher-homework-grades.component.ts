@@ -14,8 +14,8 @@ export class TeacherHomeworkGradesComponent implements OnInit {
   error = '';
   showHomeworkForm = false;
   showGradeForm = false;
-  homeworkForm = { studentId: '', title: '', description: '', dueDate: '' };
-  gradeForm = { studentId: '', title: '', gradeValue: 100, maxValue: 100, gradeDate: '', notes: '' };
+  homeworkForm: { studentId: string; title: string; description: string; dueDate: string | Date | number } = { studentId: '', title: '', description: '', dueDate: '' };
+  gradeForm: { studentId: string; title: string; gradeValue: number; maxValue: number; gradeDate: string | Date | number; notes: string } = { studentId: '', title: '', gradeValue: 100, maxValue: 100, gradeDate: '', notes: '' };
   showFeedback = false;
   selectedHomework: TeacherHomeworkDto | null = null;
   teacherFeedback = '';
@@ -46,8 +46,16 @@ export class TeacherHomeworkGradesComponent implements OnInit {
     this.showHomeworkForm = true;
   }
 
+  toDateStr(v: string | Date | number): string {
+    if (v == null || v === '') return '';
+    if (typeof v === 'string') return v;
+    if (typeof v === 'number') return new Date(v).toISOString().slice(0, 10);
+    return (v as Date).toISOString().slice(0, 10);
+  }
+
   submitHomework(): void {
-    this.api.createHomework(this.homeworkForm).subscribe({
+    const payload = { ...this.homeworkForm, dueDate: this.toDateStr(this.homeworkForm.dueDate) };
+    this.api.createHomework(payload).subscribe({
       next: () => { this.load(); this.showHomeworkForm = false; },
       error: () => {}
     });
@@ -66,7 +74,8 @@ export class TeacherHomeworkGradesComponent implements OnInit {
   }
 
   submitGrade(): void {
-    this.api.createGrade(this.gradeForm).subscribe({
+    const payload = { ...this.gradeForm, gradeDate: this.toDateStr(this.gradeForm.gradeDate) };
+    this.api.createGrade(payload).subscribe({
       next: () => { this.load(); this.showGradeForm = false; },
       error: () => {}
     });

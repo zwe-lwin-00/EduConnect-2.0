@@ -85,7 +85,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "port": 9098,
+            "port": 9094,
             "open": false
           },
           "configurations": {
@@ -125,5 +125,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

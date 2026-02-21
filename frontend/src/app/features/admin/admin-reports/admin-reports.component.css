@@ -4,8 +4,9 @@
 .hint { color: #64748b; margin-bottom: 1rem; }
 .error { color: #b91c1c; margin-bottom: 1rem; padding: 0.75rem; background: #fef2f2; border-radius: 8px; }
 .loading { color: #64748b; padding: 0.5rem 0; }
-.toolbar { margin-bottom: 1rem; }
-.toolbar input { margin: 0 0.5rem; padding: 0.35rem; }
+.toolbar { margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+.toolbar label { margin-right: 0.25rem; }
+.toolbar dx-date-box { display: inline-block; }
 .summary { margin-bottom: 1rem; padding: 0.75rem; background: #f1f5f9; border-radius: 6px; }
 .summary-item { margin-right: 1.5rem; }
 h2 { margin-top: 1.5rem; }

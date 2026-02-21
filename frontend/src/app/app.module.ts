@@ -9,7 +9,24 @@ import { JwtInterceptor } from './core/http/jwt.interceptor';
 import { ErrorInterceptor } from './core/http/error.interceptor';
 import { loadRuntimeConfig } from './core/services/api-url';
 import { SharedModule } from './shared/shared.module';
-import { DxDataGridModule, DxButtonModule } from 'devextreme-angular';
+import {
+  DxDataGridModule,
+  DxButtonModule,
+  DxPopupModule,
+  DxMenuModule,
+  DxFormModule,
+  DxTextBoxModule,
+  DxSelectBoxModule,
+  DxDateBoxModule,
+  DxNumberBoxModule,
+  DxTextAreaModule,
+  DxTagBoxModule,
+  DxLoadPanelModule,
+  DxToastModule,
+  DxTileViewModule,
+  DxScrollViewModule,
+  DxCheckBoxModule
+} from 'devextreme-angular';
 
 import { LoginComponent } from './features/auth/login/login.component';
 import { AdminLayoutComponent } from './features/admin/admin-layout/admin-layout.component';
@@ -74,7 +91,21 @@ import { ParentStudentOverviewComponent } from './features/parent/parent-student
     AppRoutingModule,
     SharedModule,
     DxDataGridModule,
-    DxButtonModule
+    DxButtonModule,
+    DxPopupModule,
+    DxMenuModule,
+    DxFormModule,
+    DxTextBoxModule,
+    DxSelectBoxModule,
+    DxDateBoxModule,
+    DxNumberBoxModule,
+    DxTextAreaModule,
+    DxTagBoxModule,
+    DxLoadPanelModule,
+    DxToastModule,
+    DxTileViewModule,
+    DxScrollViewModule,
+    DxCheckBoxModule
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: () => () => loadRuntimeConfig(), multi: true },

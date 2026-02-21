@@ -1,14 +1,14 @@
 <div class="page-block">
   <header class="page-header">
     <h1>Subscriptions / Payments</h1>
-    <button type="button" class="btn-primary" (click)="openCreate()">Create subscription (monthly)</button>
+    <dx-button text="Create subscription (monthly)" type="default" (onClick)="openCreate()"></dx-button>
   </header>
   <p class="hint">Monthly billing only. Create a new subscription (1 month) or renew existing via Renew.</p>
-  <p *ngIf="error" class="error">{{ error }}</p>
-  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <dx-toast [visible]="!!error" type="error" [message]="error" [displayTime]="6000" (onHidden)="error = ''" [position]="{ at: { x: 'center', y: 'top' }, my: { x: 'center', y: 'top' } }"></dx-toast>
+  <dx-load-panel [visible]="loading" [showIndicator]="true" [showPane]="true" [shading]="false" message="Loading…"></dx-load-panel>
   <div *ngIf="!loading && !error && !subscriptions.length" class="empty-state">
     <p>No subscriptions yet.</p>
-    <button type="button" class="btn-primary" (click)="openCreate()">Create subscription (monthly)</button>
+    <dx-button text="Create subscription (monthly)" type="default" (onClick)="openCreate()"></dx-button>
   </div>
   <dx-data-grid *ngIf="!loading && !error && subscriptions.length" [dataSource]="subscriptions" [showBorders]="true" keyExpr="id">
     <dxi-column dataField="studentName" caption="Student"></dxi-column>
@@ -21,30 +21,23 @@
     </dxi-column>
   </dx-data-grid>
 </div>
-<div class="modal" *ngIf="showCreate">
-  <app-card class="modal-content">
-    <h2>Create subscription (monthly)</h2>
-    <div class="form-group">
+<dx-popup [(visible)]="showCreate" title="Create subscription (monthly)" [showCloseButton]="true" [width]="420" (onHiding)="closeCreate()">
+  <div class="popup-form">
+    <div class="form-item">
       <label>Student</label>
-      <select [(ngModel)]="createForm.studentId">
-        <option value="" disabled>— Select student —</option>
-        <option *ngFor="let s of students" [value]="s.id">{{ s.fullName }} ({{ s.grade }})</option>
-      </select>
+      <dx-select-box [dataSource]="studentOptions" displayExpr="label" valueExpr="id" [(value)]="createForm.studentId" placeholder="— Select student —"></dx-select-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Type</label>
-      <select [(ngModel)]="createForm.type">
-        <option value="ONE_TO_ONE">One-To-One</option>
-        <option value="GROUP">Group</option>
-      </select>
+      <dx-select-box [dataSource]="typeOptions" displayExpr="label" valueExpr="value" [(value)]="createForm.type"></dx-select-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Start date (end = start + 1 month)</label>
-      <input type="date" [(ngModel)]="createForm.startDate" />
+      <dx-date-box [value]="createForm.startDate" (valueChange)="createForm.startDate = $event" type="date"></dx-date-box>
     </div>
-    <div class="modal-actions">
-      <button type="button" (click)="submitCreate()">Create</button>
-      <button type="button" (click)="closeCreate()">Cancel</button>
+    <div class="popup-actions">
+      <dx-button text="Create" type="default" (onClick)="submitCreate()"></dx-button>
+      <dx-button text="Cancel" type="normal" (onClick)="closeCreate()"></dx-button>
     </div>
-  </app-card>
-</div>
+  </div>
+</dx-popup>

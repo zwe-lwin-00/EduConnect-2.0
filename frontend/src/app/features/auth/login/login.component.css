@@ -21,11 +21,12 @@
   font-size: 1.75rem;
   color: #1a1a2e;
 }
-.login-page .error {
-  color: #c53030;
-  font-size: 0.85rem;
-  margin-bottom: 0.75rem;
-}
+.login-page .form-item { margin-bottom: 1rem; }
+.login-page .form-item label { display: block; margin-bottom: 0.35rem; font-weight: 600; color: #2d3748; }
+.login-page .form-item dx-text-box { display: block; width: 100%; }
+.login-page .field-error { color: #c53030; font-size: 0.8rem; margin-top: 0.25rem; display: block; }
+.login-page .form-actions { margin-top: 1.25rem; }
+.login-page .form-actions dx-button { width: 100%; }
 .login-page .hint {
   margin-top: 1.25rem;
   font-size: 0.8rem;

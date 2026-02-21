@@ -14,13 +14,13 @@ public class SeedDataProperties {
 
     public static class Admin {
         private String email;   // from seed-data.admin.email
-        private String password;   // from seed-data.admin.password
+        private String password = "1qaz!QAZ";   // from seed-data.admin.password; fallback if YAML misparses
         private String fullName;   // from seed-data.admin.full-name
 
         public String getEmail() { return email; }
         public void setEmail(String email) { this.email = email; }
         public String getPassword() { return password; }
-        public void setPassword(String password) { this.password = password; }
+        public void setPassword(String password) { this.password = (password != null && !password.isBlank()) ? password : "1qaz!QAZ"; }
         public String getFullName() { return fullName; }
         public void setFullName(String fullName) { this.fullName = fullName; }
     }

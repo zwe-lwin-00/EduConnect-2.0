@@ -1,36 +1,40 @@
 <div class="teacher-dashboard">
+  <dx-load-panel [visible]="loading" [showIndicator]="true" [showPane]="true" [shading]="true" message="Loading…" [position]="{ of: 'body' }"></dx-load-panel>
+  <dx-toast [visible]="!!error" type="error" [message]="error" [displayTime]="8000" (onHidden)="error = ''" [position]="{ at: { x: 'center', y: 'top' }, my: { x: 'center', y: 'top' } }"></dx-toast>
   <header class="page-header">
     <h1>Teacher Dashboard</h1>
   </header>
-  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
-  <p *ngIf="!loading && error" class="error">{{ error }}</p>
   <div *ngIf="!loading && !error" class="cards">
-    <a routerLink="/teacher/sessions" class="card">
+    <div class="card">
       <h3>Today's 1:1 sessions</h3>
       <p class="value">{{ data.todayOneToOneSessions }}</p>
-    </a>
-    <a routerLink="/teacher/sessions" class="card">
+      <dx-button text="Sessions" type="normal" stylingMode="text" (onClick)="navigate('/teacher/sessions')"></dx-button>
+    </div>
+    <div class="card">
       <h3>Today's group sessions</h3>
       <p class="value">{{ data.todayGroupSessions }}</p>
-    </a>
-    <a routerLink="/teacher/sessions" class="card">
+      <dx-button text="Sessions" type="normal" stylingMode="text" (onClick)="navigate('/teacher/sessions')"></dx-button>
+    </div>
+    <div class="card">
       <h3>Upcoming 1:1</h3>
       <p class="value">{{ data.upcomingOneToOneCount }}</p>
-    </a>
-    <a routerLink="/teacher/homework-grades" class="card">
+      <dx-button text="Sessions" type="normal" stylingMode="text" (onClick)="navigate('/teacher/sessions')"></dx-button>
+    </div>
+    <div class="card">
       <h3>Homework to grade</h3>
       <p class="value">{{ data.pendingHomeworkToGrade }}</p>
-    </a>
+      <dx-button text="Homework & Grades" type="normal" stylingMode="text" (onClick)="navigate('/teacher/homework-grades')"></dx-button>
+    </div>
   </div>
   <div *ngIf="!loading && !error && !data.todayOneToOneSessions && !data.todayGroupSessions && !data.upcomingOneToOneCount && !data.pendingHomeworkToGrade" class="empty-state">
     <p>No activity yet. Use the links below to get started.</p>
   </div>
   <nav class="quick-links" aria-label="Quick links">
-    <a routerLink="/teacher/availability">Availability</a>
-    <a routerLink="/teacher/students">Students</a>
-    <a routerLink="/teacher/sessions">Sessions</a>
-    <a routerLink="/teacher/group-classes">Group classes</a>
-    <a routerLink="/teacher/homework-grades">Homework & Grades</a>
-    <a routerLink="/teacher/profile">Profile</a>
+    <dx-button text="Availability" type="normal" stylingMode="outlined" (onClick)="navigate('/teacher/availability')"></dx-button>
+    <dx-button text="Students" type="normal" stylingMode="outlined" (onClick)="navigate('/teacher/students')"></dx-button>
+    <dx-button text="Sessions" type="normal" stylingMode="outlined" (onClick)="navigate('/teacher/sessions')"></dx-button>
+    <dx-button text="Group classes" type="normal" stylingMode="outlined" (onClick)="navigate('/teacher/group-classes')"></dx-button>
+    <dx-button text="Homework & Grades" type="normal" stylingMode="outlined" (onClick)="navigate('/teacher/homework-grades')"></dx-button>
+    <dx-button text="Profile" type="normal" stylingMode="outlined" (onClick)="navigate('/teacher/profile')"></dx-button>
   </nav>
 </div>

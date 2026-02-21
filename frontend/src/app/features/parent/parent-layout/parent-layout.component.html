@@ -1,0 +1,14 @@
+<div class="parent-layout">
+  <header class="header" role="banner" aria-label="Parent">
+    <app-brand subtitle="Parent" class="header-brand"></app-brand>
+    <div class="header-actions" role="region" aria-label="User menu">
+      <app-notification-bell></app-notification-bell>
+      <app-logout-button></app-logout-button>
+    </div>
+  </header>
+  <main class="content">
+    <dx-scroll-view class="content-scroll" width="100%" height="100%">
+      <router-outlet></router-outlet>
+    </dx-scroll-view>
+  </main>
+</div>

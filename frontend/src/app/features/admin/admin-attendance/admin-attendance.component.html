@@ -3,12 +3,12 @@
     <h1>Attendance</h1>
   </header>
   <p class="hint">Teachers check in/out from Sessions. Use Override to correct times, hours, or notes.</p>
-  <p *ngIf="error" class="error">{{ error }}</p>
+  <dx-toast [visible]="!!error" type="error" [message]="error" [displayTime]="6000" (onHidden)="error = ''" [position]="{ at: { x: 'center', y: 'top' }, my: { x: 'center', y: 'top' } }"></dx-toast>
   <div class="toolbar">
     <label>Date</label>
-    <input type="date" [(ngModel)]="date" (ngModelChange)="onDateChange()" />
+    <dx-date-box [(value)]="date" type="date" (onValueChanged)="onDateChange()"></dx-date-box>
   </div>
-  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <dx-load-panel [visible]="loading" [showIndicator]="true" [showPane]="true" [shading]="false" message="Loading…"></dx-load-panel>
   <div *ngIf="!loading && !error && !list.length" class="empty-state">
     <p>No attendance records for this date.</p>
   </div>
@@ -25,29 +25,28 @@
     </dxi-column>
   </dx-data-grid>
 </div>
-<div class="modal" *ngIf="showOverride && selected">
-  <app-card class="modal-content">
-    <h2>Override check-in / check-out</h2>
+<dx-popup [(visible)]="showOverride" title="Override check-in / check-out" [showCloseButton]="true" [width]="480" (onHiding)="closeOverride()">
+  <div class="popup-form" *ngIf="selected">
     <p class="session-info">{{ selected.teacherName }} – {{ selected.studentName }} ({{ selected.sessionDate }}) · Check-in: {{ selected.checkInAt | myanmarDate:'short' }} · Check-out: {{ selected.checkOutAt | myanmarDate:'short' }}</p>
-    <div class="form-group">
+    <div class="form-item">
       <label>Check-in</label>
-      <input type="datetime-local" [(ngModel)]="overrideForm.checkInAt" />
+      <dx-date-box [value]="$any(overrideForm.checkInAt)" (valueChange)="overrideForm.checkInAt = $event" type="datetime"></dx-date-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Check-out</label>
-      <input type="datetime-local" [(ngModel)]="overrideForm.checkOutAt" />
+      <dx-date-box [value]="$any(overrideForm.checkOutAt)" (valueChange)="overrideForm.checkOutAt = $event" type="datetime"></dx-date-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Hours used</label>
-      <input type="number" step="0.25" [(ngModel)]="overrideForm.hoursUsed" />
+      <dx-number-box [value]="$any(overrideForm.hoursUsed)" (valueChange)="overrideForm.hoursUsed = $event" [min]="0" [step]="0.25"></dx-number-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Lesson notes</label>
-      <textarea [(ngModel)]="overrideForm.lessonNotes" rows="3" style="width:100%"></textarea>
+      <dx-text-area [(value)]="overrideForm.lessonNotes" [height]="80"></dx-text-area>
     </div>
-    <div class="modal-actions">
-      <button type="button" (click)="saveOverride()">Save</button>
-      <button type="button" (click)="closeOverride()">Cancel</button>
+    <div class="popup-actions">
+      <dx-button text="Save" type="default" (onClick)="saveOverride()"></dx-button>
+      <dx-button text="Cancel" type="normal" (onClick)="closeOverride()"></dx-button>
     </div>
-  </app-card>
-</div>
+  </div>
+</dx-popup>

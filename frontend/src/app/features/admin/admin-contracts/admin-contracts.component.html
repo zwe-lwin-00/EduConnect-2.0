@@ -1,13 +1,13 @@
 <div class="page-block">
   <header class="page-header">
     <h1>One-To-One (Contracts)</h1>
-    <button type="button" class="btn-primary" (click)="openCreate()">Create One-To-One</button>
+    <dx-button text="Create One-To-One" type="default" (onClick)="openCreate()"></dx-button>
   </header>
-  <p *ngIf="error" class="error">{{ error }}</p>
-  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <dx-toast [visible]="!!error" type="error" [message]="error" [displayTime]="6000" (onHidden)="error = ''" [position]="{ at: { x: 'center', y: 'top' }, my: { x: 'center', y: 'top' } }"></dx-toast>
+  <dx-load-panel [visible]="loading" [showIndicator]="true" [showPane]="true" [shading]="false" message="Loading…"></dx-load-panel>
   <div *ngIf="!loading && !error && !contracts.length" class="empty-state">
     <p>No One-To-One contracts yet.</p>
-    <button type="button" class="btn-primary" (click)="openCreate()">Create One-To-One</button>
+    <dx-button text="Create One-To-One" type="default" (onClick)="openCreate()"></dx-button>
   </div>
   <dx-data-grid *ngIf="!loading && !error && contracts.length" [dataSource]="contracts" [showBorders]="true" keyExpr="id">
     <dxi-column dataField="teacherName" caption="Teacher"></dxi-column>
@@ -19,54 +19,46 @@
     </dxi-column>
   </dx-data-grid>
 </div>
-<div class="modal" *ngIf="showCreate">
-  <app-card class="modal-content">
-    <h2>Create One-To-One</h2>
-    <div class="form-group">
+<dx-popup [(visible)]="showCreate" title="Create One-To-One" [showCloseButton]="true" [width]="480" (onHiding)="closeCreate()">
+  <div class="popup-form">
+    <div class="form-item">
       <label>Teacher</label>
-      <select [(ngModel)]="form.teacherId">
-        <option value="">--</option>
-        <option *ngFor="let t of teachers" [value]="t.id">{{ t.fullName }}</option>
-      </select>
+      <dx-select-box [dataSource]="teachers" displayExpr="fullName" valueExpr="id" [(value)]="form.teacherId" placeholder="--"></dx-select-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Student</label>
-      <select [(ngModel)]="form.studentId">
-        <option value="">--</option>
-        <option *ngFor="let s of students" [value]="s.id">{{ s.fullName }}</option>
-      </select>
+      <dx-select-box [dataSource]="students" displayExpr="fullName" valueExpr="id" [(value)]="form.studentId" placeholder="--"></dx-select-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Subscription (One-To-One) or Legacy end date</label>
-      <select [(ngModel)]="form.subscriptionId">
-        <option value="">Use legacy end date</option>
-        <option *ngFor="let sub of subscriptions" [value]="sub.id">{{ sub.studentName }} until {{ sub.endDate }}</option>
-      </select>
+      <dx-select-box [dataSource]="subscriptionOptions" displayExpr="label" valueExpr="id" [(value)]="form.subscriptionId" placeholder="Use legacy end date"></dx-select-box>
     </div>
-    <div class="form-group" *ngIf="!form.subscriptionId">
+    <div class="form-item" *ngIf="!form.subscriptionId">
       <label>Legacy period end</label>
-      <input type="date" [(ngModel)]="form.legacyPeriodEnd" />
+      <dx-date-box [(value)]="form.legacyPeriodEnd" type="date"></dx-date-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Days of week</label>
-      <div class="days-row">
-        <label *ngFor="let opt of dayOptions" class="day-checkbox">
-          <input type="checkbox" [checked]="isDayChecked(opt.value)" (change)="toggleDay(opt.value)" />
-          {{ opt.label }}
-        </label>
-      </div>
+      <dx-tag-box [dataSource]="dayOptions" displayExpr="label" valueExpr="value" [(value)]="form.daysOfWeek" [multiline]="false"></dx-tag-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Start time (optional)</label>
-      <input type="time" [(ngModel)]="form.scheduleStartTime" />
+      <dx-date-box [(value)]="form.scheduleStartTime" type="time" pickerType="rollers"></dx-date-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>End time (optional)</label>
-      <input type="time" [(ngModel)]="form.scheduleEndTime" />
+      <dx-date-box [(value)]="form.scheduleEndTime" type="time" pickerType="rollers"></dx-date-box>
     </div>
-    <div class="modal-actions">
-      <button type="button" (click)="submitCreate()">Create</button>
-      <button type="button" (click)="closeCreate()">Cancel</button>
+    <div class="popup-actions">
+      <dx-button text="Create" type="default" (onClick)="submitCreate()"></dx-button>
+      <dx-button text="Cancel" type="normal" (onClick)="closeCreate()"></dx-button>
     </div>
-  </app-card>
-</div>
+  </div>
+</dx-popup>
+<dx-popup [(visible)]="showConfirmCancel" title="Cancel contract" [showCloseButton]="true" [width]="400" (onHiding)="showConfirmCancel = false; contractToCancel = null">
+  <p>Cancel this One-To-One contract?</p>
+  <div class="popup-actions">
+    <dx-button text="Yes, cancel" type="danger" (onClick)="confirmCancelContract()"></dx-button>
+    <dx-button text="No" type="normal" (onClick)="showConfirmCancel = false"></dx-button>
+  </div>
+</dx-popup>

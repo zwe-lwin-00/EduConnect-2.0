@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AdminApiService, DashboardData } from '../../../core/services/admin-api.service';
 
 @Component({
@@ -12,7 +13,11 @@ export class AdminDashboardComponent implements OnInit {
   error = '';
   summaryData: { metric: string; value: number | string }[] = [];
 
-  constructor(private adminApi: AdminApiService) {}
+  constructor(private adminApi: AdminApiService, private router: Router) {}
+
+  navigate(path: string): void {
+    this.router.navigateByUrl(path);
+  }
 
   ngOnInit(): void {
     this.adminApi.getDashboard().subscribe({

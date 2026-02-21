@@ -1,17 +1,18 @@
 <div class="notification-bell">
-  <button type="button" class="bell-btn" (click)="toggle()" title="Notifications" aria-label="Notifications">
+  <dx-button type="normal" stylingMode="text" (onClick)="toggle()" title="Notifications" [elementAttr]="{ 'aria-label': 'Notifications' }" class="bell-btn">
     <span class="bell-icon">🔔</span>
     <span *ngIf="unreadCount > 0" class="badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
-  </button>
+  </dx-button>
   <div class="dropdown" *ngIf="open">
     <div class="dropdown-header">
       <span>Notifications</span>
-      <button type="button" class="mark-all" (click)="markAllRead()" [disabled]="unreadCount === 0">
-        Mark all as read
-      </button>
+      <dx-button text="Mark all as read" type="normal" stylingMode="outlined" (onClick)="markAllRead()" [disabled]="unreadCount === 0"></dx-button>
     </div>
     <div class="dropdown-body">
-      <div *ngIf="loading" class="loading">Loading…</div>
+      <div *ngIf="loading" class="loading">
+        <dx-load-indicator [visible]="true" height="32" width="32"></dx-load-indicator>
+        <span>Loading…</span>
+      </div>
       <div *ngIf="!loading && notifications.length === 0" class="empty">No notifications</div>
       <div *ngIf="!loading && notifications.length > 0" class="list">
         <div *ngFor="let n of notifications" class="item" [class.unread]="!n.read">

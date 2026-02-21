@@ -18,21 +18,14 @@ export class AdminGroupClassesComponent implements OnInit {
   error = '';
   showCreate = false;
   dayOptions = DAY_LABELS;
-  form: any = { name: '', teacherId: '', scheduleStartTime: '', scheduleEndTime: '', daysOfWeek: [] as number[] };
+  form: any = { name: '', teacherId: '', scheduleStartTime: null as string | null, scheduleEndTime: null as string | null, daysOfWeek: [] as number[] };
 
   constructor(public api: AdminApiService) {}
 
-  isDayChecked(dayValue: number): boolean {
-    return Array.isArray(this.form.daysOfWeek) && this.form.daysOfWeek.includes(dayValue);
-  }
-
-  toggleDay(dayValue: number): void {
-    const arr = Array.isArray(this.form.daysOfWeek) ? [...this.form.daysOfWeek] : [];
-    const i = arr.indexOf(dayValue);
-    if (i >= 0) arr.splice(i, 1);
-    else arr.push(dayValue);
-    arr.sort((a, b) => a - b);
-    this.form.daysOfWeek = arr;
+  toTimeStr(v: string | Date | null): string {
+    if (!v) return '';
+    const d = typeof v === 'string' ? new Date('1970-01-01T' + v) : (v as Date);
+    return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
   }
 
   ngOnInit(): void {
@@ -55,13 +48,15 @@ export class AdminGroupClassesComponent implements OnInit {
 
   openCreate(): void {
     this.showCreate = true;
-    this.form = { name: '', teacherId: '', scheduleStartTime: '', scheduleEndTime: '', daysOfWeek: [] };
+    this.form = { name: '', teacherId: '', scheduleStartTime: null, scheduleEndTime: null, daysOfWeek: [] };
   }
 
   submitCreate(): void {
     const body: any = { name: this.form.name, teacherId: this.form.teacherId };
-    if (this.form.scheduleStartTime) body.scheduleStartTime = this.form.scheduleStartTime;
-    if (this.form.scheduleEndTime) body.scheduleEndTime = this.form.scheduleEndTime;
+    const start = this.toTimeStr(this.form.scheduleStartTime);
+    const end = this.toTimeStr(this.form.scheduleEndTime);
+    if (start) body.scheduleStartTime = start;
+    if (end) body.scheduleEndTime = end;
     if (this.form.daysOfWeek?.length) body.daysOfWeek = this.form.daysOfWeek;
     this.api.createGroupClass(body).subscribe({ next: () => { this.load(); this.showCreate = false; }, error: () => {} });
   }

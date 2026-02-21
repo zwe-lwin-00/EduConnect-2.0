@@ -1,13 +1,13 @@
 <div class="page-block">
   <header class="page-header">
     <h1>Group classes</h1>
-    <button type="button" class="btn-primary" (click)="openCreate()">Create group class</button>
+    <dx-button text="Create group class" type="default" (onClick)="openCreate()"></dx-button>
   </header>
-  <p *ngIf="error" class="error">{{ error }}</p>
-  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <dx-toast [visible]="!!error" type="error" [message]="error" [displayTime]="6000" (onHidden)="error = ''" [position]="{ at: { x: 'center', y: 'top' }, my: { x: 'center', y: 'top' } }"></dx-toast>
+  <dx-load-panel [visible]="loading" [showIndicator]="true" [showPane]="true" [shading]="false" message="Loading…"></dx-load-panel>
   <div *ngIf="!loading && !error && !list.length" class="empty-state">
     <p>No group classes yet.</p>
-    <button type="button" class="btn-primary" (click)="openCreate()">Create group class</button>
+    <dx-button text="Create group class" type="default" (onClick)="openCreate()"></dx-button>
   </div>
   <dx-data-grid *ngIf="!loading && !error && list.length" [dataSource]="list" [showBorders]="true" keyExpr="id">
     <dxi-column dataField="name" caption="Name"></dxi-column>
@@ -18,40 +18,31 @@
     <dxi-column dataField="scheduleEndTime" caption="End"></dxi-column>
   </dx-data-grid>
 </div>
-<div class="modal" *ngIf="showCreate">
-  <app-card class="modal-content">
-    <h2>Create group class</h2>
-    <div class="form-group">
+<dx-popup [(visible)]="showCreate" title="Create group class" [showCloseButton]="true" [width]="480" (onHiding)="closeCreate()">
+  <div class="popup-form">
+    <div class="form-item">
       <label>Name</label>
-      <input type="text" [(ngModel)]="form.name" />
+      <dx-text-box [(value)]="form.name"></dx-text-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Teacher</label>
-      <select [(ngModel)]="form.teacherId">
-        <option value="">--</option>
-        <option *ngFor="let t of teachers" [value]="t.id">{{ t.fullName }}</option>
-      </select>
+      <dx-select-box [dataSource]="teachers" displayExpr="fullName" valueExpr="id" [(value)]="form.teacherId" placeholder="--"></dx-select-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Schedule start</label>
-      <input type="time" [(ngModel)]="form.scheduleStartTime" />
+      <dx-date-box [(value)]="form.scheduleStartTime" type="time" pickerType="rollers"></dx-date-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Schedule end</label>
-      <input type="time" [(ngModel)]="form.scheduleEndTime" />
+      <dx-date-box [(value)]="form.scheduleEndTime" type="time" pickerType="rollers"></dx-date-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Days of week</label>
-      <div class="days-row">
-        <label *ngFor="let opt of dayOptions" class="day-checkbox">
-          <input type="checkbox" [checked]="isDayChecked(opt.value)" (change)="toggleDay(opt.value)" />
-          {{ opt.label }}
-        </label>
-      </div>
+      <dx-tag-box [dataSource]="dayOptions" displayExpr="label" valueExpr="value" [(value)]="form.daysOfWeek" [multiline]="false"></dx-tag-box>
     </div>
-    <div class="modal-actions">
-      <button type="button" (click)="submitCreate()">Create</button>
-      <button type="button" (click)="closeCreate()">Cancel</button>
+    <div class="popup-actions">
+      <dx-button text="Create" type="default" (onClick)="submitCreate()"></dx-button>
+      <dx-button text="Cancel" type="normal" (onClick)="closeCreate()"></dx-button>
     </div>
-  </app-card>
-</div>
+  </div>
+</dx-popup>

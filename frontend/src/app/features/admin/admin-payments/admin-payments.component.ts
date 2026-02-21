@@ -12,7 +12,12 @@ export class AdminPaymentsComponent implements OnInit {
   loading = true;
   error = '';
   showCreate = false;
-  createForm = { studentId: '', type: 'ONE_TO_ONE' as string, startDate: '' };
+  createForm: { studentId: string; type: string; startDate: string | Date | number } = { studentId: '', type: 'ONE_TO_ONE', startDate: '' };
+  typeOptions = [{ value: 'ONE_TO_ONE', label: 'One-To-One' }, { value: 'GROUP', label: 'Group' }];
+
+  get studentOptions(): { id: string; label: string }[] {
+    return this.students.map(s => ({ id: s.id, label: `${s.fullName} (${s.grade})` }));
+  }
 
   constructor(public api: AdminApiService) {}
 
@@ -41,7 +46,11 @@ export class AdminPaymentsComponent implements OnInit {
   }
 
   submitCreate(): void {
-    const start = this.createForm.startDate;
+    const startVal = this.createForm.startDate;
+    let start: string;
+    if (typeof startVal === 'string') start = startVal;
+    else if (typeof startVal === 'number') start = new Date(startVal).toISOString().slice(0, 10);
+    else start = (startVal as Date).toISOString().slice(0, 10);
     const end = new Date(start);
     end.setMonth(end.getMonth() + 1);
     const endStr = end.toISOString().slice(0, 10);

@@ -28,6 +28,16 @@ export class LoginComponent {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || this.auth.getRedirectByRole();
   }
 
+  onEmailChange(value: string): void {
+    this.form.get('email')?.setValue(value ?? '');
+    this.form.get('email')?.markAsTouched();
+  }
+
+  onPasswordChange(value: string): void {
+    this.form.get('password')?.setValue(value ?? '');
+    this.form.get('password')?.markAsTouched();
+  }
+
   onSubmit(): void {
     if (this.form.invalid) return;
     this.loading = true;

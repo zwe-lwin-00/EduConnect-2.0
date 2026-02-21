@@ -13,3 +13,10 @@
 .form-group label { display: block; margin-bottom: 0.25rem; }
 .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.5rem; box-sizing: border-box; }
 .modal-actions { margin-top: 1rem; display: flex; gap: 0.5rem; }
+.toolbar { display: flex; align-items: center; gap: 0.5rem; }
+.toolbar dx-date-box { display: inline-block; }
+.popup-form { padding: 0.5rem 0; }
+.popup-form .form-item { margin-bottom: 1rem; }
+.popup-form .form-item label { display: block; margin-bottom: 0.25rem; font-weight: 600; }
+.popup-form dx-select-box, .popup-form dx-date-box, .popup-form dx-text-area { display: block; width: 100%; }
+.popup-actions { margin-top: 1rem; display: flex; gap: 0.5rem; }

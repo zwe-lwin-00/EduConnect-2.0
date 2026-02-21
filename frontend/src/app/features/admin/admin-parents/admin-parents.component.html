@@ -1,13 +1,13 @@
 <div class="page-block">
   <header class="page-header">
     <h1>Parents</h1>
-    <button type="button" class="btn-primary" (click)="openCreate()">Create parent</button>
+    <dx-button text="Create parent" type="default" (onClick)="openCreate()"></dx-button>
   </header>
-  <p *ngIf="error" class="error">{{ error }}</p>
-  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <dx-toast [visible]="!!error" type="error" [message]="error" [displayTime]="6000" (onHidden)="error = ''" [position]="{ at: { x: 'center', y: 'top' }, my: { x: 'center', y: 'top' } }"></dx-toast>
+  <dx-load-panel [visible]="loading" [showIndicator]="true" [showPane]="true" [shading]="false" message="Loading…"></dx-load-panel>
   <div *ngIf="!loading && !error && !parents.length" class="empty-state">
     <p>No parents yet.</p>
-    <button type="button" class="btn-primary" (click)="openCreate()">Create parent</button>
+    <dx-button text="Create parent" type="default" (onClick)="openCreate()"></dx-button>
   </div>
   <dx-data-grid *ngIf="!loading && !error && parents.length" [dataSource]="parents" [showBorders]="true" keyExpr="id">
     <dxi-column dataField="fullName" caption="Name"></dxi-column>
@@ -16,27 +16,26 @@
     <dxi-column dataField="active" caption="Active" dataType="boolean"></dxi-column>
   </dx-data-grid>
 </div>
-<div class="modal" *ngIf="showCreate">
-  <app-card class="modal-content">
-    <h2>Create parent</h2>
-    <div class="form-group">
+<dx-popup [(visible)]="showCreate" title="Create parent" [showCloseButton]="true" [width]="420" (onHiding)="closeCreate()">
+  <div class="popup-form">
+    <div class="form-item">
       <label>Email</label>
-      <input type="email" [(ngModel)]="form.email" />
+      <dx-text-box [(value)]="form.email" mode="email"></dx-text-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Full name</label>
-      <input type="text" [(ngModel)]="form.fullName" />
+      <dx-text-box [(value)]="form.fullName"></dx-text-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Phone</label>
-      <input type="text" [(ngModel)]="form.phone" />
+      <dx-text-box [(value)]="form.phone"></dx-text-box>
     </div>
     <div *ngIf="createResult" class="temp-password">
       <strong>Share with parent:</strong> Email {{ createResult.email }} / Temporary password: {{ createResult.temporaryPassword }}
     </div>
-    <div class="modal-actions">
-      <button type="button" (click)="submitCreate()">Create</button>
-      <button type="button" (click)="closeCreate()">{{ createResult ? 'Close' : 'Cancel' }}</button>
+    <div class="popup-actions">
+      <dx-button text="Create" type="default" (onClick)="submitCreate()"></dx-button>
+      <dx-button [text]="createResult ? 'Close' : 'Cancel'" type="normal" (onClick)="closeCreate()"></dx-button>
     </div>
-  </app-card>
-</div>
+  </div>
+</dx-popup>

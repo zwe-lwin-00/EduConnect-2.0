@@ -3,11 +3,16 @@
 .page-header h1 { margin: 0; }
 section { margin-bottom: 2rem; }
 .error { color: #b91c1c; margin-bottom: 1rem; padding: 0.75rem; background: #fef2f2; border-radius: 8px; }
+.toolbar { margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+.toolbar dx-number-box { width: 100px; }
+.popup-form { padding: 0.5rem 0; }
+.popup-form .form-item { margin-bottom: 1rem; }
+.popup-form .form-item label { display: block; margin-bottom: 0.25rem; font-weight: 600; }
+.popup-form dx-date-box, .popup-form dx-text-box { display: block; width: 100%; }
+.popup-actions { margin-top: 1rem; display: flex; gap: 0.5rem; }
 .loading { color: #64748b; padding: 0.5rem 0; }
 .empty-state { padding: 1.5rem; text-align: center; color: #64748b; background: #f8fafc; border-radius: 10px; }
 .empty-state p { margin: 0; }
-.toolbar { margin-bottom: 1rem; }
-.toolbar input { margin: 0 0.5rem; padding: 0.35rem; }
 .btn-primary { padding: 0.5rem 1rem; background: #0f3460; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
 .modal-content { max-width: 420px; width: 90%; }

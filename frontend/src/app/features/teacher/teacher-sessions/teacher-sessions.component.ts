@@ -11,11 +11,11 @@ export class TeacherSessionsComponent implements OnInit {
   contracts: { id: string; studentId: string; studentName: string }[] = [];
   loading = true;
   error = '';
-  from = '';
-  to = '';
+  from: string | Date | number = '';
+  to: string | Date | number = '';
   showStart = false;
   startContractId = '';
-  startDate = '';
+  startDate: string | Date | number = '';
   showNotes = false;
   selectedSession: TeacherSessionDto | null = null;
   lessonNotes = '';
@@ -32,10 +32,19 @@ export class TeacherSessionsComponent implements OnInit {
     this.api.getContracts().subscribe(list => this.contracts = list);
   }
 
+  private dateStr(v: string | Date | number): string {
+    if (!v) return '';
+    if (typeof v === 'string') return v;
+    if (typeof v === 'number') return new Date(v).toISOString().slice(0, 10);
+    return (v as Date).toISOString().slice(0, 10);
+  }
+
   load(): void {
     this.loading = true;
     this.error = '';
-    this.api.getSessions(this.from || undefined, this.to || undefined).subscribe({
+    const fromStr = this.dateStr(this.from);
+    const toStr = this.dateStr(this.to);
+    this.api.getSessions(fromStr || undefined, toStr || undefined).subscribe({
       next: (list) => { this.sessions = list; this.loading = false; },
       error: () => { this.loading = false; this.error = 'Failed to load sessions. Please try again.'; }
     });
@@ -43,7 +52,7 @@ export class TeacherSessionsComponent implements OnInit {
 
   openStart(): void {
     this.startContractId = '';
-    this.startDate = new Date().toISOString().slice(0, 10);
+    this.startDate = new Date().toISOString().slice(0, 10) as string;
     this.showStart = true;
   }
 
@@ -57,7 +66,8 @@ export class TeacherSessionsComponent implements OnInit {
   }
 
   submitStart(): void {
-    this.api.createAttendance(this.startContractId, this.startDate || undefined).subscribe({
+    const dateStr = this.dateStr(this.startDate);
+    this.api.createAttendance(this.startContractId, dateStr || undefined).subscribe({
       next: () => { this.load(); this.showStart = false; },
       error: () => {}
     });

@@ -4,13 +4,13 @@
   </header>
   <section>
     <h2>Holidays</h2>
-    <p *ngIf="error" class="error">{{ error }}</p>
+    <dx-toast [visible]="!!error" type="error" [message]="error" [displayTime]="6000" (onHidden)="error = ''" [position]="{ at: { x: 'center', y: 'top' }, my: { x: 'center', y: 'top' } }"></dx-toast>
     <div class="toolbar">
       <label>Year</label>
-      <input type="number" [(ngModel)]="holidayYear" (ngModelChange)="onYearChange()" />
-      <button type="button" class="btn-primary" (click)="openHolidayForm()">Add holiday</button>
+      <dx-number-box [(value)]="holidayYear" [min]="2000" [max]="2100" (onValueChanged)="onYearChange()"></dx-number-box>
+      <dx-button text="Add holiday" type="default" (onClick)="openHolidayForm()"></dx-button>
     </div>
-    <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+    <dx-load-panel [visible]="loading" [showIndicator]="true" [showPane]="true" [shading]="false" message="Loading…"></dx-load-panel>
     <div *ngIf="!loading && !error && !holidays.length" class="empty-state">
       <p>No holidays for this year.</p>
     </div>
@@ -19,7 +19,7 @@
       <dxi-column dataField="name" caption="Name"></dxi-column>
       <dxi-column dataField="description" caption="Description"></dxi-column>
       <dxi-column type="buttons" width="80">
-        <dxi-button hint="Delete" (onClick)="deleteHoliday($any($event).row.data)"></dxi-button>
+        <dxi-button hint="Delete" (onClick)="confirmDeleteHoliday($any($event).row.data)"></dxi-button>
       </dxi-column>
     </dx-data-grid>
   </section>
@@ -32,24 +32,30 @@
     </dx-data-grid>
   </section>
 </div>
-<div class="modal" *ngIf="showHolidayForm">
-  <app-card class="modal-content">
-    <h2>Add holiday</h2>
-    <div class="form-group">
+<dx-popup [(visible)]="showHolidayForm" title="Add holiday" [showCloseButton]="true" [width]="420" (onHiding)="closeHolidayForm()">
+  <div class="popup-form">
+    <div class="form-item">
       <label>Date</label>
-      <input type="date" [(ngModel)]="holidayForm.holidayDate" />
+      <dx-date-box [value]="holidayForm.holidayDate" (valueChange)="holidayForm.holidayDate = $event" type="date"></dx-date-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Name</label>
-      <input type="text" [(ngModel)]="holidayForm.name" />
+      <dx-text-box [(value)]="holidayForm.name"></dx-text-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Description</label>
-      <input type="text" [(ngModel)]="holidayForm.description" />
+      <dx-text-box [(value)]="holidayForm.description"></dx-text-box>
     </div>
-    <div class="modal-actions">
-      <button type="button" (click)="submitHoliday()">Add</button>
-      <button type="button" (click)="closeHolidayForm()">Cancel</button>
+    <div class="popup-actions">
+      <dx-button text="Add" type="default" (onClick)="submitHoliday()"></dx-button>
+      <dx-button text="Cancel" type="normal" (onClick)="closeHolidayForm()"></dx-button>
     </div>
-  </app-card>
-</div>
+  </div>
+</dx-popup>
+<dx-popup [(visible)]="showDeleteConfirm" title="Delete holiday" [showCloseButton]="true" [width]="400" (onHiding)="showDeleteConfirm = false; holidayToDelete = null">
+  <p>Delete this holiday?</p>
+  <div class="popup-actions">
+    <dx-button text="Yes, delete" type="danger" (onClick)="doDeleteHoliday()"></dx-button>
+    <dx-button text="No" type="normal" (onClick)="showDeleteConfirm = false; holidayToDelete = null"></dx-button>
+  </div>
+</dx-popup>

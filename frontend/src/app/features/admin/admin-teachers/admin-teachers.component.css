@@ -13,3 +13,9 @@
 .loading { color: #64748b; padding: 0.5rem 0; }
 .empty-state { padding: 2rem; text-align: center; color: #64748b; background: #f8fafc; border-radius: 10px; }
 .empty-state p { margin: 0 0 1rem 0; }
+.popup-form { padding: 0.5rem 0; }
+.popup-form .form-item { margin-bottom: 1rem; }
+.popup-form .form-item label { display: block; margin-bottom: 0.25rem; font-weight: 600; }
+.popup-form dx-text-box, .popup-form dx-text-area { display: block; width: 100%; }
+.popup-actions { margin-top: 1rem; display: flex; gap: 0.5rem; }
+.temp-password { margin: 1rem 0; padding: 0.75rem; background: #f0fdf4; border-radius: 6px; }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ParentApiService } from '../../../core/services/parent-api.service';
 
 interface CalendarItem {
@@ -38,8 +38,17 @@ export class ParentStudentCalendarComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     public api: ParentApiService
   ) {}
+
+  navigateBack(): void {
+    this.router.navigate(['/parent/student', this.studentId]);
+  }
+
+  navigateToParent(): void {
+    this.router.navigate(['/parent']);
+  }
 
   ngOnInit(): void {
     this.studentId = this.route.snapshot.paramMap.get('studentId') || '';

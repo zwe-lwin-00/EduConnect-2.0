@@ -1,13 +1,13 @@
 <div class="page-block">
   <header class="page-header">
     <h1>Teachers</h1>
-    <button type="button" class="btn-primary" (click)="openOnboard()">Onboard teacher</button>
+    <dx-button text="Onboard teacher" type="default" (onClick)="openOnboard()"></dx-button>
   </header>
-  <p *ngIf="error" class="error">{{ error }}</p>
-  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <dx-toast [visible]="!!error" type="error" [message]="error" [displayTime]="6000" (onHidden)="error = ''" [position]="{ at: { x: 'center', y: 'top' }, my: { x: 'center', y: 'top' } }"></dx-toast>
+  <dx-load-panel [visible]="loading" [showIndicator]="true" [showPane]="true" [shading]="false" message="Loading…"></dx-load-panel>
   <div *ngIf="!loading && !error && !teachers.length" class="empty-state">
     <p>No teachers yet.</p>
-    <button type="button" class="btn-primary" (click)="openOnboard()">Onboard teacher</button>
+    <dx-button text="Onboard teacher" type="default" (onClick)="openOnboard()"></dx-button>
   </div>
   <dx-data-grid
     *ngIf="!loading && !error && teachers.length"
@@ -30,85 +30,97 @@
   </dx-data-grid>
 </div>
 
-<div class="modal" *ngIf="showOnboard">
-  <app-card class="modal-content">
-    <h2>Onboard teacher</h2>
-    <div class="form-group">
+<dx-popup
+  [(visible)]="showOnboard"
+  title="Onboard teacher"
+  [showCloseButton]="true"
+  [width]="480"
+  (onHiding)="closeOnboard()">
+  <div class="popup-form">
+    <div class="form-item">
       <label>Email</label>
-      <input type="email" [(ngModel)]="onboardForm.email" placeholder="email@example.com" />
+      <dx-text-box [(value)]="onboardForm.email" placeholder="email@example.com" mode="email"></dx-text-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Full name</label>
-      <input type="text" [(ngModel)]="onboardForm.fullName" />
+      <dx-text-box [(value)]="onboardForm.fullName"></dx-text-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Phone</label>
-      <input type="text" [(ngModel)]="onboardForm.phone" />
+      <dx-text-box [(value)]="onboardForm.phone"></dx-text-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Education</label>
-      <input type="text" [(ngModel)]="onboardForm.education" />
+      <dx-text-box [(value)]="onboardForm.education"></dx-text-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Bio</label>
-      <textarea [(ngModel)]="onboardForm.bio" rows="3"></textarea>
+      <dx-text-area [(value)]="onboardForm.bio" [height]="80"></dx-text-area>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Specializations (comma-separated)</label>
-      <input type="text" [(ngModel)]="onboardForm.specializations" placeholder="e.g. Math, Science" />
+      <dx-text-box [(value)]="onboardForm.specializations" placeholder="e.g. Math, Science"></dx-text-box>
     </div>
     <div *ngIf="tempPassword" class="temp-password">
       <strong>Temporary password (share with teacher):</strong> {{ tempPassword }}
     </div>
-    <div class="modal-actions">
-      <button type="button" (click)="submitOnboard()">Create</button>
-      <button type="button" (click)="closeOnboard()">{{ tempPassword ? 'Close' : 'Cancel' }}</button>
+    <div class="popup-actions">
+      <dx-button text="Create" type="default" (onClick)="submitOnboard()"></dx-button>
+      <dx-button [text]="tempPassword ? 'Close' : 'Cancel'" type="normal" (onClick)="closeOnboard()"></dx-button>
     </div>
-  </app-card>
-</div>
+  </div>
+</dx-popup>
 
-<div class="modal" *ngIf="showResetPassword && resetTeacher">
-  <app-card class="modal-content">
-    <h2>Reset password</h2>
+<dx-popup
+  [(visible)]="showResetPassword"
+  title="Reset password"
+  [showCloseButton]="true"
+  [width]="420"
+  (onHiding)="closeResetPassword()">
+  <div class="popup-form" *ngIf="resetTeacher">
     <p>Reset password for <strong>{{ resetTeacher.fullName }}</strong> ({{ resetTeacher.email }})? They will be required to change it on next login.</p>
     <div *ngIf="resetPasswordResult" class="temp-password">
       <strong>Share with teacher:</strong><br />
       Email: {{ resetPasswordResult.email }}<br />
       Temporary password: {{ resetPasswordResult.temporaryPassword }}
     </div>
-    <div class="modal-actions">
-      <button *ngIf="!resetPasswordResult" type="button" (click)="confirmResetPassword()">Reset password</button>
-      <button type="button" (click)="closeResetPassword()">{{ resetPasswordResult ? 'Close' : 'Cancel' }}</button>
+    <div class="popup-actions">
+      <dx-button *ngIf="!resetPasswordResult" text="Reset password" type="default" (onClick)="confirmResetPassword()"></dx-button>
+      <dx-button [text]="resetPasswordResult ? 'Close' : 'Cancel'" type="normal" (onClick)="closeResetPassword()"></dx-button>
     </div>
-  </app-card>
-</div>
+  </div>
+</dx-popup>
 
-<div class="modal" *ngIf="showEdit && selectedTeacher">
-  <app-card class="modal-content">
-    <h2>Edit teacher</h2>
-    <div class="form-group">
+<dx-popup
+  [(visible)]="showEdit"
+  title="Edit teacher"
+  [showCloseButton]="true"
+  [width]="480"
+  (onHiding)="closeEdit()">
+  <div class="popup-form" *ngIf="selectedTeacher">
+    <div class="form-item">
       <label>Full name</label>
-      <input type="text" [(ngModel)]="editForm.fullName" />
+      <dx-text-box [(value)]="editForm.fullName"></dx-text-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Phone</label>
-      <input type="text" [(ngModel)]="editForm.phone" />
+      <dx-text-box [(value)]="editForm.phone"></dx-text-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Education</label>
-      <input type="text" [(ngModel)]="editForm.education" />
+      <dx-text-box [(value)]="editForm.education"></dx-text-box>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Bio</label>
-      <textarea [(ngModel)]="editForm.bio" rows="3"></textarea>
+      <dx-text-area [(value)]="editForm.bio" [height]="80"></dx-text-area>
     </div>
-    <div class="form-group">
+    <div class="form-item">
       <label>Specializations (comma-separated)</label>
-      <input type="text" [(ngModel)]="editForm.specializations" placeholder="e.g. Math, Science" />
+      <dx-text-box [(value)]="editForm.specializations" placeholder="e.g. Math, Science"></dx-text-box>
     </div>
-    <div class="modal-actions">
-      <button type="button" (click)="saveEdit()">Save</button>
-      <button type="button" (click)="closeEdit()">Cancel</button>
+    <div class="popup-actions">
+      <dx-button text="Save" type="default" (onClick)="saveEdit()"></dx-button>
+      <dx-button text="Cancel" type="normal" (onClick)="closeEdit()"></dx-button>
     </div>
-  </app-card>
-</div>
+  </div>
+</dx-popup>

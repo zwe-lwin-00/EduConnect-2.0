@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DxButtonModule, DxLoadIndicatorModule } from 'devextreme-angular';
 import { PlaceholderComponent } from './components/placeholder/placeholder.component';
 import { FormFieldComponent } from './components/form-field/form-field.component';
 import { PrimaryButtonComponent } from './components/primary-button/primary-button.component';
@@ -25,7 +26,7 @@ import { MyanmarDatePipe } from './pipes/myanmar-date.pipe';
     NotificationBellComponent,
     MyanmarDatePipe
   ],
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, DxButtonModule, DxLoadIndicatorModule],
   exports: [
     PlaceholderComponent,
     FormFieldComponent,

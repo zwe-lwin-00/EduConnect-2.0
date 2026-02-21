@@ -1,26 +1,7 @@
-.back {
-  display: inline-block;
-  margin-bottom: 1rem;
-  color: #1e40af;
-  text-decoration: none;
-}
-.back:hover {
-  text-decoration: underline;
-}
+.back-btn { margin-bottom: 1rem; }
 .error { color: #b91c1c; margin-bottom: 1rem; padding: 0.75rem; background: #fef2f2; border-radius: 8px; }
-.loading { color: #64748b; padding: 0.5rem 0; }
-.invalid-student {
-  padding: 1rem;
-  color: #b91c1c;
-}
-.btn-secondary {
-  padding: 0.5rem 1rem;
-  background: #64748b;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
+.invalid-student { padding: 1rem; color: #b91c1c; }
+.invalid-student dx-button { margin-top: 0.5rem; }
 .page-header {
   display: flex;
   align-items: center;

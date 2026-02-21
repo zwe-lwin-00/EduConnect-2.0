@@ -15,8 +15,8 @@ export class AdminReportsComponent implements OnInit {
   monthly: ReportRow[] = [];
   loading = true;
   error = '';
-  from = '';
-  to = '';
+  from: string | Date | number = '';
+  to: string | Date | number = '';
   totalSessions = 0;
   totalRevenue = 0;
 
@@ -32,11 +32,25 @@ export class AdminReportsComponent implements OnInit {
     this.loadMonthly();
   }
 
+  onRangeChange(): void {
+    this.loadDaily();
+    this.loadMonthly();
+  }
+
+  private dateStr(v: string | Date | number): string {
+    if (v == null || v === '') return '';
+    if (typeof v === 'string') return v;
+    if (typeof v === 'number') return new Date(v).toISOString().slice(0, 10);
+    return (v as Date).toISOString().slice(0, 10);
+  }
+
   loadDaily(): void {
-    if (!this.from || !this.to) return;
+    const fromStr = this.dateStr(this.from);
+    const toStr = this.dateStr(this.to);
+    if (!fromStr || !toStr) return;
     this.loading = true;
     this.error = '';
-    this.api.getDailyReport(this.from, this.to).subscribe({
+    this.api.getDailyReport(fromStr, toStr).subscribe({
       next: list => {
         this.daily = list;
         this.totalSessions = list.reduce((s, r) => s + (r.sessionCount ?? 0), 0);
@@ -48,7 +62,9 @@ export class AdminReportsComponent implements OnInit {
   }
 
   loadMonthly(): void {
-    this.api.getMonthlyReport(this.from || undefined, this.to || undefined).subscribe({
+    const fromStr = this.dateStr(this.from);
+    const toStr = this.dateStr(this.to);
+    this.api.getMonthlyReport(fromStr || undefined, toStr || undefined).subscribe({
       next: list => {
         this.monthly = list.map(r => ({
           ...r,

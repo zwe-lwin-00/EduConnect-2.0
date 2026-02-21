@@ -1,17 +1,18 @@
 <div class="page-block">
-  <a routerLink="/parent" class="back">← My students</a>
-  <p *ngIf="error" class="error">{{ error }}</p>
-  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <dx-button text="← My students" type="normal" stylingMode="text" (onClick)="navigateToParent()" class="back-btn"></dx-button>
+  <dx-toast [visible]="!!error" type="error" [message]="error" [displayTime]="6000" (onHidden)="error = ''" [position]="{ at: { x: 'center', y: 'top' }, my: { x: 'center', y: 'top' } }"></dx-toast>
+  <dx-load-panel [visible]="loading" [showIndicator]="true" [showPane]="true" [shading]="false" message="Loading…"></dx-load-panel>
   <div *ngIf="!loading && invalidStudent" class="invalid-student">
     <p>Invalid student.</p>
-    <p>This student is not linked to your account. <a routerLink="/parent">Return to My students</a>.</p>
+    <p>This student is not linked to your account.</p>
+    <dx-button text="Return to My students" type="normal" (onClick)="navigateToParent()"></dx-button>
   </div>
   <div *ngIf="!loading && !error && !invalidStudent && overview">
     <header class="header">
       <h1>{{ overview.studentName }}</h1>
       <p class="grade">Grade {{ overview.grade }}</p>
       <p *ngIf="overview.assignedTeacherName" class="teacher">Assigned teacher: {{ overview.assignedTeacherName }}</p>
-      <a [routerLink]="['/parent', 'student', overview.studentId, 'calendar']" class="calendar-link">View month calendar →</a>
+      <dx-button text="View month calendar →" type="default" (onClick)="navigateToCalendar()"></dx-button>
     </header>
     <section>
       <h2>Progress</h2>

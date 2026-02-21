@@ -1,0 +1,8 @@
+.parent-layout { min-height: 100vh; display: flex; flex-direction: column; }
+.header { padding: 1rem 1.5rem; background: #0f3460; color: #fff; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+.header-actions { display: flex; align-items: center; gap: 0.75rem; }
+.header-brand { margin: 0; color: #fff; }
+.header .subtitle { color: #94a3b8; }
+.content { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+.content-scroll { flex: 1; }
+.content-scroll ::ng-deep .dx-scrollview-content { padding: 0; }

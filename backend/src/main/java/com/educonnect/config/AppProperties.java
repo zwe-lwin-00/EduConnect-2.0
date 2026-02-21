@@ -17,7 +17,7 @@ public class AppProperties {
     private int parentOverviewRecentSessionsMax = 20;
     private int parentOverviewTotalSessionsYears = 1;
     private int reportDefaultMonthsBack = 11;
-    private String apiPublicUrl = "http://localhost:9099";
+    private String apiPublicUrl = "http://localhost:9095";
 
     public int getSubscriptionExpiringAlertDays() {
         return subscriptionExpiringAlertDays;

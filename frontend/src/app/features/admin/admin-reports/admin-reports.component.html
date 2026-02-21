@@ -3,14 +3,14 @@
     <h1>Daily and monthly reports</h1>
   </header>
   <p class="hint">Sessions = One-To-One attendance records in the period. Revenue = hours × teacher hourly rate (or default).</p>
-  <p *ngIf="error" class="error">{{ error }}</p>
+  <dx-toast [visible]="!!error" type="error" [message]="error" [displayTime]="6000" (onHidden)="error = ''" [position]="{ at: { x: 'center', y: 'top' }, my: { x: 'center', y: 'top' } }"></dx-toast>
   <div class="toolbar">
     <label>From</label>
-    <input type="date" [(ngModel)]="from" (ngModelChange)="loadDaily(); loadMonthly()" />
+    <dx-date-box [value]="from" (valueChange)="from = $event; onRangeChange()" type="date"></dx-date-box>
     <label>To</label>
-    <input type="date" [(ngModel)]="to" (ngModelChange)="loadDaily(); loadMonthly()" />
+    <dx-date-box [value]="to" (valueChange)="to = $event; onRangeChange()" type="date"></dx-date-box>
   </div>
-  <div *ngIf="loading" class="loading" aria-live="polite">Loading…</div>
+  <dx-load-panel [visible]="loading" [showIndicator]="true" [showPane]="true" [shading]="false" message="Loading…"></dx-load-panel>
   <div *ngIf="!loading && !error" class="summary">
     <span class="summary-item">Total sessions: <strong>{{ totalSessions }}</strong></span>
     <span class="summary-item">Total revenue: <strong>{{ totalRevenue | number:'1.2-2' }}</strong></span>

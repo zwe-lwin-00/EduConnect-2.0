@@ -10,4 +10,5 @@
 .profile-card dl { margin: 0; }
 .profile-card dt { font-weight: 600; margin-top: 0.75rem; color: #475569; }
 .profile-card dd { margin: 0.25rem 0 0 0; }
+.profile-card .zoom-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; }
 .profile-card a { color: #1e3a5f; }

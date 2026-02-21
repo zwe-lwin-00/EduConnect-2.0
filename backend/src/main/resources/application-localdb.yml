@@ -2,7 +2,8 @@
 # Requires mssql-jdbc_auth DLL on PATH or in backend/native — see README-RUN.md.
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:sqlserver://(localdb)\\MSSQLLocalDB;databaseName=educonnect;encrypt=false;trustServerCertificate=true;integratedSecurity=true}
+    # JDBC does not support "(localdb)" hostname; use localhost + instanceName for LocalDB.
+    url: ${SPRING_DATASOURCE_URL:jdbc:sqlserver://localhost;instanceName=MSSQLLocalDB;databaseName=educonnect;encrypt=false;trustServerCertificate=true;integratedSecurity=true}
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     username:
     password:

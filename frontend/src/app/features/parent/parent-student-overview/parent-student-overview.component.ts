@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ParentApiService, StudentOverviewDto } from '../../../core/services/parent-api.service';
@@ -18,8 +18,19 @@ export class ParentStudentOverviewComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     public api: ParentApiService
   ) {}
+
+  navigateToParent(): void {
+    this.router.navigate(['/parent']);
+  }
+
+  navigateToCalendar(): void {
+    if (this.overview?.studentId) {
+      this.router.navigate(['/parent', 'student', this.overview.studentId, 'calendar']);
+    }
+  }
 
   ngOnInit(): void {
     this.studentId = this.route.snapshot.paramMap.get('studentId') || '';

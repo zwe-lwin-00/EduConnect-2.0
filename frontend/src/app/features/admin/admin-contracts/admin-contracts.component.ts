@@ -19,23 +19,16 @@ export class AdminContractsComponent implements OnInit {
   loading = true;
   error = '';
   showCreate = false;
+  showConfirmCancel = false;
+  contractToCancel: ContractDto | null = null;
   dayOptions = DAY_LABELS;
-  form: any = { teacherId: '', studentId: '', subscriptionId: '', legacyPeriodEnd: '', daysOfWeek: [] as number[], scheduleStartTime: '', scheduleEndTime: '' };
+  form: any = { teacherId: '', studentId: '', subscriptionId: '', legacyPeriodEnd: '' as string | Date, daysOfWeek: [] as number[], scheduleStartTime: null as string | null, scheduleEndTime: null as string | null };
+
+  get subscriptionOptions(): { id: string; label: string }[] {
+    return this.subscriptions.map(s => ({ id: s.id, label: `${s.studentName} until ${s.endDate}` }));
+  }
 
   constructor(public api: AdminApiService) {}
-
-  isDayChecked(dayValue: number): boolean {
-    return Array.isArray(this.form.daysOfWeek) && this.form.daysOfWeek.includes(dayValue);
-  }
-
-  toggleDay(dayValue: number): void {
-    const arr = Array.isArray(this.form.daysOfWeek) ? [...this.form.daysOfWeek] : [];
-    const i = arr.indexOf(dayValue);
-    if (i >= 0) arr.splice(i, 1);
-    else arr.push(dayValue);
-    arr.sort((a, b) => a - b);
-    this.form.daysOfWeek = arr;
-  }
 
   /** Schedule column text: e.g. "Mon, Wed · 09:00–10:00" */
   formatScheduleCell = (e: { data: ContractDto }): string => this.formatSchedule(e.data);
@@ -71,20 +64,48 @@ export class AdminContractsComponent implements OnInit {
 
   openCreate(): void {
     this.showCreate = true;
-    this.form = { teacherId: '', studentId: '', subscriptionId: '', legacyPeriodEnd: '', daysOfWeek: [], scheduleStartTime: '', scheduleEndTime: '' };
+    this.form = { teacherId: '', studentId: '', subscriptionId: '', legacyPeriodEnd: '', daysOfWeek: [], scheduleStartTime: null, scheduleEndTime: null };
+  }
+
+  toDateStr(v: string | Date | null): string {
+    if (!v) return '';
+    if (typeof v === 'string') return v;
+    return (v as Date).toISOString().slice(0, 10);
+  }
+  toTimeStr(v: string | Date | null): string {
+    if (!v) return '';
+    const d = typeof v === 'string' ? new Date('1970-01-01T' + v) : (v as Date);
+    const h = d.getHours();
+    const m = d.getMinutes();
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
   }
 
   submitCreate(): void {
     const body: any = { teacherId: this.form.teacherId, studentId: this.form.studentId };
     if (this.form.subscriptionId) body.subscriptionId = this.form.subscriptionId;
-    else if (this.form.legacyPeriodEnd) body.legacyPeriodEnd = this.form.legacyPeriodEnd;
-    if (this.form.scheduleStartTime) body.scheduleStartTime = this.form.scheduleStartTime;
-    if (this.form.scheduleEndTime) body.scheduleEndTime = this.form.scheduleEndTime;
+    else {
+      const end = this.toDateStr(this.form.legacyPeriodEnd);
+      if (end) body.legacyPeriodEnd = end;
+    }
+    const startTime = this.toTimeStr(this.form.scheduleStartTime);
+    const endTime = this.toTimeStr(this.form.scheduleEndTime);
+    if (startTime) body.scheduleStartTime = startTime;
+    if (endTime) body.scheduleEndTime = endTime;
     if (this.form.daysOfWeek?.length) body.daysOfWeek = this.form.daysOfWeek;
     this.api.createContract(body).subscribe({ next: () => { this.load(); this.showCreate = false; }, error: () => {} });
   }
 
   cancelContract(c: ContractDto): void {
-    if (confirm('Cancel this One-To-One contract?')) this.api.cancelContract(c.id).subscribe(() => this.load());
+    this.contractToCancel = c;
+    this.showConfirmCancel = true;
+  }
+
+  confirmCancelContract(): void {
+    if (!this.contractToCancel) return;
+    this.api.cancelContract(this.contractToCancel.id).subscribe(() => {
+      this.load();
+      this.showConfirmCancel = false;
+      this.contractToCancel = null;
+    });
   }
 }

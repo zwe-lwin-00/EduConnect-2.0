@@ -1,11 +1,16 @@
 .admin-layout { display: flex; min-height: 100vh; }
 .sidebar { width: 220px; background: #1a1a2e; color: #e2e8f0; padding: 1rem 0; display: flex; flex-direction: column; }
 .sidebar-brand { padding: 0 1rem 1rem; border-bottom: 1px solid #334155; margin-bottom: 0.5rem; color: #e2e8f0; }
-.sidebar nav { flex: 1; }
-.sidebar nav a { display: block; padding: 0.5rem 1rem; color: #94a3b8; text-decoration: none; font-size: 0.9rem; }
-.sidebar nav a:hover { color: #fff; background: rgba(255,255,255,0.05); }
-.sidebar nav a.active { color: #fff; background: #0f3460; }
-.content { flex: 1; background: #f8fafc; overflow: auto; }
+.admin-nav-menu { flex: 1; border: none; background: transparent; width: 100%; }
+.admin-nav-menu ::ng-deep .dx-menu-items-container { border: none; background: transparent; }
+.admin-nav-menu ::ng-deep .dx-menu-item { padding: 0; border: none; }
+.admin-nav-menu ::ng-deep .dx-menu-item .dx-menu-item-content { color: #94a3b8; font-size: 0.9rem; padding: 0.5rem 1rem; border: none; }
+.admin-nav-menu ::ng-deep .dx-menu-item:hover .dx-menu-item-content { color: #fff; background: rgba(255,255,255,0.05); }
+.admin-nav-menu ::ng-deep .dx-menu-item.dx-state-selected .dx-menu-item-content { color: #fff; background: #0f3460; }
+.admin-nav-menu ::ng-deep .dx-menu-item .dx-icon { display: none; }
+.content { flex: 1; background: #f8fafc; overflow: hidden; display: flex; flex-direction: column; }
+.content-scroll { flex: 1; }
+.content-scroll ::ng-deep .dx-scrollview-content { padding: 0; }
 .user { padding: 1rem; border-top: 1px solid #334155; font-size: 0.85rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
 .user app-notification-bell { margin-right: 0.25rem; }
 .user-name { font-weight: 500; color: #e2e8f0; }

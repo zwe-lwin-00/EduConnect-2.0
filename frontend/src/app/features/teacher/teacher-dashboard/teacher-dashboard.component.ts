@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TeacherApiService, TeacherDashboardData } from '../../../core/services/teacher-api.service';
 
 @Component({
@@ -16,7 +17,11 @@ export class TeacherDashboardComponent implements OnInit {
   loading = true;
   error = '';
 
-  constructor(public api: TeacherApiService) {}
+  constructor(public api: TeacherApiService, private router: Router) {}
+
+  navigate(path: string): void {
+    this.router.navigateByUrl(path);
+  }
 
   ngOnInit(): void {
     this.api.getDashboard().subscribe({

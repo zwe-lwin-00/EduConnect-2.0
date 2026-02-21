@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminApiService, StudentDto, ParentDto } from '../../../core/services/admin-api.service';
 
+const GRADE_OPTIONS = [{ value: 'P1', label: 'P1' }, { value: 'P2', label: 'P2' }, { value: 'P3', label: 'P3' }, { value: 'P4', label: 'P4' }];
+
 @Component({
   selector: 'app-admin-students',
   templateUrl: './admin-students.component.html',
@@ -12,7 +14,12 @@ export class AdminStudentsComponent implements OnInit {
   loading = true;
   error = '';
   showAdd = false;
-  form: { fullName: string; grade: string; dateOfBirth: string; parentId: string } = { fullName: '', grade: 'P1', dateOfBirth: '', parentId: '' };
+  form: { fullName: string; grade: string; dateOfBirth: string | Date | number; parentId: string } = { fullName: '', grade: 'P1', dateOfBirth: '', parentId: '' };
+  gradeOptions = GRADE_OPTIONS;
+
+  get parentOptions(): { id: string; label: string }[] {
+    return this.parents.map(p => ({ id: p.id, label: `${p.fullName} (${p.email})` }));
+  }
 
   constructor(public api: AdminApiService) {}
 
@@ -41,7 +48,10 @@ export class AdminStudentsComponent implements OnInit {
 
   submitAdd(): void {
     const body: any = { fullName: this.form.fullName, grade: this.form.grade, parentId: this.form.parentId };
-    if (this.form.dateOfBirth) body.dateOfBirth = this.form.dateOfBirth;
+    const dob = this.form.dateOfBirth;
+    if (dob != null && dob !== '') {
+      body.dateOfBirth = typeof dob === 'string' ? dob : typeof dob === 'number' ? new Date(dob).toISOString().slice(0, 10) : (dob as Date).toISOString().slice(0, 10);
+    }
     this.api.createStudent(body).subscribe({ next: () => { this.load(); this.showAdd = false; }, error: () => {} });
   }
 

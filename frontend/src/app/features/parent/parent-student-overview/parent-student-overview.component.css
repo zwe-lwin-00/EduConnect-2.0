@@ -1,15 +1,13 @@
 .page-block { padding: 1rem; }
-.back { display: inline-block; margin-bottom: 1rem; color: #0f3460; text-decoration: none; }
+.back-btn { margin-bottom: 1rem; }
 .error { color: #b91c1c; margin-bottom: 1rem; padding: 0.75rem; background: #fef2f2; border-radius: 8px; }
-.loading { color: #64748b; padding: 0.5rem 0; }
 .section-empty { color: #64748b; margin: 0 0 0.5rem 0; font-size: 0.9rem; }
 .invalid-student { padding: 1.5rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b; }
 .invalid-student p { margin: 0 0 0.5rem 0; }
-.invalid-student a { color: #0f3460; }
+.invalid-student dx-button { margin-top: 0.5rem; }
 .header { margin-bottom: 1.5rem; }
 .header h1 { margin: 0 0 0.25rem 0; }
 .grade, .teacher { margin: 0; color: #64748b; }
-.calendar-link { display: inline-block; margin-top: 0.5rem; color: #1e40af; text-decoration: none; }
-.calendar-link:hover { text-decoration: underline; }
+.header dx-button { margin-top: 0.5rem; }
 section { margin-bottom: 1.5rem; }
 section h2 { margin-bottom: 0.5rem; }

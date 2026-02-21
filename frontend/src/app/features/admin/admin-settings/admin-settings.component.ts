@@ -11,9 +11,11 @@ export class AdminSettingsComponent implements OnInit {
   settings: SystemSettingDto[] = [];
   loading = true;
   error = '';
-  holidayYear: number | null = new Date().getFullYear();
+  holidayYear: number = new Date().getFullYear();
   showHolidayForm = false;
-  holidayForm: { holidayDate: string; name: string; description: string } = { holidayDate: '', name: '', description: '' };
+  showDeleteConfirm = false;
+  holidayToDelete: HolidayDto | null = null;
+  holidayForm: { holidayDate: string | Date | number; name: string; description: string } = { holidayDate: '', name: '', description: '' };
 
   constructor(public api: AdminApiService) {}
 
@@ -25,7 +27,7 @@ export class AdminSettingsComponent implements OnInit {
   loadHolidays(): void {
     this.loading = true;
     this.error = '';
-    this.api.getHolidays(this.holidayYear ?? undefined).subscribe({
+    this.api.getHolidays(this.holidayYear).subscribe({
       next: list => { this.holidays = list; this.loading = false; },
       error: () => { this.loading = false; this.error = 'Failed to load holidays. Please try again.'; }
     });
@@ -45,10 +47,25 @@ export class AdminSettingsComponent implements OnInit {
   }
 
   submitHoliday(): void {
-    this.api.createHoliday(this.holidayForm).subscribe(() => { this.loadHolidays(); this.showHolidayForm = false; });
+    const dateVal = this.holidayForm.holidayDate;
+    let holidayDate: string;
+    if (typeof dateVal === 'string') holidayDate = dateVal;
+    else if (typeof dateVal === 'number') holidayDate = new Date(dateVal).toISOString().slice(0, 10);
+    else holidayDate = (dateVal as Date).toISOString().slice(0, 10);
+    this.api.createHoliday({ ...this.holidayForm, holidayDate }).subscribe(() => { this.loadHolidays(); this.showHolidayForm = false; });
   }
 
-  deleteHoliday(h: HolidayDto): void {
-    if (confirm('Delete this holiday?')) this.api.deleteHoliday(h.id).subscribe(() => this.loadHolidays());
+  confirmDeleteHoliday(h: HolidayDto): void {
+    this.holidayToDelete = h;
+    this.showDeleteConfirm = true;
+  }
+
+  doDeleteHoliday(): void {
+    if (!this.holidayToDelete) return;
+    this.api.deleteHoliday(this.holidayToDelete.id).subscribe(() => {
+      this.loadHolidays();
+      this.showDeleteConfirm = false;
+      this.holidayToDelete = null;
+    });
   }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ParentApiService, ParentStudentDto } from '../../../core/services/parent-api.service';
 
 @Component({
@@ -11,7 +12,11 @@ export class ParentStudentsComponent implements OnInit {
   loading = true;
   error = '';
 
-  constructor(public api: ParentApiService) {}
+  constructor(public api: ParentApiService, private router: Router) {}
+
+  navigateToStudent(studentId: string): void {
+    this.router.navigate(['/parent/student', studentId]);
+  }
 
   ngOnInit(): void {
     this.api.getStudents().subscribe({
